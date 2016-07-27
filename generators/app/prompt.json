@@ -1,0 +1,48 @@
+{
+  "yeosay" : "Welcome to the delightful generator-generate generator!",
+  "lang": [
+    {
+      "type": "list",
+      "name": "lang",
+      "message": "Select programming language:",
+      "choices": [
+        "java",
+        "python",
+        "javascript"
+      ]
+    }
+  ],
+  "java" : [
+    {
+      "type": "list",
+      "name": "temp",
+      "message": "Select application template:",
+    "choices" : [
+    "terminal",
+    "library",
+    "gui"
+    ]
+  }],
+  "python" : [
+    {
+      "type": "list",
+      "name": "temp",
+      "message": "Select application template:",
+      "choices" : [
+        "terminal",
+        "library",
+        "prototype"
+      ]
+    }],
+  "javascript" : [
+    {
+      "type": "list",
+      "name": "temp",
+      "message": "Select application template:",
+      "choices" : [
+        "library",
+        "backend",
+        "frontend"
+      ]
+    }]
+}

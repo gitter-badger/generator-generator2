@@ -2,28 +2,30 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
+var Q = require('./prompt.json');
 
 module.exports = yeoman.Base.extend({
   prompting: function () {
-    // Have Yeoman greet the user.
-    this.log(yosay(
-      'Welcome to the delightful ' + chalk.red('generator-generate') + ' generator!'
-    ));
+    var self = this;
 
-    var prompts = [{
-      type: 'confirm',
-      name: 'someAnswer',
-      message: 'Would you like to enable this option?',
-      default: true
-    }];
+    this.log(yosay(Q.yeosay));
 
-    return this.prompt(prompts).then(function (props) {
-      // To access props later use this.props.someAnswer;
-      this.props = props;
+    return this.prompt(Q.lang).then(function (A0) {
+      var _self = this;
+      _self.props = A0;
+
+      return self.prompt(Q[A0.lang]).then(function (A1) {
+        return _self.props.temp = A1.temp;
+      }.bind(_self));
+
     }.bind(this));
+
+
   },
 
   writing: function () {
+
+    this.log(this.props);
     this.fs.copy(
       this.templatePath('dummyfile.txt'),
       this.destinationPath('dummyfile.txt')
