@@ -1,9 +1,8 @@
 {
-
-  "lang": [
+  "subgenerator": [
     {
       "type": "list",
-      "name": "lang",
+      "name": "subgenerator",
       "message": "Select programming language:",
       "choices": [
         "java",
@@ -11,38 +10,5 @@
         "javascript"
       ]
     }
-  ],
-  "java" : [
-    {
-      "type": "list",
-      "name": "temp",
-      "message": "Select application template:",
-    "choices" : [
-    "terminal",
-    "library",
-    "gui"
-    ]
-  }],
-  "python" : [
-    {
-      "type": "list",
-      "name": "temp",
-      "message": "Select application template:",
-      "choices" : [
-        "terminal",
-        "library",
-        "prototype"
-      ]
-    }],
-  "javascript" : [
-    {
-      "type": "list",
-      "name": "temp",
-      "message": "Select application template:",
-      "choices" : [
-        "library",
-        "backend",
-        "frontend"
-      ]
-    }]
+  ]
 }

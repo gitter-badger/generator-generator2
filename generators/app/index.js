@@ -5,15 +5,19 @@ var yosay = require('yosay');
 var Q = require('./prompt.json');
 
 module.exports = yeoman.Base.extend({
-  prompting: function () {
-    var self = this;
+	prompting: function () {
+		var self = this;
 
-    this.log(yosay("Welcome to the delightful generator-generate generator!"));
+		this.log(yosay("Welcome to the delightful generator-generate generator!"));
 
-    return this.prompt(Q.lang).then(function (A0) {
-      self.props = A0;
-      self.composeWith('generate:' + A0.lang);
-    }.bind(this));
-  }
+		return this.prompt(Q.subgenerator).then(function (A0) {
+			self.props = A0;
+		}.bind(this));
+	},
+
+	configuring: function () {
+		this.config.set(this.props);
+		this.composeWith('generate:' + this.props.subgenerator);
+	}
 
 });
