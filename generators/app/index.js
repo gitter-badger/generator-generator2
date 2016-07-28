@@ -2,7 +2,7 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
-var Q = require('./prompt.json');
+var Q = require('./prompt');
 
 module.exports = yeoman.Base.extend({
 	prompting: function () {

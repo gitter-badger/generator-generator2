@@ -1,38 +1,49 @@
 'use strict';
+
 var yeoman = require('yeoman-generator');
-var chalk = require('chalk');
 var fs = require('fs');
-var Q = require('./prompt.json');
+var Q = require('./prompt');
+var walk = require('walk');
+
+var pathJoin = require('path').join;
+var ejsRender = require('ejs').render;
 
 module.exports = yeoman.Base.extend({
+
 	prompting: function () {
 		var self = this;
+		var PROMPT = (this.config.get('base') == null ? 'base' : 'module');
 
-		var forAllTemps = fs.readdirSync(this.templatePath('_forAll'));
-		var dirList = fs.readdirSync(this.sourceRoot());
+		Q[PROMPT][0].choices = fs.readdirSync(self.templatePath(PROMPT));
+		return self.prompt(Q[PROMPT]).then(function (A0) {
+			self.props = A0;
+		}.bind(self));
 
-		if (!this.config.get('projectType')) {
+	},
 
-			for(var i in dirList){
-				if(dirList[i] != "_forAll")
-					Q.projectType[0].choices.push(dirList[i]);
-			}
+	configuring: function () {
+		if (this.props.base)
+			this.config.set('base', this.props.base);
+	},
 
-			return this.prompt(Q.projectType).then(function (A0) {
-				self.props = A0;
+	writing: function () {
+		var self = this;
 
-				Q.templates[0].choices = fs.readdirSync(this.templatePath(A0.projectType));
-				for(var i in forAllTemps)
-					Q.templates[0].choices.push(forAllTemps[i]);
+		if (self.props.base) {
 
-				return self.prompt(Q.templates).then(function(A1){
-					self.props.templates = A1.templates;
-				});
-
-			}.bind(this));
+			var base = pathJoin(self.templatePath('base'), self.props.base);
+			var destBase = self.destinationPath('.');
+			var walker = walk.walk(base);
+			walker.on("file", function (root, stat, next) {
+				var from = pathJoin(root,stat.name);
+				var to = ejsRender(from.replace(base,destBase),self.config.getAll());
+				self.fs.copyTpl(from,to, self.config.getAll());
+				next();
+			});
 		}
 	},
-	configuring: function () {
-		this.log(this.props);
+
+	renaming: function(){
+		var self = this;
 	}
 });
