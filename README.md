@@ -1,6 +1,6 @@
 # generator-generate
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
-> Personal generator for generating various starting project and code arhitecture for py, js, java.
+> Personal yeoman generator for generating various starting project and code arhitecture for py, js, java.
 
 ## Installation
 
@@ -16,6 +16,41 @@ Then generate your new project:
 ```bash
 yo generate
 ```
+
+## Generators feature
+
+#### Defaults
+
+Generators will set up next feature for all project templates:
+ 
+ * testing environment,
+ * build tool,
+ * default project logo image,
+ * continuous integration tool,
+ * readme structure with badges and logo image,
+ * default project files: (licence, history, contributing, authors, etc...),
+ * default vcs files: (gitignore, gitmodules, etc...),
+ * documentation environment,
+ * project arhitecture: (tests,src, etc...),
+ * environent configuration (test,development,production)
+ 
+#### CLI (console line interface)
+
+ * docopt,
+ * ? database,
+ * version reading from git,
+ * auto deploy,
+ 
+#### GUI (graphical user interface)
+
+ * setup framework,
+ * about framework
+ * help framework,
+ * ? database,
+ * module base project,
+ * auto deploy,
+ * version reading from git
+
 
 ## Getting To Know Yeoman
 
