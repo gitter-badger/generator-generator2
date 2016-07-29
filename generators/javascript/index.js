@@ -1,1 +1,1 @@
-module.exports = require('../app/router');
+module.exports = require('../app/lib/subgenerator');
