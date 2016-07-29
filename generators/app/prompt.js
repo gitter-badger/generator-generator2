@@ -1,10 +1,11 @@
 module.exports = {
+	"yosay": "Welcome to the delightful generator-generate generator!",
 	"subgenerator": [
 		{
 			"type": "input",
 			"name": "projectName",
 			"message": "Project name:",
-			"validate" : function (input) {
+			"validate": function (input) {
 				return /^[a-zA-Z]+$/.test(input) == true ? true : "Use letters from a-z and A-Z!";
 			}
 		},
@@ -17,7 +18,7 @@ module.exports = {
 			"type": "input",
 			"name": "githubUser",
 			"message": "Github username:",
-			"validate" : function (input) {
+			"validate": function (input) {
 				return /^[a-zA-Z]+$/.test(input) == true ? true : "Use letters from a-z and A-Z!";
 			}
 		},
