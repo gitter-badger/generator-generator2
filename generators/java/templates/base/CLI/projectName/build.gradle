@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
+        classpath 'net.nemerosa:versioning:1.5.0'
+        // classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1'
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+apply plugin: 'java-base'
+apply plugin: 'application'
+apply plugin: 'idea'
+apply plugin: 'wrapper'
+apply plugin: 'build-dashboard'
+apply plugin: 'jacoco'
+//apply plugin: 'org.sonarqube'
+apply plugin: 'net.nemerosa.versioning'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile(
+            [group: 'com.offbytwo', name: 'docopt', version: '0.6.0.20150202'],
+            [group: 'org.projectlombok', name: 'lombok', version: '1.16.6'],
+    )
+
+    testCompile(
+            [group: 'junit', name: 'junit', version: '4.12']
+    )
+}
+
+sourceSets {
+    main {
+        resources.srcDirs = [
+                "src/main/java",
+                "src/main/resources"
+        ]
+    }
+}
+
+
+mainClassName='app.Main'
+description='projectDescription'
+group='github.urosjarc.projectName'
+sourceCompatibility=1.8
+version = versioning.info.full
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+        attributes 'Build-Date': new Date().format('dd.MM.yyyy')
+    }
+}

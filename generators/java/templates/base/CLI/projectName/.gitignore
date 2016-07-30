@@ -1,0 +1,7 @@
+*
+!.gitignore
+!*.gradle
+!gradle.properties
+!src
+!libs
+.gradle
