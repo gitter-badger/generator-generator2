@@ -17,12 +17,12 @@ Then generate your new project:
 yo generate
 ```
 
-## Generators feature
+## Generators features
+
+Generators will set up next feature for all project templates:
 
 #### Defaults
 
-Generators will set up next feature for all project templates:
- 
  * testing environment,
  * build tool,
  * default project logo image,
@@ -32,25 +32,35 @@ Generators will set up next feature for all project templates:
  * default vcs files: (gitignore, gitmodules, etc...),
  * documentation environment,
  * project arhitecture: (tests,src, etc...),
- * environent configuration (test,development,production)
+ * environent configuration (test,development,production),
+ * version reading from git,
+ * change log generating from git flow,
+ * auto deploy (docs, exec),
+ * database,
+ * generate deb file for linux,
+ * logger
+ * error reporting
  
 #### CLI (console line interface)
 
  * docopt,
- * ? database,
- * version reading from git,
- * auto deploy,
  
 #### GUI (graphical user interface)
 
+ * docopt,
  * setup framework,
  * about framework
  * help framework,
- * ? database,
  * module base project,
- * auto deploy,
- * version reading from git
+ 
+#### WEB
 
+ * heroku
+ 
+## Subgenerators features
+
+ * http service generator,
+ * module generator,
 
 ## Getting To Know Yeoman
 
