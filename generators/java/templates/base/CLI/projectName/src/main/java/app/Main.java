@@ -35,7 +35,7 @@ public final class Main {
                         + "\n")
                 .withVersion(Config.APP.NAME + " " + Config.BUILD.VERSION)
                 .parse(args);
-        
+
         System.out.println(opts);
 
         if(opts.get("install").equals(true)){
