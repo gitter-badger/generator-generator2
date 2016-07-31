@@ -1,7 +1,6 @@
-*
-!src/**/*
-!.gitignore
-!*.gradle
-!gradle.properties
-!libs
+gradlew.bat
+gradlew
+gradle
+build
+.idea
 .gradle

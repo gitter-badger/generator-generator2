@@ -1,5 +1,6 @@
 package app;
 
+import java.io.IOException;
 import java.util.Map;
 
 import app.cmd.Install;
@@ -7,6 +8,7 @@ import app.cmd.Default;
 import app.cmd.Exec;
 import app.db.Db;
 import org.docopt.Docopt;
+import org.springframework.shell.Bootstrap;
 
 public final class Main {
 
@@ -30,6 +32,12 @@ public final class Main {
         }
 
         finish();
+
+        try {
+            Bootstrap.main(args);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void setOpts(String[] args){
