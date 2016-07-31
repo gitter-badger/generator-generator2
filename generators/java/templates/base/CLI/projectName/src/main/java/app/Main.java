@@ -1,36 +1,55 @@
 package app;
 
-import java.util.Enumeration;
 import java.util.Map;
-import java.util.Properties;
-
+import app.cmd.Install;
+import app.cmd.Default;
+import app.cmd.Exec;
 import org.docopt.Docopt;
 
 public final class Main {
 
-    private static final String doc = "Naval Fate.\n"
-            + "\n"
-            + "Usage:\n"
-            + "  naval_fate ship new <name>...\n"
-            + "  naval_fate ship <name> move <x> <y> [--speed=<kn>]\n"
-            + "  naval_fate ship shoot <x> <y>\n"
-            + "  naval_fate mine (set|remove) <x> <y> [--moored | --drifting]\n"
-            + "  naval_fate (-h | --help)\n"
-            + "  naval_fate --version\n"
-            + "\n"
-            + "Options:\n"
-            + "  -h --help     Show this screen.\n"
-            + "  --version     Show version.\n"
-            + "  --speed=<kn>  Speed in knots [default: 10].\n"
-            + "  --moored      Moored (anchored) mine.\n"
-            + "  --drifting    Drifting mine.\n"
-            + "\n";
-
     public static void main(final String[] args) {
-        final Map<String, Object> opts = new Docopt(doc)
-                .withVersion("Naval Fate 2.0")
+        /**
+         * Positional arguments: <argument> , ARGUMENT
+         * Short options: -o ,-abc , -a -b -c
+         * Long options: --option , --option==ARG
+         * Optional elements: []
+         * Required elements: ()
+         * Group of arguments: <argument>... , (<x> <y>)...
+         * Options description: --options==<km>   Info [default: 10]
+         */
+        final Map<String, Object> opts = new Docopt(
+                "Description:\n"
+                        + String.format("  %s\n", Config.APP.DESCRIPTION)
+                        + "\n"
+                        + "Usage:\n"
+                        + String.format("  %s\n", Config.APP.NAME)
+                        + String.format("  %s install\n", Config.APP.NAME)
+                        + String.format("  %s exec <name> --option=ARGS\n", Config.APP.NAME)
+                        + String.format("  %s (-h | --help)\n", Config.APP.NAME)
+                        + String.format("  %s (-v | --version)\n", Config.APP.NAME)
+                        + "\n"
+                        + "Options:\n"
+                        + "  -v --version  Show version.\n"
+                        + "  -h --help     Show this screen.\n"
+                        + "\n")
+                .withVersion(Config.APP.NAME + " " + Config.BUILD.VERSION)
                 .parse(args);
+        
+        System.out.println(opts);
 
-        System.out.println(System.getProperty("env"));
+        if(opts.get("install").equals(true)){
+            new Install();
+        }
+        else if(opts.get("exec").equals(true)){
+            new Exec(
+                (String) opts.get("<name>"),
+                (String) opts.get("--option")
+            );
+        }
+        else{
+            new Default();
+        }
+
     }
 }
