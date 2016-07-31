@@ -1,14 +1,38 @@
 package app;
 
 import java.util.Map;
+
 import app.cmd.Install;
 import app.cmd.Default;
 import app.cmd.Exec;
+import app.db.Db;
 import org.docopt.Docopt;
 
 public final class Main {
 
+    private static Map<String,Object> opts;
+
     public static void main(final String[] args) {
+        setOpts(args);
+        start();
+
+        if(opts.get("install").equals(true)){
+            new Install();
+        }
+        else if(opts.get("exec").equals(true)){
+            new Exec(
+                (String) opts.get("<name>"),
+                (String) opts.get("--option")
+            );
+        }
+        else{
+            new Default();
+        }
+
+        finish();
+    }
+
+    private static void setOpts(String[] args){
         /**
          * Positional arguments: <argument> , ARGUMENT
          * Short options: -o ,-abc , -a -b -c
@@ -18,7 +42,7 @@ public final class Main {
          * Group of arguments: <argument>... , (<x> <y>)...
          * Options description: --options==<km>   Info [default: 10]
          */
-        final Map<String, Object> opts = new Docopt(
+        opts = new Docopt(
                 "Description:\n"
                         + String.format("  %s\n", Config.APP.DESCRIPTION)
                         + "\n"
@@ -35,21 +59,18 @@ public final class Main {
                         + "\n")
                 .withVersion(Config.APP.NAME + " " + Config.BUILD.VERSION)
                 .parse(args);
-
-        System.out.println(opts);
-
-        if(opts.get("install").equals(true)){
-            new Install();
-        }
-        else if(opts.get("exec").equals(true)){
-            new Exec(
-                (String) opts.get("<name>"),
-                (String) opts.get("--option")
-            );
-        }
-        else{
-            new Default();
-        }
-
+    }
+    private static void start(){
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
+        Db.open(
+                Config.DB.DRIVER,
+                Config.DB.URL,
+                Config.DB.USERNAME,
+                Config.DB.PASSWORD
+        );
+        if (Config.DB.SEED) Db.seed();
+    }
+    private static void finish() {
+        Db.close();
     }
 }

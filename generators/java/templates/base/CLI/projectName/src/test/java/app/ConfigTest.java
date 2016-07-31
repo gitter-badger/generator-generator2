@@ -42,7 +42,9 @@ public class ConfigTest {
 
     @Test
     public void DB() {
-        assertNotNull(Config.DB.TYPE);
+        assertNotNull(Config.DB.PASSWORD);
+        assertNotNull(Config.DB.USERNAME);
+        assertNotNull(Config.DB.DRIVER);
         assertNotNull(Config.DB.SEED);
         assertNotNull(Config.DB.URL);
     }

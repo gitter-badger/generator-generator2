@@ -4,31 +4,33 @@ import app.db.domain.Entity;
 import app.db.domain.edges.HAVE;
 import app.db.domain.nodes.That;
 import app.db.domain.nodes.Thing;
+import app.db.queries.ThatQuery;
 import lombok.Getter;
+import org.neo4j.ogm.config.Configuration;
 import org.neo4j.ogm.service.Components;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Todo: Add update,delete,create event callback on every database entity. For 2 way binding.
  */
 public class Db {
 
-    @Getter
-    private static Session session;
+    @Getter private static Session session;
 
-    public static void open(String driver, String dbUrl) {
-        Components.configuration().driverConfiguration()
+    public static void open(String driver, String dbUrl, String username, String password) {
+        Configuration configuration = new Configuration();
+        configuration.driverConfiguration()
                 .setDriverClassName(driver)
                 .setURI(dbUrl)
-                .setCredentials("neo4j", "root");
+                .setCredentials(username,password);
+
         session = new SessionFactory(
+                configuration,
                 Entity.class.getPackage().getName()
         ).openSession();
+
     }
 
     public static void seed() {
@@ -45,9 +47,6 @@ public class Db {
     }
 
     public static void close() {
-
-        System.out.println("Closing database...");
-
     }
 
     public static class ENTITY {

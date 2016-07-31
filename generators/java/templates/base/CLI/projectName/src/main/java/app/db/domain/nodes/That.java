@@ -2,12 +2,11 @@ package app.db.domain.nodes;
 
 import app.db.domain.Node;
 import lombok.AllArgsConstructor;
-import org.neo4j.ogm.annotation.typeconversion.DateLong;
+import lombok.Getter;
 
 @AllArgsConstructor
 public class That extends Node {
 
-    @DateLong
-    private String name;
+    @Getter private String name;
 }
 
