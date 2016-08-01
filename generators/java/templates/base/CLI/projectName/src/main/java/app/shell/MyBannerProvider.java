@@ -1,4 +1,4 @@
-package app.commands;
+package app.shell;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

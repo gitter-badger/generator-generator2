@@ -1,4 +1,4 @@
-package app.commands;
+package app.shell;
 
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
@@ -7,7 +7,7 @@ import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HelloWorldCommands implements CommandMarker {
+public class MyShellCommands implements CommandMarker {
 
     private boolean simpleCommandExecuted = false;
 
