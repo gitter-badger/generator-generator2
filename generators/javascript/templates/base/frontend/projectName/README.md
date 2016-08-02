@@ -1,0 +1,78 @@
+# ProjectName
+
+This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.10.
+
+## Development server
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+## Code scaffolding
+
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/route/class`.
+
+## Build
+
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+
+## Running unit tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Running end-to-end tests
+
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/). 
+Before running the tests make sure you are serving the app via `ng serve`.
+
+## Deploying to Github Pages
+
+Run `ng github-pages:deploy` to deploy to Github Pages.
+
+## Further help
+
+To get more help on the `angular-cli` use `ng --help` or go check out the [Angular-CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## Notes
+
+Typings: (typeScript definition manager).
+
+ * typings.json : Joust like npm's package.json for <typings>.
+ * tslint.json : TypeScript static linter.
+ * typings/ : Holder for all definition files.
+ * *.d.ts : Actual definition files.
+
+TypeScript:
+
+ * typings.d.ts : Here are references all typings def files and custom project specific definitions.
+ * tsconfig.json : This file says where is the root ts project and will be parsed from IDE which will make code hits base on definition files.
+ 
+Angular build tool:
+
+ * angular-cli-build.js : angular-cli build file.
+ * angular-cli.json : angular-cli build configuration file.
+ 
+SystemJS:
+
+ * system-config.ts : Main configuration file for SystemJS. This file will be first imported by System and then main.ts
+ 
+    * .map : Map for example /vendor/../../angular-alsdf.min.js to angular so you can (import * from 'angular')!
+    * .packages : Specificate for example entry point for specific packages etc...
+
+App:
+
+ * main.ts : Main entry point for angular application.
+ 
+Packages:
+
+ * @angular/common : A collection of useful directives, filters, and services for Angular JS.
+ * @angular/compiler : Teaching html new sytaxes.
+ * @angular/core : ...
+ * @angular/forms : Helper for forms inputs.
+ * @angular/http : Executing http calls.
+ * @angular/platform-browser : ??? Wtf ???
+ * @angular/platform-browser-dynamic : Where bootstraping angular application came from.
+ * @angular/router : Main angular router.
+ 
+ * es6-ship : Use latest es6 features cross all browsers.
+ * reflect-metadata : Add annotations to scripts.
+ * rxjs : Reax extention.
+ * systemjs : Dynamic front end loading.
+ * zone.js : threads like in javascript.
