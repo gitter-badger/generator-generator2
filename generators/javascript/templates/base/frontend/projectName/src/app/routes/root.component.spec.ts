@@ -1,20 +1,20 @@
 /* tslint:disable:no-unused-variable */
 
 import { addProviders, async, inject } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import { RootComponent } from './root.component';
 
-describe('App: ProjectName', () => {
+describe(': ProjectName', () => {
   beforeEach(() => {
-    addProviders([AppComponent]);
+    addProviders([RootComponent]);
   });
 
   it('should create the app',
-    inject([AppComponent], (app: AppComponent) => {
+    inject([RootComponent], (app: RootComponent) => {
       expect(app).toBeTruthy();
     }));
 
   it('should have as title \'app works!\'',
-    inject([AppComponent], (app: AppComponent) => {
+    inject([RootComponent], (app: RootComponent) => {
       expect(app.title).toEqual('app works!');
     }));
 });
