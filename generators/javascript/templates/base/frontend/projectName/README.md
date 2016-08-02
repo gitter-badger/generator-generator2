@@ -57,4 +57,22 @@ SystemJS:
     * .packages : Specificate for example entry point for specific packages etc...
 
 App:
+
  * main.ts : Main entry point for angular application.
+ 
+Packages:
+
+ * @angular/common : A collection of useful directives, filters, and services for Angular JS.
+ * @angular/compiler : Teaching html new sytaxes.
+ * @angular/core : ...
+ * @angular/forms : Helper for forms inputs.
+ * @angular/http : Executing http calls.
+ * @angular/platform-browser : ??? Wtf ???
+ * @angular/platform-browser-dynamic : Where bootstraping angular application came from.
+ * @angular/router : Main angular router.
+ 
+ * es6-ship : Use latest es6 features cross all browsers.
+ * reflect-metadata : Add annotations to scripts.
+ * rxjs : Reax extention.
+ * systemjs : Dynamic front end loading.
+ * zone.js : threads like in javascript.
