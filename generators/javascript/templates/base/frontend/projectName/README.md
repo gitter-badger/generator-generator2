@@ -29,3 +29,32 @@ Run `ng github-pages:deploy` to deploy to Github Pages.
 ## Further help
 
 To get more help on the `angular-cli` use `ng --help` or go check out the [Angular-CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## Notes
+
+Typings: (typeScript definition manager).
+
+ * typings.json : Joust like npm's package.json for <typings>.
+ * tslint.json : TypeScript static linter.
+ * typings/ : Holder for all definition files.
+ * *.d.ts : Actual definition files.
+
+TypeScript:
+
+ * typings.d.ts : Here are references all typings def files and custom project specific definitions.
+ * tsconfig.json : This file says where is the root ts project and will be parsed from IDE which will make code hits base on definition files.
+ 
+Angular build tool:
+
+ * angular-cli-build.js : angular-cli build file.
+ * angular-cli.json : angular-cli build configuration file.
+ 
+SystemJS:
+
+ * system-config.ts : Main configuration file for SystemJS. This file will be first imported by System and then main.ts
+ 
+    * .map : Map for example /vendor/../../angular-alsdf.min.js to angular so you can (import * from 'angular')!
+    * .packages : Specificate for example entry point for specific packages etc...
+
+App:
+ * main.ts : Main entry point for angular application.
