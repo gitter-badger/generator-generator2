@@ -4,6 +4,7 @@ import {HomeComponent} from './routes/home';
 import {AboutComponent} from './routes/about';
 
 const routes:RouterConfig = [
+	{path: '',component: HomeComponent},
 	{path: 'home', component: HomeComponent},
 	{path: 'about', component: AboutComponent},
 ];
