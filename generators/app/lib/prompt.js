@@ -1,27 +1,61 @@
+var utils = require('./utils');
+
 exports.generator = function () {
 	return {
 		"yosay": "Welcome to the delightful generator-generate generator!",
 		"generator": [
 			{
 				"type": "input",
-				"name": "projectName",
+				"name": "name",
 				"message": "Project name:",
-				"validate": function (input) {
-					return /^[a-zA-Z]+$/.test(input) == true ? true : "Use letters from a-z and A-Z!";
-				}
+				"validate": utils.validateWord
 			},
 			{
 				"type": "input",
-				"name": "projectInfo",
-				"message": "Project info:"
+				"name": "description",
+				"message": "Description:"
+			},
+			{
+				"type" : "input",
+				"name" : "keywords",
+				"message" : "Keywords:"
 			},
 			{
 				"type": "input",
-				"name": "githubUser",
-				"message": "Github username:",
-				"validate": function (input) {
-					return /^[a-zA-Z]+$/.test(input) == true ? true : "Use letters from a-z and A-Z!";
-				}
+				"name": "homepage",
+				"message": "Homepage (github):",
+				"validate": utils.validateUrl
+			},
+			{
+				"type": "list",
+				"name": "license",
+				"message": "License:",
+				"choices": [
+					"GNU AGPLv3",
+					"GNU GPLv3",
+					"GNU LGPLv3",
+					"Mozilla Public License 2.0",
+					"Apache License 2.0",
+					"MIT License",
+					"The Unlicense"
+				]
+			},
+			{
+				"type": "input",
+				"name": "authorName",
+				"message": "Authors name:"
+			},
+			{
+				"type": "input",
+				"name": "authorEmail",
+				"message": "Author email:",
+				"validate" : utils.validateEmail
+			},
+			{
+				"type": "input",
+				"name": "authorUrl",
+				"message": "Author url:",
+				"validate": utils.validateUrl
 			},
 			{
 				"type": "list",
@@ -35,7 +69,7 @@ exports.generator = function () {
 			}
 		]
 	};
-}
+};
 
 exports.subgenerator = function (baseChoices, moduleChoices) {
 	return {

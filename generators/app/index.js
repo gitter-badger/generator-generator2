@@ -13,7 +13,9 @@ module.exports = yeoman.Base.extend({
 			this.log(yosay(Q.yosay));
 
 			return this.prompt(Q.generator).then(function (A0) {
-				self.props = A0;
+				self.props = {
+					app : A0
+				};
 				self._configuring();
 			}.bind(this));
 		} else {
