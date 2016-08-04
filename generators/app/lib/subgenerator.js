@@ -6,10 +6,13 @@ var pathJoin = require('path').join;
 var prompt = require('./prompt');
 var yosay = require('yosay');
 
+/**
+ * Default subgenerator methods that will be executed when subgenerator is started.
+ */
 exports.prompting = function () {
 	var self = this;
 
-	var PROMPT = (this.config.get('base') == null ? 'base' : 'module');
+	var PROMPT = (this.config.get('subgenerator') == null ? 'base' : 'module');
 	var Q = prompt.subgenerator(
 		fs.readdirSync(self.templatePath('base')),
 		fs.readdirSync(self.templatePath('module'))
@@ -23,7 +26,7 @@ exports.prompting = function () {
 
 exports.configuring = function () {
 	if (this.props.base)
-		this.config.set('base', this.props.base);
+		this.config.set('subgenerator', this.props);
 };
 
 exports.writing = function () {
@@ -41,11 +44,11 @@ exports.writing = function () {
 	}
 	else{
 		if(!(self.props.module in self))
-			throw new ReferenceError('Subgenerator(' + self.config.get('subgenerator') + ') is missing "' + self.props.module + '" method!');
+			throw new ReferenceError('Subgenerator(' + self.config.get('app').language + ') is missing "' + self.props.module + '" method!');
+		self.log(self.config.get('app').language + '.' + self.props.module + ' start...');
 		self[self.props.module]();
+		self.log(self.config.get('app').language + '.' + self.props.module + ' finish...');
+
 	}
 };
 
-exports.end = function(){
-	this.config.set('inited',true);
-};

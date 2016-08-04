@@ -1,5 +1,10 @@
 var utils = require('./utils');
 
+/**
+ * Json configuration for main generator.
+ *
+ * @returns {{yosay: string, generator: *[]}}
+ */
 exports.generator = function () {
 	return {
 		"yosay": "Welcome to the delightful generator-generate generator!",
@@ -59,7 +64,7 @@ exports.generator = function () {
 			},
 			{
 				"type": "list",
-				"name": "subgenerator",
+				"name": "language",
 				"message": "Select programming language:",
 				"choices": [
 					"java",
@@ -71,6 +76,13 @@ exports.generator = function () {
 	};
 };
 
+/**
+ * Json configuration for all subgenerators.
+ *
+ * @param baseChoices
+ * @param moduleChoices
+ * @returns {{subgenerator: {base: *[], module: *[]}}}
+ */
 exports.subgenerator = function (baseChoices, moduleChoices) {
 	return {
 		"subgenerator": {
