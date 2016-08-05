@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.web.WebView?>
+<StackPane prefHeight="390.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.fx.app.dialogs.help.HelpPresenter">
+   <children>
+      <WebView fx:id="video" prefHeight="326.0" prefWidth="461.0" />
+      <ProgressIndicator fx:id="progress" progress="-1" StackPane.alignment="CENTER">
+         <StackPane.margin>
+            <Insets bottom="130.0" left="130.0" right="130.0" top="130.0" />
+         </StackPane.margin>
+      </ProgressIndicator>
+   </children>
+</StackPane>

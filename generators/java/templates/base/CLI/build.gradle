@@ -1,5 +1,3 @@
-import com.sun.javafx.runtime.SystemProperties
-
 buildscript {
     repositories {
         jcenter()
@@ -36,7 +34,8 @@ dependencies {
     compile 'org.neo4j:neo4j-ogm-http-driver:2.0.4'
     compile 'org.neo4j:neo4j-ogm-embedded-driver:2.0.4'
     compile 'org.neo4j:neo4j-ogm-bolt-driver:2.0.4'
-
+    compile 'com.airhacks:afterburner.fx:1.6.2'
+    compile 'javax.inject:javax.inject:1'
 
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:1.+"
@@ -53,17 +52,14 @@ sourceSets {
     }
 }
 
-
 mainClassName = 'app.Main'
 group = 'github.urosjarc.projectName'
 sourceCompatibility = 1.8
 version = versioning.info.full
 
-jar {
-    manifest {
-        attributes 'Main-Class': mainClassName
-        attributes 'Build-Date': new Date().format('dd.MM.yyyy')
-    }
+ant.propertyfile(file: "src/main/resources/config/build.properties") {
+    entry(key: "date", value: new Date().format('dd.MM.yyyy'))
+    entry(key: "version", value: version)
 }
 
 run {
