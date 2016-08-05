@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.fx.setup.views.path.PathPresenter">
+    <children>
+        <VBox layoutX="180.0" layoutY="89.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox prefHeight="68.0" prefWidth="600.0">
+                    <children>
+                        <VBox prefHeight="79.0" prefWidth="538.0" spacing="10.0">
+                            <children>
+                                <Label text="Choose Install Location">
+                                    <font>
+                                        <Font name="System Bold" size="15.0" />
+                                    </font>
+                                </Label>
+                                <Label text="Choose the folder in which to install application.">
+                                    <font>
+                                        <Font size="11.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="10.0" />
+                                    </VBox.margin>
+                                </Label>
+                            </children>
+                            <padding>
+                                <Insets left="10.0" top="10.0" />
+                            </padding>
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </VBox>
+                        <ImageView fitHeight="82.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="/media/duke.png" />
+                            </image>
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                        </ImageView>
+                    </children>
+                </HBox>
+                <Separator prefWidth="200.0" />
+                <VBox prefHeight="363.0" prefWidth="600.0" spacing="10.0">
+                    <children>
+                  <TextFlow prefHeight="20.0" prefWidth="560.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Setup will install application in the following folder. To install in a different folder, click Browse and select another folder. Click Install to start the installation." />
+                     </children>
+                  </TextFlow>
+                  <Label text="DestinationFolder">
+                     <VBox.margin>
+                        <Insets top="80.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" prefHeight="13.0" prefWidth="542.0" spacing="10.0">
+                     <children>
+                        <TextField fx:id="dirField" editable="false" prefHeight="26.0" prefWidth="390.0" />
+                        <Button fx:id="browseButton" mnemonicParsing="false" onAction="#browse" text="Browse..." />
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </HBox>
+                  <GridPane hgap="5.0" prefHeight="1.0" prefWidth="560.0" vgap="5.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="NEVER" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="560.0" minWidth="10.0" prefWidth="415.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints vgrow="NEVER" />
+                      <RowConstraints vgrow="NEVER" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Space required: " />
+                        <Label text="Space available:" GridPane.rowIndex="1" />
+                        <Label fx:id="appSpaceLabel" text="..." GridPane.columnIndex="1" />
+                        <Label fx:id="freeSpaceLabel" text="..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="30.0" />
+                     </VBox.margin>
+                  </GridPane>
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

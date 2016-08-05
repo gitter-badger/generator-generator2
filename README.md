@@ -61,6 +61,11 @@ Generators will set up next feature for all project templates:
 
  * http service generator,
  * module generator,
+ 
+## Links
+
+ * https://docs.npmjs.com/files/package.json
+ * http://choosealicense.com/
 
 ## Getting To Know Yeoman
 

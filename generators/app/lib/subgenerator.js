@@ -5,11 +5,16 @@ var fs = require('fs');
 var pathJoin = require('path').join;
 var prompt = require('./prompt');
 var yosay = require('yosay');
+var ejsRender = require('ejs').render;
+var walk = require('walk');
 
+/**
+ * Default subgenerator methods that will be executed when subgenerator is started.
+ */
 exports.prompting = function () {
 	var self = this;
 
-	var PROMPT = (this.config.get('base') == null ? 'base' : 'module');
+	var PROMPT = (this.config.get('subgenerator') == null ? 'base' : 'module');
 	var Q = prompt.subgenerator(
 		fs.readdirSync(self.templatePath('base')),
 		fs.readdirSync(self.templatePath('module'))
@@ -23,7 +28,7 @@ exports.prompting = function () {
 
 exports.configuring = function () {
 	if (this.props.base)
-		this.config.set('base', this.props.base);
+		this.config.set('subgenerator', this.props);
 };
 
 exports.writing = function () {
@@ -32,20 +37,57 @@ exports.writing = function () {
 
 		var fromDir = pathJoin(self.templatePath('base'), self.props.base);
 		var toDir = self.destinationPath('.');
-		var config = self.config.getAll();
 
-		utils.walkWithEjs(fromDir,toDir,config,function(from,to){
-			self.fs.copyTpl(from, to,config);
-		},this.async());
+		self._walkWithEjs(fromDir,toDir,self.async());
 
 	}
 	else{
 		if(!(self.props.module in self))
-			throw new ReferenceError('Subgenerator(' + self.config.get('subgenerator') + ') is missing "' + self.props.module + '" method!');
+			throw new ReferenceError('Subgenerator(' + self.config.get('app').language + ') is missing "' + self.props.module + '" method!');
+
 		self[self.props.module]();
+
 	}
 };
 
-exports.end = function(){
-	this.config.set('inited',true);
+/**
+ * This method will walk dir and replace file and path ejs templates strings with yo-rc json
+ * configuration and put names of all defaults file in ejs configuration and place values
+ * as content of the same file... ejs.config.file[fileNameFromDefault] = contentOfTheSameFileFromDefault.
+ *
+ * !!! ejs.config.file.licence = licences[app.licence].readFile()
+ *
+ * @param fromDir
+ * @param toDir
+ * @param done
+ * @private
+ */
+exports._walkWithEjs = function (fromDir, toDir, done) {
+	var self = this;
+	var config = self.config.getAll();
+	var configAll = self.config.getAll();
+	configAll.files = {};
+
+	var defaultsDir = pathJoin(self.sourceRoot(),'../../app/templates/defaults');
+
+	//Todo: Check if this works for subgenerators methods.
+	var defaultFiles = fs.readdirSync(defaultsDir);
+	for (var i in defaultFiles) {
+		var defaultFile = defaultFiles[i];
+		configAll.files[defaultFile] = ejsRender(self.fs.read(pathJoin(defaultsDir, defaultFile)), config);
+	}
+
+	configAll.files.license = ejsRender(self.fs.read(pathJoin(defaultsDir,'../licenses', self.config.get('app').license)), config);
+
+	var walker = walk.walk(fromDir);
+	walker.on("file", function (root, stat, next) {
+		var from = pathJoin(root, stat.name);
+		var to = ejsRender(from.replace(fromDir, toDir), config);
+		self.fs.copyTpl(from, to, configAll);
+		next();
+	});
+
+	walker.on('end', function () {
+		done();
+	});
 };
