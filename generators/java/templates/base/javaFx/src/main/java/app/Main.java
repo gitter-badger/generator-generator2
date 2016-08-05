@@ -22,17 +22,10 @@ public final class Main {
         setOpts(args);
         start();
 
-        if(opts.get("install").equals(true)){
-            new Install();
-        }
-        else if(opts.get("exec").equals(true)){
-            new Exec(
-                (String) opts.get("<name>"),
-                (String) opts.get("--option")
-            );
-        }
-        else{
-            new Default();
+        if (Config.getInstallPath() != null) {
+            LauncherImpl.launchApplication(App.class, Preloader.class, args);
+        } else {
+            LauncherImpl.launchApplication(Setup.class, args);
         }
 
         finish();
@@ -54,8 +47,6 @@ public final class Main {
                         + "\n"
                         + "Usage:\n"
                         + String.format("  %s\n", Config.APP.NAME)
-                        + String.format("  %s install\n", Config.APP.NAME)
-                        + String.format("  %s exec <name> --option=ARGS\n", Config.APP.NAME)
                         + String.format("  %s (-h | --help)\n", Config.APP.NAME)
                         + String.format("  %s (-v | --version)\n", Config.APP.NAME)
                         + "\n"

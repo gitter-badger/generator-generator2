@@ -17,20 +17,52 @@ import org.neo4j.ogm.session.SessionFactory;
  */
 public class Db {
 
+    private static final Properties dbProps = new Properties();
+
+    static {
+        try {
+            dbProps.load(Main.class.getResourceAsStream("/config/db.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    final static public class CONFIG {
+
+        public static final String USERNAME = dbProps.getProperty("username");
+        public static final String PASSWORD = dbProps.getProperty("password");
+        public static final String DRIVER = envProps.getProperty(ENV + "." + "db.driver");
+        public static final Boolean SEED = Boolean.parseBoolean(envProps.getProperty(ENV + "." + "db.seed"));
+        public static final String URL;
+
+        static {
+            String url = envProps.getProperty(ENV + "." + "db.url", null);
+
+            if(new UrlValidator().isValid(url)){
+                url = new File(getInstallPath(), url).getPath();
+            }
+
+            URL=url;
+        }
+
+    }
+
     @Getter private static Session session;
 
-    public static void open(String driver, String dbUrl, String username, String password) {
+    public static void open() {
         Configuration configuration = new Configuration();
         configuration.driverConfiguration()
-                .setDriverClassName(driver)
-                .setURI(dbUrl)
-                .setCredentials(username,password);
+                .setDriverClassName(CONFIG.DRIVER)
+                .setURI(CONFIG.URL)
+                .setCredentials(CONFIG.USERNAME,CONFIG.PASSWORD);
 
         session = new SessionFactory(
                 configuration,
                 Entity.class.getPackage().getName()
         ).openSession();
 
+        if(CONFIG.SEED)
+            seed();
     }
 
     public static void seed() {

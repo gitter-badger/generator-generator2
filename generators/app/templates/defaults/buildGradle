@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
+        classpath 'net.nemerosa:versioning:1.5.0'
+        // classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1'
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+apply plugin: 'java-base'
+apply plugin: 'application'
+apply plugin: 'idea'
+apply plugin: 'wrapper'
+apply plugin: 'build-dashboard'
+apply plugin: 'jacoco'
+//apply plugin: 'org.sonarqube'
+apply plugin: 'net.nemerosa.versioning'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+
+    compile 'com.offbytwo:docopt:0.6.0.20150202'
+    compile 'org.projectlombok:lombok:1.16.6'
+    compile 'org.slf4j:slf4j-simple:1.7.16'
+    compile 'commons-validator:commons-validator:1.5.0'
+    compile 'org.springframework.shell:spring-shell:1.2.0.RELEASE'
+    compile 'org.neo4j:neo4j-ogm-core:2.0.4'
+    compile 'org.neo4j:neo4j-ogm-http-driver:2.0.4'
+    compile 'org.neo4j:neo4j-ogm-embedded-driver:2.0.4'
+    compile 'org.neo4j:neo4j-ogm-bolt-driver:2.0.4'
+    compile 'com.airhacks:afterburner.fx:1.6.2'
+    compile 'javax.inject:javax.inject:1'
+    compile 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.0'
+
+    testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:1.+"
+    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
+}
+
+sourceSets {
+    main {
+        resources.srcDirs = [
+                "src/main/java",
+                "src/main/resources"
+        ]
+    }
+}
+
+mainClassName = 'app.fx.app.App'
+group = 'github.urosjarc.projectName'
+sourceCompatibility = 1.8
+version = versioning.info.full
+
+ant.propertyfile(file: "src/main/resources/config/build.properties") {
+    entry(key: "date", value: new Date().format('dd.MM.yyyy'))
+    entry(key: "version", value: version)
+}
+
+run {
+	if (project.hasProperty('ENV')) {
+		systemProperties['ENV'] = getProperty('ENV')
+	} else {
+		systemProperties['ENV'] = ENV
+	}
+    systemProperties['org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY'] = "ERROR";
+	println "ENV: ${systemProperties['ENV']}"
+}
