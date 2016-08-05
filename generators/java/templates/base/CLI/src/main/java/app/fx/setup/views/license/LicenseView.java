@@ -1,4 +1,4 @@
-package diary.fx.setup.views.license;
+package app.fx.setup.views.license;
 
 import com.airhacks.afterburner.views.FXMLView;
 

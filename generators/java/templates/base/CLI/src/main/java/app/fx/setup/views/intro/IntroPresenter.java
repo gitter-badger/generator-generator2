@@ -1,6 +1,6 @@
-package diary.fx.setup.views.intro;
+package app.fx.setup.views.intro;
 
-import diary.Config;
+import app.Config;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.text.Text;
@@ -15,7 +15,7 @@ public class IntroPresenter implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-		header.setText(String.format("Welcome to the %s Setup Wizard",Config.PACKAGE.NAME));
+		header.setText(String.format("Welcome to the %s Setup Wizard",Config.APP.NAME));
     }
 
 }

@@ -1,5 +1,7 @@
 package app.fx.app;
 
+import app.fx.app.dialogs.about.About;
+import app.fx.app.dialogs.help.Help;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,9 +22,9 @@ public class AppPresenter implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 
-		entries.setContent(EntriesCtrl.getView());
-		realizations.setContent(RealizationsCtrl.getView());
-		bookmarks.setContent(BookmarksCtrl.getView());
+//		entries.setContent(EntriesCtrl.getView());
+//		realizations.setContent(RealizationsCtrl.getView());
+//		bookmarks.setContent(BookmarksCtrl.getView());
 
 	}
 

@@ -1,5 +1,6 @@
 package app.fx.app.dialogs.about;
 
+import app.Config;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.text.Font;
@@ -27,16 +28,15 @@ public class AboutPresenter implements Initializable {
 		title.setFont(titleFont);
 
         version.setText("v" + Config.BUILD.VERSION);
-        title.setText(Config.PACKAGE.NAME);
+        title.setText(Config.APP.NAME);
         created.setText(Config.BUILD.DATE);
-		name.setText(Config.PACKAGE.NAME);
-		description.setText(Config.PACKAGE.DESCRIPTION.replaceAll("\n",""));
-		licence.setText(Config.PACKAGE.LICENSE);
+		name.setText(Config.APP.NAME);
+		description.setText(Config.APP.DESCRIPTION.replaceAll("\n",""));
+		licence.setText(Config.APP.LICENSE);
 		creator.setText(
-			Config.PACKAGE.AUTHOR + "\n" +
-            Config.PACKAGE.AUTHOR_URL + "\n" +
-            Config.PACKAGE.AUTHOR_EMAIL + "\n" +
-            Config.PACKAGE.AUTHOR_LOCATION + "\n"
+			Config.APP.AUTHOR_NAME + "\n" +
+            Config.APP.AUTHOR_URL + "\n" +
+            Config.APP.AUTHOR_EMAIL
 		);
     }
 }

@@ -1,4 +1,4 @@
-package diary.fx.setup.views.path;
+package app.fx.setup.views.path;
 
 import com.airhacks.afterburner.views.FXMLView;
 import javafx.scene.Parent;

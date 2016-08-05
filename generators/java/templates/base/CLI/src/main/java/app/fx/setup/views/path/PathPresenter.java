@@ -1,6 +1,6 @@
-package diary.fx.setup.views.path;
+package app.fx.setup.views.path;
 
-import diary.Config;
+import app.Config;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -30,7 +30,7 @@ public class PathPresenter implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        File appDir = new File(System.getProperty("user.home"),Config.PACKAGE.NAME.toLowerCase());
+        File appDir = new File(System.getProperty("user.home"),Config.APP.NAME.toLowerCase());
         dirField.setText(appDir.getPath());
 
         appSpaceLabel.setText("~ 10MB");
@@ -43,7 +43,7 @@ public class PathPresenter implements Initializable {
     }
 
     public void browse(){
-		String packageName = Config.PACKAGE.NAME.toLowerCase();
+		String packageName = Config.APP.NAME.toLowerCase();
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File(dirField.getText()).getParentFile());

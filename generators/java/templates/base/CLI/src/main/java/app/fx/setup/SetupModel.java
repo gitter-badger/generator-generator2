@@ -1,5 +1,6 @@
 package app.fx.setup;
 
+import app.Config;
 import app.fx.setup.views.finish.FinishCtrl;
 import app.fx.setup.views.intro.IntroCtrl;
 import app.fx.setup.views.license.LicenseCtrl;

@@ -1,5 +1,6 @@
 package app.fx.preloader;
 
+import app.Config;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressBar;
@@ -31,7 +32,7 @@ public class PreloaderPresenter implements Initializable {
 		loadingText.setFont(loadingFont);
 		infoText.setFont(infoFont);
 
-		titleText.setText(Config.PACKAGE.NAME);
+		titleText.setText(Config.APP.NAME);
 		infoText.setText(Config.BUILD.VERSION + "  (" + Config.BUILD.DATE + ")");
 
     }

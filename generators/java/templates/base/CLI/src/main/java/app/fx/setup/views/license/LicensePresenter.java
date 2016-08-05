@@ -1,4 +1,4 @@
-package diary.fx.setup.views.license;
+package app.fx.setup.views.license;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

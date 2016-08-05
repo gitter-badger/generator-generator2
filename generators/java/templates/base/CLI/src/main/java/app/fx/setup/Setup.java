@@ -1,5 +1,6 @@
 package app.fx.setup;
 
+import app.Config;
 import com.airhacks.afterburner.injection.Injector;
 import app.fx.app.dialogs.help.Help;
 import app.fx.setup.views.finish.FinishCtrl;

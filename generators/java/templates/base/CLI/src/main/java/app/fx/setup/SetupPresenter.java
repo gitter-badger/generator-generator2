@@ -3,6 +3,7 @@ package app.fx.setup;
 //INJECTING-CHILD
 //INJECTING-END
 
+import app.Config;
 import app.fx.setup.views.finish.FinishCtrl;
 import app.fx.setup.views.intro.IntroCtrl;
 import app.fx.setup.views.license.LicenseCtrl;
@@ -13,7 +14,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import lombok.Getter;
-import org.json.simple.parser.ParseException;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -99,7 +99,11 @@ public class SetupPresenter implements Initializable {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("WARNING");
             alert.setHeaderText("ERR: Selected directory");
-            alert.setContentText(String.format("One or more folders with the name '%s'\nalready exist, select other directory!", Config.PACKAGE.NAME));
+            alert.setContentText(String.format(
+                    "One or more folders with the name '%s'\n" +
+                    "already exist, select other directory!",
+                    Config.APP.NAME
+            ));
             alert.show();
             return;
         }
@@ -123,7 +127,7 @@ public class SetupPresenter implements Initializable {
     }
 
     @FXML
-    private void finish() throws IOException, ParseException {
+    private void finish() throws IOException {
         model.initFinish();
         finishButton.getScene().getWindow().hide();
     }

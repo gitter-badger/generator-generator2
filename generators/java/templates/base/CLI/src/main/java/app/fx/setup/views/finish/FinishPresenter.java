@@ -1,4 +1,4 @@
-package diary.fx.setup.views.finish;
+package app.fx.setup.views.finish;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
