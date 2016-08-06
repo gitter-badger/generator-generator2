@@ -122,12 +122,29 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 exports._appendToFileLine = function(destFile,lineFlag,codeArray){
 	var filePath = this.destinationPath(destFile);
 
-	var oldFile = this.fs.read(filePath);
-	var newFile = '';
+	var oldFileLines = this.fs.read(filePath).split('\n');
+	var newFileLines = [];
 
-	/**
-	 * Do something with new file
-	 */
+	for(var i=0;i<oldFileLines.length;i++){
+		newFileLines.push(oldFileLines[i]);
+
+		if(oldFileLines[i].indexOf(lineFlag) != -1){
+			var whiteSpaces = '';
+			for(var j=0;j<oldFileLines[i].length;j++){
+				if(oldFileLines[i][j] == '\t' || oldFileLines[i][j] == ' '){
+					whiteSpaces += oldFileLines[i][j];
+					continue;
+				} else {
+					break;
+				}
+			}
+			newFileLines.push(whiteSpaces + codeArray.join('\n' + whiteSpaces));
+		}
+	}
+
+	var newFile = newFileLines.join('\n')
+		.replace(/&#34;/g, '"')
+		.replace(/&#39;/g, "'");
 
 	this.fs.write(destFile,newFile);
 };

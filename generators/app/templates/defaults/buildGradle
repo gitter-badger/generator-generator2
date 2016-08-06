@@ -66,6 +66,5 @@ run {
 	} else {
 		systemProperties['ENV'] = ENV
 	}
-    systemProperties['org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY'] = "ERROR";
 	println "ENV: ${systemProperties['ENV']}"
 }
