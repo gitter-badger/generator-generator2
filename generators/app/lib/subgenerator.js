@@ -7,6 +7,7 @@ var prompt = require('./prompt');
 var yosay = require('yosay');
 var ejsRender = require('ejs').render;
 var walk = require('walk');
+var chalk = require('chalk');
 
 /**
  * Default subgenerator methods that will be executed when subgenerator is started.
@@ -29,6 +30,7 @@ exports.prompting = function () {
 exports.configuring = function () {
 	if (this.props.base)
 		this.config.set('subgenerator', this.props);
+
 };
 
 exports.writing = function () {
@@ -74,16 +76,38 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 	var defaultFiles = fs.readdirSync(defaultsDir);
 	for (var i in defaultFiles) {
 		var defaultFile = defaultFiles[i];
-		configAll.files[defaultFile] = ejsRender(self.fs.read(pathJoin(defaultsDir, defaultFile)), config);
+
+		try{
+			configAll.files[defaultFile] = ejsRender(self.fs.read(pathJoin(defaultsDir, defaultFile)), config);
+		} catch(err){
+			throw new Error(chalk.red.bold(
+				"\n > Message: " + err.message + '\n' +
+				" > File: " + pathJoin(defaultsDir,defaultFile) + '\n'
+			));
+		}
 	}
 
-	configAll.files.license = ejsRender(self.fs.read(pathJoin(defaultsDir,'../licenses', self.config.get('app').license)), config);
+	try{
+		configAll.files.license = ejsRender(self.fs.read(pathJoin(defaultsDir,'../licenses', self.config.get('app').license)), config);
+	} catch (err){
+		throw new Error(chalk.red.bold(
+			"\n > Message: " + err.message + '\n' +
+			" > File: " + pathJoin(defaultsDir,defaultFile) + '\n'
+		));
+	}
 
 	var walker = walk.walk(fromDir);
 	walker.on("file", function (root, stat, next) {
 		var from = pathJoin(root, stat.name);
-		var to = ejsRender(from.replace(fromDir, toDir), config);
-		self.fs.copyTpl(from, to, configAll);
+		try{
+			var to = ejsRender(from.replace(fromDir, toDir), config);
+			self.fs.copyTpl(from, to, configAll);
+		} catch (err){
+			throw new Error(chalk.red.bold(
+				"\n > Message: " + err.message + '\n' +
+				" > File: " + from + '\n'
+			));
+		}
 		next();
 	});
 

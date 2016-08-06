@@ -13,17 +13,17 @@ module.exports = yeoman.Base.extend({
 
 		var fromDir = pathJoin(this.templatePath('module'),this.props.module);
 		var toDir = this.destinationPath('.');
-		var config = this.config.getAll();
 
+		self._walkWithEjs(fromDir,toDir,self.async());
 	},
 	database: function(){
 		var self = this;
 
-		this.log('Execute database');
+		this.log('Add build.gradle libs... find for //Generate:libs in build.gradle and add libs after this line...');
 
 		var fromDir = pathJoin(this.templatePath('module'),this.props.module);
 		var toDir = this.destinationPath('.');
-		
+
 		self._walkWithEjs(fromDir,toDir,self.async());
 	}
 }).extend(subgenerator);

@@ -1,1 +1,1 @@
-<%=files.license=>
+<%=files.license%>

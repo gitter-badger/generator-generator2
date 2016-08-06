@@ -1,4 +1,3 @@
-
 exports.validateWord = function (input) {
 	return /^[a-zA-Z.]+$/.test(input) == true ? true : "Use letters from a-z and A-Z with dot!";
 };
