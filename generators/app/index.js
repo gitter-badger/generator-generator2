@@ -10,7 +10,9 @@ module.exports = generator.Base.extend({
 		var self = this;
 
 		if(!this.config.get('inited') && !this.config.get('app')){
+
 			this.log(yosay(Q.yosay));
+
 			return this.prompt(Q.generator).then(function (A0) {
 				self.props = {
 					app: A0
@@ -20,6 +22,7 @@ module.exports = generator.Base.extend({
 			}.bind(this));
 		}
 
+		this.log(yosay(this.config.get('app').authorName + " ♥ " + this.config.get('app').name));
 		self._subgenerator();
 
 	},
@@ -39,7 +42,7 @@ module.exports = generator.Base.extend({
 		if(!this.config.get('inited'))
 			this.config.set('inited',true);
 
-		this.log('\n ♥ Yeoman has finish...');
+		this.log('\n ♥ Yeoman loves you! ♥');
 	}
 });
 

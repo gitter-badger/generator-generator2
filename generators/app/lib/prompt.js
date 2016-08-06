@@ -7,7 +7,7 @@ var utils = require('./utils');
  */
 exports.generator = function () {
 	return {
-		"yosay": "Welcome to the delightful generator-generate generator!",
+		"yosay": "♥ Java ♥\n♥ TypeScript ♥\n♥ Node ♥\n♥ Python ♥",
 		"generator": [
 			{
 				"type": "input",

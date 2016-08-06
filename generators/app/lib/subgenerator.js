@@ -47,8 +47,11 @@ exports.writing = function () {
 		if(!(self.props.module in self))
 			throw new ReferenceError('Subgenerator(' + self.config.get('app').language + ') is missing "' + self.props.module + '" method!');
 
-		self[self.props.module]();
+		var fromDir = pathJoin(this.templatePath('module'),this.props.module);
+		var toDir = this.destinationPath('.');
+		self._walkWithEjs(fromDir,toDir,self.async());
 
+		self[self.props.module]();
 	}
 };
 
@@ -114,4 +117,17 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 	walker.on('end', function () {
 		done();
 	});
+};
+
+exports._appendToFileLine = function(destFile,lineFlag,codeArray){
+	var filePath = this.destinationPath(destFile);
+
+	var oldFile = this.fs.read(filePath);
+	var newFile = '';
+
+	/**
+	 * Do something with new file
+	 */
+
+	this.fs.write(destFile,newFile);
 };
