@@ -30,31 +30,38 @@ exports.prompting = function () {
 exports.configuring = function () {
 	if (this.props.base)
 		this.config.set('subgenerator', this.props);
-
 };
 
 exports.writing = function () {
 	var self = this;
+	var toDir = self.destinationPath('.');
+
 	if (self.props.base) {
-
 		var fromDir = pathJoin(self.templatePath('base'), self.props.base);
-		var toDir = self.destinationPath('.');
-
-		self._walkWithEjs(fromDir,toDir,self.async());
-
 	}
 	else{
-		if(!(self.props.module in self))
-			throw new ReferenceError('Subgenerator(' + self.config.get('app').language + ') is missing "' + self.props.module + '" method!');
-
 		var fromDir = pathJoin(this.templatePath('module'),this.props.module);
-		var toDir = this.destinationPath('.');
-		self._walkWithEjs(fromDir,toDir,self.async());
-
-		self[self.props.module]();
 	}
+
+	self._walkWithEjs(fromDir,toDir,self.async());
 };
 
+exports.conflicts = function(){
+	var self = this;
+
+	if (self.props.base)
+		var method = self.props.base;
+	else	
+        var method = self.props.module;
+
+	if(!(method in self))
+		throw new ReferenceError(
+			'Subgenerator(' + self.config.get('app').language + ') is missing "' +
+			method + '" method!'
+		);
+
+	self[method]();
+};
 /**
  * This method will walk dir and replace file and path ejs templates strings with yo-rc json
  * configuration and put names of all defaults file in ejs configuration and place values
@@ -141,11 +148,13 @@ exports._appendToFileLine = function(destFile,lineFlag,codeArray){
 
 	var oldFileLines = this.fs.read(filePath).split('\n');
 	var newFileLines = [];
+	var lineFlagFound = false;
 
 	for(var i=0;i<oldFileLines.length;i++){
 		newFileLines.push(oldFileLines[i]);
 
 		if(oldFileLines[i].indexOf(lineFlag) != -1){
+			lineFlagFound = true;
 			var whiteSpaces = '';
 			for(var j=0;j<oldFileLines[i].length;j++){
 				if(oldFileLines[i][j] == '\t' || oldFileLines[i][j] == ' '){
@@ -158,8 +167,13 @@ exports._appendToFileLine = function(destFile,lineFlag,codeArray){
 			newFileLines.push(whiteSpaces + codeArray.join('\n' + whiteSpaces));
 		}
 	}
+	if(!lineFlagFound){
+		throw new ReferenceError(chalk.red.bold(
+			"\n > Message: Line flag (" + lineFlag + ") not found!\n" +
+			" > File: " + filePath + '\n'
+		));
+	}
 
 	var newFile = utils.decodeHtmlChars(newFileLines.join('\n'));
-
 	this.fs.write(destFile,newFile);
 };

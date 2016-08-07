@@ -14,11 +14,17 @@ module.exports = generator.Base.extend({
 			this.log(yosay(Q.yosay));
 
 			return this.prompt(Q.generator).then(function (A0) {
-				self.props = {
-					app: A0
-				};
-				self._configuring();
-				self._subgenerator();
+				return self.prompt(Q[A0.language]).then(function(A1){
+
+					self.props = {
+						app : A0
+					};
+					self.props[A0.language] = A1;
+					
+					self._configuring();
+					self._subgenerator();
+
+				}.bind(self));
 			}.bind(this));
 		}
 

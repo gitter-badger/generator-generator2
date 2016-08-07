@@ -12,14 +12,12 @@ final public class Config {
     private static final Preferences prefs = Preferences.userNodeForPackage(Config.class);
 
     private static final Properties envProps = new Properties();
-    private static final Properties dbProps = new Properties();
     private static final Properties appProps = new Properties();
     private static final Properties buildProps = new Properties();
 
     static {
         try {
             envProps.load(Main.class.getResourceAsStream("/config/env.properties"));
-            dbProps.load(Main.class.getResourceAsStream("/config/db.properties"));
             appProps.load(Main.class.getResourceAsStream("/config/app.properties"));
             buildProps.load(Main.class.getResourceAsStream("/config/build.properties"));
         } catch (IOException e) {
@@ -27,32 +25,12 @@ final public class Config {
         }
     }
 
-    final static public class DB {
-
-        public static final String USERNAME = dbProps.getProperty("username");
-        public static final String PASSWORD = dbProps.getProperty("password");
-        public static final String DRIVER = envProps.getProperty(ENV + "." + "db.driver");
-        public static final Boolean SEED = Boolean.parseBoolean(envProps.getProperty(ENV + "." + "db.seed"));
-        public static final String URL;
-
-        static {
-            String url = envProps.getProperty(ENV + "." + "db.url", null);
-
-            if(new UrlValidator().isValid(url)){
-                url = new File(getInstallPath(), url).getPath();
-            }
-
-            URL=url;
-        }
-
-    }
-
     final static public class APP {
 
         public static final String NAME = appProps.getProperty("name");
+        public static final String DESCRIPTION = appProps.getProperty("description");
         public static final String HOMEPAGE = appProps.getProperty("homepage");
         public static final String LICENSE = appProps.getProperty("license");
-        public static final String DESCRIPTION = appProps.getProperty("description");
         public static final String AUTHOR_NAME = appProps.getProperty("authorName");
         public static final String AUTHOR_EMAIL = appProps.getProperty("authorEmail");
         public static final String AUTHOR_URL = appProps.getProperty("authorUrl");

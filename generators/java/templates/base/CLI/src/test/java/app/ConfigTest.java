@@ -41,20 +41,14 @@ public class ConfigTest {
     }
 
     @Test
-    public void DB() {
-        assertNotNull(Config.DB.PASSWORD);
-        assertNotNull(Config.DB.USERNAME);
-        assertNotNull(Config.DB.DRIVER);
-        assertNotNull(Config.DB.SEED);
-        assertNotNull(Config.DB.URL);
-    }
-
-    @Test
     public void APP() {
         assertNotNull(Config.APP.NAME);
-        assertNotNull(Config.APP.WEBSITE);
-        assertNotNull(Config.APP.LICENSE);
         assertNotNull(Config.APP.DESCRIPTION);
+        assertNotNull(Config.APP.HOMEPAGE);
+        assertNotNull(Config.APP.LICENSE);
+        assertNotNull(Config.APP.AUTHOR_NAME);
+        assertNotNull(Config.APP.AUTHOR_EMAIL);
+        assertNotNull(Config.APP.AUTHOR_URL);
     }
 
     @Test

@@ -72,6 +72,13 @@ exports.generator = function () {
 					"javascript"
 				]
 			}
+		],
+		"java" : [
+			{
+				"type": "input",
+				"name": "groupId",
+				"message": "GroupId (github.username):"
+			}
 		]
 	};
 };
@@ -105,3 +112,4 @@ exports.subgenerator = function (baseChoices, moduleChoices) {
 		}
 	};
 };
+

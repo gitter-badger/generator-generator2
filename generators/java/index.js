@@ -3,13 +3,42 @@
 var yeoman = require('yeoman-generator');
 var subgenerator = require('../app/lib/subgenerator');
 
+var buildGradle = {
+    src : "build.gradle",
+    flag : "//Yeoman:libs"
+};
+
 module.exports = yeoman.Base.extend({
-	database: function(){
-		this._appendToFileLine( "build.gradle", "//Yeoman:libs", [
-			"compile 'org.neo4j:neo4j-ogm-core:2.0.4'",
-			"compile 'org.neo4j:neo4j-ogm-http-driver:2.0.4'",
-			"compile 'org.neo4j:neo4j-ogm-embedded-driver:2.0.4'",
-			"compile 'org.neo4j:neo4j-ogm-bolt-driver:2.0.4'"
+
+	/**
+	 * Base templates...
+	 */
+	
+    shell: function(){
+        this._appendToFileLine( buildGradle.src, buildGradle.flag,[
+            "compile 'org.springframework.shell:spring-shell:1.2.0.RELEASE'"
         ]);
-	}
+    },
+    javaFx: function(){
+        this._appendToFileLine( buildGradle.src, buildGradle.flag,[
+            "compile 'com.airhacks:afterburner.fx:1.6.2'",
+            "compile 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.0'",
+            "compile 'javax.inject:javax.inject:1'"
+        ]);
+    },
+    CLI : function(){
+    },
+
+	/**
+	 * Module templates...
+	 */
+	
+    database: function(){
+        this._appendToFileLine( buildGradle.src, buildGradle.flag,[
+            "compile 'org.neo4j:neo4j-ogm-core:2.0.4'",
+            "compile 'org.neo4j:neo4j-ogm-http-driver:2.0.4'",
+            "compile 'org.neo4j:neo4j-ogm-embedded-driver:2.0.4'",
+            "compile 'org.neo4j:neo4j-ogm-bolt-driver:2.0.4'"
+        ]);
+    }
 }).extend(subgenerator);
