@@ -2,8 +2,6 @@
 
 var yeoman = require('yeoman-generator');
 var subgenerator = require('../app/lib/subgenerator');
-var utils = require('../app/lib/utils');
-var pathJoin = require('path').join;
 
 module.exports = yeoman.Base.extend({
 	database: function(){

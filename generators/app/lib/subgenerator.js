@@ -81,7 +81,10 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 		var defaultFile = defaultFiles[i];
 
 		try{
-			configAll.files[defaultFile] = ejsRender(self.fs.read(pathJoin(defaultsDir, defaultFile)), config);
+			configAll.files[defaultFile] = ejsRender(
+				self.fs.read(pathJoin(defaultsDir, defaultFile)),
+				config
+			);
 		} catch(err){
 			throw new Error(chalk.red.bold(
 				"\n > Message: " + err.message + '\n' +
@@ -91,7 +94,10 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 	}
 
 	try{
-		configAll.files.license = ejsRender(self.fs.read(pathJoin(defaultsDir,'../licenses', self.config.get('app').license)), config);
+		configAll.files.license = ejsRender(
+			self.fs.read(pathJoin(defaultsDir,'../licenses', self.config.get('app').license)),
+			config
+		);
 	} catch (err){
 		throw new Error(chalk.red.bold(
 			"\n > Message: " + err.message + '\n' +
@@ -119,6 +125,14 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 	});
 };
 
+/**
+ * This method will append code array after the line where is located lineFlag.
+ *
+ * @param destFile
+ * @param lineFlag
+ * @param codeArray
+ * @private
+ */
 exports._appendToFileLine = function(destFile,lineFlag,codeArray){
 	var filePath = this.destinationPath(destFile);
 
@@ -142,9 +156,7 @@ exports._appendToFileLine = function(destFile,lineFlag,codeArray){
 		}
 	}
 
-	var newFile = newFileLines.join('\n')
-		.replace(/&#34;/g, '"')
-		.replace(/&#39;/g, "'");
+	var newFile = utils.decodeHtmlChars(newFileLines.join('\n'));
 
 	this.fs.write(destFile,newFile);
 };
