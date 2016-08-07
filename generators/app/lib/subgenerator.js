@@ -110,7 +110,10 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 		var from = pathJoin(root, stat.name);
 		try{
 			var to = ejsRender(from.replace(fromDir, toDir), config);
-			self.fs.copyTpl(from, to, configAll);
+			self.fs.write(to, utils.decodeHtmlChars(
+				ejsRender(self.fs.read(from),configAll)
+			));
+
 		} catch (err){
 			throw new Error(chalk.red.bold(
 				"\n > Message: " + err.message + '\n' +
