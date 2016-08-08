@@ -11,7 +11,7 @@ exports.validateEmail = function (email) {
 	return re.test(email) == true ? true : "Email is unvalid!";
 };
 
-exports.decodeHtmlChars = function(string){
+exports.decodeHtmlChars = function (string) {
 	return string
 		.replace(/&#34;/g, '"')
 		.replace(/&#39;/g, "'");

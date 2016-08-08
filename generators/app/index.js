@@ -9,18 +9,18 @@ module.exports = generator.Base.extend({
 	prompting: function () {
 		var self = this;
 
-		if(!this.config.get('inited') && !this.config.get('app')){
+		if (!this.config.get('inited') && !this.config.get('app')) {
 
 			this.log(yosay(Q.yosay));
 
 			return this.prompt(Q.generator).then(function (A0) {
-				return self.prompt(Q[A0.language]).then(function(A1){
+				return self.prompt(Q[A0.language]).then(function (A1) {
 
 					self.props = {
-						app : A0
+						app: A0
 					};
 					self.props[A0.language] = A1;
-					
+
 					self._configuring();
 					self._subgenerator();
 

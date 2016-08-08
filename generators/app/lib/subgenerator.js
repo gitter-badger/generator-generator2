@@ -51,7 +51,7 @@ exports.conflicts = function(){
 
 	if (self.props.base)
 		var method = self.props.base;
-	else	
+	else
         var method = self.props.module;
 
 	if(!(method in self))
