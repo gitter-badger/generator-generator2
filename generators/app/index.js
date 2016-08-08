@@ -36,6 +36,8 @@ module.exports = generator.Base.extend({
 	_configuring: function () {
 		this.config.set(this.props);
 		var yoRc = { "generator-generate" : this.config.getAll() };
+		var date = new Date();
+		yoRc['generator-generate'].app.createdAt =  date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
 		fs.writeFileSync(this.destinationPath('.yo-rc.json'),JSON.stringify(yoRc));
 	},
 
