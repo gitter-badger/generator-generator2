@@ -62,6 +62,7 @@ exports.conflicts = function(){
 
 	self[method]();
 };
+
 /**
  * This method will walk dir and replace file and path ejs templates strings with yo-rc json
  * configuration and put names of all defaults file in ejs configuration and place values
@@ -78,37 +79,37 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 	var self = this;
 	var config = self.config.getAll();
 	var configAll = self.config.getAll();
-	configAll.files = {};
+	configAll.file = {};
 
 	var defaultsDir = pathJoin(self.sourceRoot(),'../../app/templates/defaults');
+	var defaultFiles = utils.walkSync(defaultsDir);
 
-	//Todo: Check if this works for subgenerators methods.
-	var defaultFiles = fs.readdirSync(defaultsDir);
 	for (var i in defaultFiles) {
 		var defaultFile = defaultFiles[i];
-
+    	var key = defaultFile.replace(defaultsDir + '/', '').replace(/\//g, '_');
 		try{
-			configAll.files[defaultFile] = ejsRender(
-				self.fs.read(pathJoin(defaultsDir, defaultFile)),
+			configAll.file[key] = ejsRender(
+				self.fs.read(defaultFile),
 				config
 			);
 		} catch(err){
 			throw new Error(chalk.red.bold(
 				"\n > Message: " + err.message + '\n' +
-				" > File: " + pathJoin(defaultsDir,defaultFile) + '\n'
+				" > File: " + defaultFile + '\n'
 			));
 		}
 	}
 
+	var licensePath = pathJoin(defaultsDir, '../licenses', self.config.get('app').license);
 	try{
-		configAll.files.license = ejsRender(
-			self.fs.read(pathJoin(defaultsDir,'../licenses', self.config.get('app').license)),
+		configAll.file.license = ejsRender(
+			self.fs.read(licensePath),
 			config
 		);
 	} catch (err){
 		throw new Error(chalk.red.bold(
 			"\n > Message: " + err.message + '\n' +
-			" > File: " + pathJoin(defaultsDir,defaultFile) + '\n'
+			" > File: " + licensePath + '\n'
 		));
 	}
 

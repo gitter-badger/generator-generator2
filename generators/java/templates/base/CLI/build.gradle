@@ -1,1 +1,1 @@
-<%=files.buildGradle%>
+<%=file.java_buildGradle%>

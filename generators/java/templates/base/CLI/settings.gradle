@@ -1,1 +1,1 @@
-<%=files.settingsGradle%>
+<%=file.java_settingsGradle%>
