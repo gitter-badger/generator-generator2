@@ -28,7 +28,7 @@ exports.generator = function () {
 			{
 				"type": "input",
 				"name": "homepage",
-				"message": "Homepage (github):",
+				"message": "Homepage:",
 				"validate": utils.validateUrl
 			},
 			{
@@ -44,6 +44,11 @@ exports.generator = function () {
 					"MIT License",
 					"The Unlicense"
 				]
+			},
+			{
+				"type": "input",
+                "name": "githubUser",
+                "message": "Github user:"
 			},
 			{
 				"type": "input",

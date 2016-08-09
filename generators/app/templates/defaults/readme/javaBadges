@@ -1,1 +1,5 @@
-[![Maven version][maven-image]][http://shields.io/] [![Build Status][travis-image]][travis-url] [![Dependency Status][versioneye-image]][versioneye-url] [![Coverage percentage][coveralls-image]][coveralls-url] [![Code quality][codeclimate-image]][codeclimate-url] [![Funding][gittip-image]][gittip-url]
+[![Build Status](https://travis-ci.org/<%=app.githubUser%>/<%=app.name%>.svg?branch=master)](https://travis-ci.org/<%=app.githubUser%>/<%=app.name%>)
+[![Dependency Status](https://www.versioneye.com/user/projects/57aa32edc75d640045d20614/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57aa32edc75d640045d20614)
+[![Coverage Status](https://coveralls.io/repos/github/<%=app.githubUser%>/<%=app.name%>/badge.svg?branch=master)](https://coveralls.io/repos/github/<%=app.githubUser%>/<%=app.name%>/badge.svg?branch=master)
+[![Codebeat badge](https://codebeat.co/badges/7fffb5d7-37ad-4599-a965-37b40ccb669e)](https://codebeat.co/projects/github-com-<%=app.githubUser%>-<%=app.name%>)
+[![Gratipay User](https://img.shields.io/gratipay/user/<%=app.githubUser%>.svg?maxAge=2592000)](https://gratipay.com/<%=app.githubUser%>/)

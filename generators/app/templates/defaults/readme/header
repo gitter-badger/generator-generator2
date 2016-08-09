@@ -1,3 +1,4 @@
-![<%=app.name%>](media/logo.png)
+<img style="float: left;" src="media/logo.png">
+<img style="float: right;" src="media/example.gif">
 
 # <%=app.name%>
