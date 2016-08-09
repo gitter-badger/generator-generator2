@@ -35,6 +35,7 @@ exports.configuring = function () {
 exports.writing = function () {
 	var self = this;
 	var toDir = self.destinationPath('.');
+	var mediaDir = pathJoin(self.sourceRoot(),'../../app/templates/media');
 
 	if (self.props.base) {
 		var fromDir = pathJoin(self.templatePath('base'), self.props.base);
@@ -43,6 +44,8 @@ exports.writing = function () {
 		var fromDir = pathJoin(this.templatePath('module'),this.props.module);
 	}
 
+	self.fs.copy(mediaDir,self.destinationPath('media'));
+	
 	self._walkWithEjs(fromDir,toDir,self.async());
 };
 

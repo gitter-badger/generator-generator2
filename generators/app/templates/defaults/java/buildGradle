@@ -1,10 +1,11 @@
 buildscript {
     repositories {
+		maven { url "https://plugins.gradle.org/m2/" }
         jcenter()
     }
     dependencies {
         classpath 'net.nemerosa:versioning:1.5.0'
-		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1"
+		classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1'
         //classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
     }
 }
@@ -20,7 +21,7 @@ apply plugin: 'wrapper'
 apply plugin: 'build-dashboard'
 apply plugin: 'jacoco'
 apply plugin: 'net.nemerosa.versioning'
-apply plugin: "org.sonarqube"
+apply plugin: 'org.sonarqube'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -32,7 +33,7 @@ dependencies {
     compile 'commons-validator:commons-validator:1.5.0'
 
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:1.+"
+    testCompile 'org.mockito:mockito-core:1.+'
     testCompile 'org.powermock:powermock-module-junit4:1.6.5'
     testCompile 'org.powermock:powermock-api-mockito:1.6.5'
 }
@@ -40,16 +41,17 @@ dependencies {
 sourceSets {
     main {
         resources.srcDirs = [
-                "src/main/java",
-                "src/main/resources"
+			"src/main/java",
+			"src/main/resources"
         ]
-    }
+	}
 }
 
 mainClassName = 'app.Main'
 group = '<%=java.groupId%>'
 sourceCompatibility = 1.8
 version = versioning.info.full
+description = '<%=app.description%>'
 
 ant.propertyfile(file: "src/main/resources/config/build.properties") {
     entry(key: "date", value: new Date().format('dd.MM.yyyy'))

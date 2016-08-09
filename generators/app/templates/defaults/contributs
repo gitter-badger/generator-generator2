@@ -11,7 +11,7 @@
 ## Directory structure
 ## Style quide
  * Respect .editorconfig file.
- * Execute ```gradle sonarqube``` for testing styles.
+ * Use IDE plugin with sonarLint.
 ## Building
 ## Testing
 ## Documentation
