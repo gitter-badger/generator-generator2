@@ -1,5 +1,7 @@
 > <%=app.description%>
 
+<br>
+
 ## Table of Contents
 
  * [Tell me more](#tell-me-more)
@@ -11,7 +13,10 @@
  * [Contributions](#contributions)
  * [License](#license)
 
+<br>
+
 ## Tell me more
+<img style="float: center;" src="media/example.gif">
 ## How it works
 ## Features
 ## Instalation

@@ -5,7 +5,7 @@ var fs = require('fs');
 var pathJoin = require('path').join;
 var prompt = require('./prompt');
 var yosay = require('yosay');
-var ejsRender = require('ejs').render;
+var ejs = require('ejs');
 var walk = require('walk');
 var chalk = require('chalk');
 
@@ -45,7 +45,7 @@ exports.writing = function () {
 	}
 
 	self.fs.copy(mediaDir,self.destinationPath('media'));
-	
+
 	self._walkWithEjs(fromDir,toDir,self.async());
 };
 
@@ -91,7 +91,7 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 		var defaultFile = defaultFiles[i];
     	var key = defaultFile.replace(defaultsDir + '/', '').replace(/\//g, '_');
 		try{
-			configAll.file[key] = ejsRender(
+			configAll.file[key] = ejs.render(
 				self.fs.read(defaultFile),
 				config
 			);
@@ -105,7 +105,7 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 
 	var licensePath = pathJoin(defaultsDir, '../licenses', self.config.get('app').license);
 	try{
-		configAll.file.license = ejsRender(
+		configAll.file.license = ejs.render(
 			self.fs.read(licensePath),
 			config
 		);
@@ -120,9 +120,9 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 	walker.on("file", function (root, stat, next) {
 		var from = pathJoin(root, stat.name);
 		try{
-			var to = ejsRender(from.replace(fromDir, toDir), config);
+			var to = ejs.render(from.replace(fromDir, toDir), config);
 			self.fs.write(to, utils.decodeHtmlChars(
-				ejsRender(self.fs.read(from),configAll)
+				ejs.render(self.fs.read(from),configAll)
 			));
 
 		} catch (err){

@@ -13,7 +13,7 @@ module.exports = yeoman.Base.extend({
 	/**
 	 * Base templates...
 	 */
-	
+
     shell: function(){
         this._appendToFileLine( buildGradle.src, buildGradle.flag,[
             "compile 'org.springframework.shell:spring-shell:1.2.0.RELEASE'"
@@ -27,12 +27,19 @@ module.exports = yeoman.Base.extend({
         ]);
     },
     CLI : function(){
+		this.log('\nTodo:');
+		this.log([
+			' * Execute gradle versionEyeCreate and replace readmes VERSIONEYE_PROJECT_ID with gradle.properties(versioneye.projectid).',
+			' * Replace readmes CODEBEAT_PROJECT_ID with actual codebeat project id.',
+			' * Make lovercase appName. in codebeat url link.',
+			' * Make first push to activate readme.md badges.'
+		].join('\n'));
     },
 
 	/**
 	 * Module templates...
 	 */
-	
+
     database: function(){
         this._appendToFileLine( buildGradle.src, buildGradle.flag,[
             "compile 'org.neo4j:neo4j-ogm-core:2.0.4'",

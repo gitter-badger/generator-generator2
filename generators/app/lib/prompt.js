@@ -68,6 +68,11 @@ exports.generator = function () {
 				"validate": utils.validateUrl
 			},
 			{
+				"type" : "input",
+				"name" : "versionEyeApiKey",
+				"message": "VersionEye api key (versioneye.com/settings/api): "
+			},
+			{
 				"type": "list",
 				"name": "language",
 				"message": "Select programming language:",

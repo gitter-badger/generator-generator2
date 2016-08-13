@@ -1,4 +1,5 @@
-<img style="float: left;" src="media/logo.png">
-<img style="float: right;" src="media/example.gif">
+<img style="float: center;" src="media/logo.png">
+
+<br>
 
 # <%=app.name%>
