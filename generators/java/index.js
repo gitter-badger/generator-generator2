@@ -31,7 +31,6 @@ module.exports = yeoman.Base.extend({
 		this.log([
 			' * Execute gradle versionEyeCreate and replace readmes VERSIONEYE_PROJECT_ID with gradle.properties(versioneye.projectid).',
 			' * Replace readmes CODEBEAT_PROJECT_ID with actual codebeat project id.',
-			' * Make lovercase appName. in codebeat url link.',
 			' * Make first push to activate readme.md badges.'
 		].join('\n'));
     },
