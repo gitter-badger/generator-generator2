@@ -4,10 +4,10 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3"
         classpath 'net.nemerosa:versioning:1.5.0'
 		classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1'
 		classpath 'org.standardout:gradle-versioneye-plugin:1.4.0'
+		classpath 'net.saliman:gradle-cobertura-plugin:2.3.2'
     }
 }
 
@@ -19,11 +19,10 @@ apply plugin: 'java-base'
 apply plugin: 'application'
 apply plugin: 'idea'
 apply plugin: 'wrapper'
-apply plugin: 'jacoco'
+apply plugin: 'net.saliman.cobertura'
 apply plugin: 'net.nemerosa.versioning'
 apply plugin: 'org.sonarqube'
 apply plugin: 'org.standardout.versioneye'
-apply plugin: 'com.github.kt3k.coveralls'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -60,11 +59,8 @@ ant.propertyfile(file: "src/main/resources/config/build.properties") {
     entry(key: "version", value: version)
 }
 
-jacocoTestReport {
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
+cobertura {
+	coverageFormats = ['html', 'xml']
 }
 
 run {

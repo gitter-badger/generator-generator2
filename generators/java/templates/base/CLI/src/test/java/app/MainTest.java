@@ -1,32 +1,49 @@
 package app;
 
+import app.cmd.Default;
+import app.cmd.Exec;
+import app.cmd.Install;
 import org.docopt.Docopt;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.powermock.api.support.membermodification.MemberModifier;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
 
-@PrepareForTest({Docopt.class})
+@PrepareForTest({Main.class})
 @RunWith(PowerMockRunner.class)
 public class MainTest {
 
-    public static Docopt docoptMock;
-
     @Before
     public void setUp() throws Exception {
-        mockStatic(Docopt.class);
-        docoptMock = mock(Docopt.class);
-        whenNew(Docopt.class).withAnyArguments().thenReturn(docoptMock);
+		spy(Main.class);
+		whenNew(Default.class).withAnyArguments().thenReturn(null);
+		whenNew(Exec.class).withAnyArguments().thenReturn(null);
+		whenNew(Install.class).withAnyArguments().thenReturn(null);
     }
 
+	@Test
+	public void Default() throws Exception {
+		Main.main(new String[]{});
+
+		verifyPrivate(Main.class,times(1)).invoke("start");
+		verifyPrivate(Main.class, times(1)).invoke("finish");
+		verifyNew(Default.class,times(1)).withNoArguments();
+	}
+
     @Test
-    public void main(){
-        //Todo: Make tests for this...
+    public void Install() throws Exception {
+		Main.main(new String[]{"install"});
+		verifyNew(Install.class,times(1)).withNoArguments();
     }
+
+	@Test
+	public void Exec() throws Exception {
+		Main.main(new String[]{"exec","name","--option=option"});
+		verifyNew(Exec.class,times(1)).withArguments("name","option");
+	}
+
 }
 
