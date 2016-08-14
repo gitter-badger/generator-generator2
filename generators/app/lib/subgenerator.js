@@ -35,7 +35,7 @@ exports.configuring = function () {
 exports.writing = function () {
 	var self = this;
 	var toDir = self.destinationPath('.');
-	var mediaDir = pathJoin(self.sourceRoot(),'../../app/templates/media');
+	var defaultDir = pathJoin(self.sourceRoot(),'../../app/templates/default');
 
 	if (self.props.base) {
 		var fromDir = pathJoin(self.templatePath('base'), self.props.base);
@@ -44,9 +44,8 @@ exports.writing = function () {
 		var fromDir = pathJoin(this.templatePath('module'),this.props.module);
 	}
 
-	self.fs.copy(mediaDir,self.destinationPath('media'));
-
 	self._walkWithEjs(fromDir,toDir,self.async());
+	self._walkWithEjs(defaultDir,toDir,function(){});
 };
 
 exports.conflicts = function(){
@@ -84,7 +83,7 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 	var configAll = self.config.getAll();
 	configAll.file = {};
 
-	var defaultsDir = pathJoin(self.sourceRoot(),'../../app/templates/defaults');
+	var defaultsDir = pathJoin(self.sourceRoot(),'../../app/templates/file');
 	var defaultFiles = utils.walkSync(defaultsDir);
 
 	for (var i in defaultFiles) {
@@ -121,9 +120,15 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 		var from = pathJoin(root, stat.name);
 		try{
 			var to = ejs.render(from.replace(fromDir, toDir), config);
-			self.fs.write(to, utils.decodeHtmlChars(
-				ejs.render(self.fs.read(from),configAll)
-			));
+			var statNameArr = stat.name.split('.');
+
+			if(['gif','png','ico'].indexOf(statNameArr[statNameArr.length-1]) > -1){
+				self.fs.copy(from,to);
+			}else{
+				self.fs.write(to, utils.decodeHtmlChars(
+					ejs.render(self.fs.read(from),configAll)
+				));
+			}
 
 		} catch (err){
 			throw new Error(chalk.red.bold(
