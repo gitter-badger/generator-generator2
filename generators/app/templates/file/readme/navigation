@@ -1,7 +1,3 @@
-> <%=app.description%>
-
-<br>
-
 ## Table of Contents
 
  * [Tell me more](#tell-me-more)
@@ -9,8 +5,3 @@
  * [Features](#features)
  * [Instalation](#installation)
  * [Usage](#usage)
- * [Documentation](#documentation)
- * [Contributions](#contributions)
- * [License](#license)
-
-<br>

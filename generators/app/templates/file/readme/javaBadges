@@ -1,6 +1,0 @@
-[![GitHub release](https://img.shields.io/github/release/<%=app.githubUser%>/<%=app.name%>.svg?maxAge=2592000)]()
-[![Travis](https://img.shields.io/travis/<%=app.githubUser%>/<%=app.name%>.svg?maxAge=2592000)](https://travis-ci.org/<%=app.githubUser%>/<%=app.name%>)
-[![Coverage Status](https://img.shields.io/codecov/c/github/<%=app.githubUser%>/<%=app.name%>.svg)](https://codecov.io/gh/<%=app.githubUser%>/<%=app.name%>)
-[![Dependency Status](https://www.versioneye.com/user/projects/VERSIONEYE_PROJECT_ID/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/VERSIONEYE_PROJECT_ID)
-[![Codebeat badge](https://codebeat.co/badges/CODEBEAT_PROJECT_ID)](https://codebeat.co/projects/github-com-<%=app.githubUser%>-<%=app.name.toLowerCase()%>)
-[![Gratipay User](https://img.shields.io/gratipay/user/<%=app.githubUser%>.svg?maxAge=2592000)](https://gratipay.com/<%=app.githubUser%>/)

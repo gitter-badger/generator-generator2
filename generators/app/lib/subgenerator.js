@@ -15,7 +15,7 @@ var chalk = require('chalk');
 exports.prompting = function () {
 	var self = this;
 
-	var PROMPT = (this.config.get('subgenerator') == null ? 'base' : 'module');
+	var PROMPT = (this.config.get('subgenerator') == null || this.config.get('inited') == null ? 'base' : 'module');
 	var Q = prompt.subgenerator(
 		fs.readdirSync(self.templatePath('base')),
 		fs.readdirSync(self.templatePath('module'))

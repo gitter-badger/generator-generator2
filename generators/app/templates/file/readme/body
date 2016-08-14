@@ -1,7 +1,5 @@
 ## Tell me more
-Todo: Replace example.gif with actual live example.
-Todo: Add in readme, extendet description text.
-<img style="float: center;" src="docs/src/media/example.gif">
+Todo: Add example.gif and extended description.
 
 ## How it works
 Todo: Add in readme, how app works internaly.
@@ -14,14 +12,3 @@ Todo: Add installation steps in readme.
 
 ## Usage
 Todo: Add usage information in readme.
-
-## Documentation
-Todo: Add documentation links in readme.
-
-## Contributions
-Todo: Add contributions links in readme.
-
-## License
-Copyright © <%=app.createdAt.split('/')[2]%> <%=app.authorName%>
-
-<%=app.license%>

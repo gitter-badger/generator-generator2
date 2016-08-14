@@ -64,8 +64,14 @@ cobertura {
 }
 
 githubPages {
-  repoUri = 'https://github.com/<%=app.githubUser%>/<%=app.name%>'
-  pages { from javadoc }
+	repoUri = 'https://github.com/<%=app.githubUser%>/<%=app.name%>'
+	pages{
+		from('build/mkdocs') {
+		}
+		from('build/docs/javadoc') {
+			into('documentation')
+		}
+	}
 }
 
 run {

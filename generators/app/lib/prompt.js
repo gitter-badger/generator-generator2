@@ -87,7 +87,7 @@ exports.generator = function () {
 			{
 				"type": "input",
 				"name": "groupId",
-				"message": "GroupId (github.username):"
+				"message": "GroupId (com.github.username):"
 			}
 		]
 	};
