@@ -16,11 +16,36 @@
 <br>
 
 ## Tell me more
+Todo: Replace example.gif with actual live example.
+Todo: Add in readme, extendet description text.
 <img style="float: center;" src="media/example.gif">
+
 ## How it works
+Todo: Add in readme, how app works internaly.
+
 ## Features
+Todo: Add features list in readme.
+
 ## Instalation
+
+1. First download latest [Java JRE](http://java.com/en/download/).
+2. Download latest [<%=app.name%>](https://github.com/<%=app.githubUser%>/<%=app.name%>/releases) release.
+3. Start one of the script in `<%=app.name%>/bin`.
+
 ## Usage
+```
+  Interface:
+	<%=app.name%>
+	<%=app.name%> install
+	<%=app.name%> exec <name> --options=ARGS
+	<%=app.name%> (-h | --help)
+	<%=app.name%> (-v | --version)
+
+  Options:\n"
+	-v --version  Show version.
+	-h --help     Show this screen.
+```
+
 ## Documentation
 ## Contributions
 All informations for contributers is located in [CONTRIBUTS](CONTRIBUTS.md) file.

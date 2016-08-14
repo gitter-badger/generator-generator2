@@ -3,7 +3,6 @@ package app;
 import app.cmd.Default;
 import app.cmd.Exec;
 import app.cmd.Install;
-import org.docopt.Docopt;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;

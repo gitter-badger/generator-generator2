@@ -8,6 +8,7 @@ buildscript {
 		classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1'
 		classpath 'org.standardout:gradle-versioneye-plugin:1.4.0'
 		classpath 'net.saliman:gradle-cobertura-plugin:2.3.2'
+		classpath 'org.ajoberstar:gradle-git:1.5.1'
     }
 }
 
@@ -23,6 +24,7 @@ apply plugin: 'net.saliman.cobertura'
 apply plugin: 'net.nemerosa.versioning'
 apply plugin: 'org.sonarqube'
 apply plugin: 'org.standardout.versioneye'
+apply plugin: 'org.ajoberstar.github-pages'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -61,6 +63,11 @@ ant.propertyfile(file: "src/main/resources/config/build.properties") {
 
 cobertura {
 	coverageFormats = ['html', 'xml']
+}
+
+githubPages {
+  repoUri = 'https://github.com/<%=app.githubUser%>/<%=app.name%>'
+  pages { from javadoc }
 }
 
 run {

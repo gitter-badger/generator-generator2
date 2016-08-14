@@ -50,6 +50,11 @@ module.exports = generator.Base.extend({
 		if(!this.config.get('inited'))
 			this.config.set('inited',true);
 
+		this.log('\n Todo:');
+		this.log([
+			'  * Replace todos with actions.'
+		].join('\n'));
+
 		this.log('\n ♥ Yeoman loves you! ♥');
 	}
 });
