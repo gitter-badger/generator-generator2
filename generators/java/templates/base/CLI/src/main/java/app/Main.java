@@ -8,10 +8,26 @@ import app.cmd.Default;
 import app.cmd.Exec;
 import org.docopt.Docopt;
 
+/**
+ * # Application entry point.
+ */
 public final class Main {
 
+	/**
+	 * Map which should holds simplified `String[] args`.
+	 */
     private static Map<String,Object> opts;
 
+	/**
+	 * Starting point of execution.
+	 *
+	 * - Will parse args to more user friendly format.
+	 * - Execute 'start()`.
+	 * - Execute main logic.
+	 * - Execute 'finish()`.
+	 *
+	 * @param args
+     */
     public static void main(final String[] args) {
         setOpts(args);
         start();
@@ -32,16 +48,22 @@ public final class Main {
         finish();
     }
 
+	/**
+	 * Parse args with docopt and set opts label.
+	 *
+	 * Docopt info:
+	 *
+	 * - Positional arguments: `<argument> , ARGUMENT`
+	 * - Short options: `-o ,-abc , -a -b -c`
+	 * - Long options: `--option , --option==ARG`
+	 * - Optional elements: `[]`
+	 * - Required elements: `()`
+	 * - Group of arguments: `<argument>... , (<x> <y>)...`
+	 * - Options description: `--options==<km>   Info [default: 10]`
+	 *
+	 * @param args Command arguments
+     */
     private static void setOpts(String[] args){
-        /**
-         * Positional arguments: <argument> , ARGUMENT
-         * Short options: -o ,-abc , -a -b -c
-         * Long options: --option , --option==ARG
-         * Optional elements: []
-         * Required elements: ()
-         * Group of arguments: <argument>... , (<x> <y>)...
-         * Options description: --options==<km>   Info [default: 10]
-         */
         opts = new Docopt(
                 "Description:\n"
                         + String.format("  %s\n", Config.APP.DESCRIPTION)
@@ -60,8 +82,20 @@ public final class Main {
                 .withVersion(Config.APP.NAME + " " + Config.BUILD.VERSION)
                 .parse(args);
     }
+
+	/**
+	 * Init starting configuration for main logic.
+	 */
     private static void start(){
     }
+
+	/**
+	 * Cleaning at the end.
+	 *
+	 * - Closing database.
+	 * - Some finish checks.
+	 * - etc...
+	 */
     private static void finish() {
     }
 }

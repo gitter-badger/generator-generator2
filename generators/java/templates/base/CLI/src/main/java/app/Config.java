@@ -6,15 +6,24 @@ import java.util.Properties;
 import java.util.prefs.Preferences;
 import org.apache.commons.validator.routines.UrlValidator;
 
+/**
+ * # All application configuration holder.
+ */
 final public class Config {
 
+	/**
+	 * Name of execution environment.
+	 */
     public static final String ENV = System.getProperty("ENV", "production");
-    private static final Preferences prefs = Preferences.userNodeForPackage(Config.class);
 
+    private static final Preferences prefs = Preferences.userNodeForPackage(Config.class);
     private static final Properties envProps = new Properties();
     private static final Properties appProps = new Properties();
     private static final Properties buildProps = new Properties();
 
+	/**
+	 * Load all recources configuration properties files.
+	 */
     static {
         try {
             envProps.load(Main.class.getResourceAsStream("/config/env.properties"));
@@ -25,6 +34,9 @@ final public class Config {
         }
     }
 
+	/**
+	 * Holder for all application informations.
+	 */
     final static public class APP {
 
         public static final String NAME = appProps.getProperty("name");
@@ -37,6 +49,9 @@ final public class Config {
 
     }
 
+	/**
+	 * Information holder for current build version.
+	 */
     final static public class BUILD {
 
         public static final String DATE = buildProps.getProperty("date");
@@ -44,10 +59,26 @@ final public class Config {
 
     }
 
+	/**
+	 * Set preferences installation path for the application.
+	 *
+	 * In this path application will store:
+	 *
+	 *  - Database.
+	 *  - Reading user configuration files.
+	 *  - Logging output.
+	 *  - etc...
+	 *
+	 * @param path Should be something like `$USER_HOME`.
+     */
     public static void setInstallPath(String path) {
         prefs.put("installPath", path);
     }
 
+	/**
+	 * Get installation path from preferences.
+	 * @return String or null.
+     */
     public static String getInstallPath() {
         return prefs.get("installPath", null);
     }

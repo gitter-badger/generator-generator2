@@ -1,8 +1,20 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'ch.raffael.pegdown-doclet:pegdown-doclet:1.2'
+    }
+}
+
+apply plugin: 'ch.raffael.pegdown-doclet'
+
 plugins {
 	id 'java-base'
 	id 'application'
 	id 'idea'
 	id 'wrapper'
+	id 'checkstyle'
 	id 'net.saliman.cobertura' version '2.3.2'
 	id 'net.nemerosa.versioning' version '1.5.0'
 	id 'org.standardout.versioneye' version '1.4.0'
