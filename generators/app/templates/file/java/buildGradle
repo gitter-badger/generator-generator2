@@ -60,6 +60,10 @@ cobertura {
 	coverageFormats = ['html', 'xml']
 }
 
+checkstyle {
+	configFile = 'checkstyle.xml' as File
+}
+
 changelog {
 	outputDirectory = file("$projectDir/docs/src")
 }
