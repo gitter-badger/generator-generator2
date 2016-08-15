@@ -1,50 +1,40 @@
-buildscript {
-    repositories {
-		maven { url "https://plugins.gradle.org/m2/" }
-        jcenter()
-    }
-    dependencies {
-        classpath 'net.nemerosa:versioning:1.5.0'
-		classpath 'org.standardout:gradle-versioneye-plugin:1.4.0'
-		classpath 'net.saliman:gradle-cobertura-plugin:2.3.2'
-		classpath 'org.ajoberstar:gradle-git:1.5.1'
-    }
+plugins {
+	id 'java-base'
+	id 'application'
+	id 'idea'
+	id 'wrapper'
+	id 'net.saliman.cobertura' version '2.3.2'
+	id 'net.nemerosa.versioning' version '1.5.0'
+	id 'org.standardout.versioneye' version '1.4.0'
+	id 'org.ajoberstar.github-pages' version '1.5.1'
+	id 'com.selesse.git.changelog' version '0.2.0'
 }
 
 repositories {
-    jcenter()
+	jcenter()
 }
 
-apply plugin: 'java-base'
-apply plugin: 'application'
-apply plugin: 'idea'
-apply plugin: 'wrapper'
-apply plugin: 'net.saliman.cobertura'
-apply plugin: 'net.nemerosa.versioning'
-apply plugin: 'org.standardout.versioneye'
-apply plugin: 'org.ajoberstar.github-pages'
-
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
+	compile fileTree(dir: 'libs', include: '*.jar')
 
 	//Yeoman:libs
-    compile 'com.offbytwo:docopt:0.6.0.20150202'
-    compile 'org.projectlombok:lombok:1.16.6'
-    compile 'org.slf4j:slf4j-simple:1.7.16'
-    compile 'commons-validator:commons-validator:1.5.0'
+	compile 'com.offbytwo:docopt:0.6.0.20150202'
+	compile 'org.projectlombok:lombok:1.16.6'
+	compile 'org.slf4j:slf4j-simple:1.7.16'
+	compile 'commons-validator:commons-validator:1.5.0'
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.+'
-    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
-    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
+	testCompile 'junit:junit:4.12'
+	testCompile 'org.mockito:mockito-core:1.+'
+	testCompile 'org.powermock:powermock-module-junit4:1.6.5'
+	testCompile 'org.powermock:powermock-api-mockito:1.6.5'
 }
 
 sourceSets {
-    main {
-        resources.srcDirs = [
+	main {
+		resources.srcDirs = [
 			"src/main/java",
 			"src/main/resources"
-        ]
+		]
 	}
 }
 
@@ -54,18 +44,17 @@ sourceCompatibility = 1.8
 version = versioning.info.full
 description = '<%=app.description%>'
 
-ant.propertyfile(file: "src/main/resources/config/build.properties") {
-    entry(key: "date", value: new Date().format('dd.MM.yyyy'))
-    entry(key: "version", value: version)
-}
-
 cobertura {
 	coverageFormats = ['html', 'xml']
 }
 
+changelog {
+	outputDirectory = file("$projectDir/docs/src")
+}
+
 githubPages {
-	repoUri = 'https://github.com/<%=app.githubUser%>/<%=app.name%>'
-	pages{
+	repoUri = 'https://github.com/urosjarc/testGenerator'
+	pages {
 		from('build/mkdocs') {
 		}
 		from('build/docs/javadoc') {
@@ -74,11 +63,44 @@ githubPages {
 	}
 }
 
+task mkdocs(type: Exec) {
+	group = 'documentation'
+	description 'Builds mkdocs src files.'
+
+	workingDir 'docs'
+	executable 'sh'
+	args '-c', 'mkdocs build --clean --quiet'
+
+	ignoreExitValue true
+	standardOutput = new ByteArrayOutputStream()
+	ext.output = { standardOutput.toString() }
+	doLast {
+		if (execResult.exitValue) {
+			logger.error(output())
+			throw new TaskExecutionException(it,
+				new Exception("Command '${commandLine.join(' ')}' failed; "
+					+ "see task output for details.")
+			)
+		}
+	}
+}
+
+task updateBuildProps {
+	description 'Update resource file build.properties.'
+	ant.propertyfile(file: "src/main/resources/config/build.properties") {
+		entry(key: "date", value: new Date().format('dd.MM.yyyy'))
+		entry(key: "version", value: version)
+	}
+}
+
 run {
-	if (project.hasProperty('ENV')) {
+    if (project.hasProperty('ENV')) {
 		systemProperties['ENV'] = getProperty('ENV')
 	} else {
 		systemProperties['ENV'] = ENV
 	}
-	println "ENV: ${systemProperties['ENV']}"
+	println(":ENV <${systemProperties['ENV']}>");
 }
+
+prepareGhPages.dependsOn(javadoc, mkdocs)
+processResources.dependsOn(updateBuildProps)
