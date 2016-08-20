@@ -65,24 +65,10 @@ checkstyle {
 }
 
 changelog {
-	outputDirectory = file('$projectDir/docs/src')
+	outputDirectory = file("${project.rootDir}/docs")
 	fileName = 'changes.md'
 	markdown {
 		commitFormat = ' * %s'
-	}
-}
-
-checkstyleMain(type: Checkstyle, overwrite: true) {
-	configFile = file("${rootProject.rootDir}/config/checkstyle.xml")
-	reports {
-		xml.destination "$project.buildDir/reports/checkstyle/main.xml"
-	}
-}
-
-checkstyleTest(type: Checkstyle, overwrite: true) {
-	configFile = file("${rootProject.rootDir}/config/checkstyle-test.xml")
-	reports {
-		xml.destination "$project.buildDir/reports/checkstyle/test.xml"
 	}
 }
 
@@ -95,6 +81,22 @@ githubPages {
 			into('documentation')
 		}
 	}
+}
+
+task checkstyleMain(type: Checkstyle, overwrite: true) {
+	configFile = file("${project.rootDir}/config/checkstyle/main.xml")
+	source 'src/main'
+	include '**/*.java'
+	classpath = files()
+	ignoreFailures = false
+}
+
+task checkstyleTest(type: Checkstyle, overwrite: true) {
+	configFile = file("${project.rootDir}/config/checkstyle/test.xml")
+	source 'src/test'
+	include '**/*.java'
+	classpath = files()
+	ignoreFailures = false
 }
 
 task mkdocs(type: Exec) {

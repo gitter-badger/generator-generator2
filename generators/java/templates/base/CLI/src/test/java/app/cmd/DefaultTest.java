@@ -6,16 +6,16 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-@PrepareForTest({Default.class})
+@PrepareForTest({ Default.class })
 @RunWith(PowerMockRunner.class)
 public class DefaultTest {
 
 	@Before
-	public void setUp(){
+	public void setUp() {
 	}
 
 	@Test
-	public void test(){
+	public void test() {
 		new Default();
 	}
 

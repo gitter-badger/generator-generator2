@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-@PrepareForTest({Exec.class})
+@PrepareForTest({ Exec.class })
 @RunWith(PowerMockRunner.class)
 public class ExecTest {
 
@@ -16,7 +16,7 @@ public class ExecTest {
 
 	@Test
 	public void test() {
-		new Exec("name","options");
+		new Exec("name", "options");
 	}
 
 }

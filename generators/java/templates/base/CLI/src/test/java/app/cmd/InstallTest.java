@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-@PrepareForTest({Install.class})
+@PrepareForTest({ Install.class })
 @RunWith(PowerMockRunner.class)
 public class InstallTest {
 
