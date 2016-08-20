@@ -44,11 +44,6 @@ public class ConfigTest {
     public void APP() {
         assertNotNull(Config.APP.NAME);
         assertNotNull(Config.APP.DESCRIPTION);
-        assertNotNull(Config.APP.HOMEPAGE);
-        assertNotNull(Config.APP.LICENSE);
-        assertNotNull(Config.APP.AUTHOR_NAME);
-        assertNotNull(Config.APP.AUTHOR_EMAIL);
-        assertNotNull(Config.APP.AUTHOR_URL);
     }
 
     @Test

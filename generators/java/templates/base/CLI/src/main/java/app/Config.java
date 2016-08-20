@@ -41,11 +41,6 @@ final public class Config {
 
         public static final String NAME = appProps.getProperty("name");
         public static final String DESCRIPTION = appProps.getProperty("description");
-        public static final String HOMEPAGE = appProps.getProperty("homepage");
-        public static final String LICENSE = appProps.getProperty("license");
-        public static final String AUTHOR_NAME = appProps.getProperty("authorName");
-        public static final String AUTHOR_EMAIL = appProps.getProperty("authorEmail");
-        public static final String AUTHOR_URL = appProps.getProperty("authorUrl");
 
     }
 

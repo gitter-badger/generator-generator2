@@ -1,6 +1,6 @@
 site_name: <%=app.name%>
-site_url: <%=app.homepage%>
-repo_url: https://github.com/<%=app.githubUser%>/<%=app.name%>/
+site_url: <%=app.siteUrl%>
+repo_url: <%=app.repoUrl%>
 site_description: <%=app.description%>
 site_author: <%=app.authorName%>
 site_favicon: media/favicon.ico

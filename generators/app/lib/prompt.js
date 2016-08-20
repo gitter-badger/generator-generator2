@@ -21,14 +21,15 @@ exports.generator = function () {
 				"message": "Description:"
 			},
 			{
-				"type" : "input",
-				"name" : "keywords",
-				"message" : "Keywords:"
+				"type": "input",
+				"name": "repoUrl",
+				"message": "Repository url (https://github.com/USER/PROJECT):",
+				"validate": utils.validateUrl
 			},
 			{
 				"type": "input",
-				"name": "homepage",
-				"message": "Homepage:",
+				"name": "siteUrl",
+				"message": "Site url (https://USER.github.io/PROJECT):",
 				"validate": utils.validateUrl
 			},
 			{
@@ -54,18 +55,6 @@ exports.generator = function () {
 				"type": "input",
 				"name": "authorName",
 				"message": "Authors name:"
-			},
-			{
-				"type": "input",
-				"name": "authorEmail",
-				"message": "Author email:",
-				"validate" : utils.validateEmail
-			},
-			{
-				"type": "input",
-				"name": "authorUrl",
-				"message": "Author url:",
-				"validate": utils.validateUrl
 			},
 			{
 				"type" : "input",

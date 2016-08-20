@@ -7,8 +7,6 @@ buildscript {
     }
 }
 
-apply plugin: 'ch.raffael.pegdown-doclet'
-
 plugins {
 	id 'java-base'
 	id 'application'
@@ -19,8 +17,10 @@ plugins {
 	id 'net.nemerosa.versioning' version '1.5.0'
 	id 'org.standardout.versioneye' version '1.4.0'
 	id 'org.ajoberstar.github-pages' version '1.5.1'
-	id 'com.selesse.git.changelog' version '0.2.0'
+	id 'com.selesse.git.changelog' version '0.2.1'
 }
+
+apply plugin: 'ch.raffael.pegdown-doclet'
 
 repositories {
 	jcenter()
@@ -62,14 +62,19 @@ cobertura {
 
 checkstyle {
 	configFile = 'checkstyle.xml' as File
+	toolVersion = '6.14.1'
 }
 
 changelog {
-	outputDirectory = file("$projectDir/docs/src")
+	outputDirectory = file('$projectDir/docs/src')
+	fileName = 'changes.md'
+	markdown {
+		commitFormat = ' * %s'
+	}
 }
 
 githubPages {
-	repoUri = 'https://github.com/urosjarc/testGenerator'
+	repoUri = '<%=app.repoUrl%>'
 	pages {
 		from('build/mkdocs') {
 		}
@@ -118,5 +123,5 @@ run {
 	println(":ENV <${systemProperties['ENV']}>");
 }
 
-prepareGhPages.dependsOn(javadoc, mkdocs)
+prepareGhPages.dependsOn(javadoc, generateChangelog, mkdocs)
 processResources.dependsOn(updateBuildProps)

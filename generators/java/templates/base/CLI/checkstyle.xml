@@ -1,1 +1,1 @@
-<%=file.java.checkstyle%>
+<%=file.java_checkstyle%>
