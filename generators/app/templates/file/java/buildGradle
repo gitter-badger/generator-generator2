@@ -72,14 +72,14 @@ changelog {
 	}
 }
 
-task checkstyleMain(type: Checkstyle) {
+checkstyleMain(type: Checkstyle, overwrite: true) {
 	configFile = file("${rootProject.rootDir}/config/checkstyle.xml")
 	reports {
 		xml.destination "$project.buildDir/reports/checkstyle/main.xml"
 	}
 }
 
-task checkstyleTest(type: Checkstyle) {
+checkstyleTest(type: Checkstyle, overwrite: true) {
 	configFile = file("${rootProject.rootDir}/config/checkstyle-test.xml")
 	reports {
 		xml.destination "$project.buildDir/reports/checkstyle/test.xml"
@@ -103,7 +103,7 @@ task mkdocs(type: Exec) {
 
 	workingDir 'docs'
 	executable 'sh'
-	args '-c', 'mkdocs build --clean --quiet --config-file ./config/mkdocs.yml'
+	args '-c', 'mkdocs build --clean --quiet --config-file ' + project.rootDir + '/config/mkdocs.yml'
 
 	ignoreExitValue true
 	standardOutput = new ByteArrayOutputStream()

@@ -28,7 +28,7 @@ public class ConfigTest {
         //Setup mocks
         mockStatic(Preferences.class);
         prefsMock = mock(Preferences.class);
-        MemberModifier.field(Config.class, "prefs").set(instance, prefsMock);
+        MemberModifier.field(Config.class, "PREFS").set(instance, prefsMock);
 
         //Setup mocks actions
         when(Preferences.userNodeForPackage(Config.class)).thenReturn(prefsMock);
