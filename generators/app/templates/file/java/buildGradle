@@ -61,7 +61,6 @@ cobertura {
 }
 
 checkstyle {
-	configFile = 'checkstyle.xml' as File
 	toolVersion = '6.14.1'
 }
 
@@ -70,6 +69,20 @@ changelog {
 	fileName = 'changes.md'
 	markdown {
 		commitFormat = ' * %s'
+	}
+}
+
+task checkstyleMain(type: Checkstyle) {
+	configFile = file("${rootProject.rootDir}/config/checkstyle.xml")
+	reports {
+		xml.destination "$project.buildDir/reports/checkstyle/main.xml"
+	}
+}
+
+task checkstyleTest(type: Checkstyle) {
+	configFile = file("${rootProject.rootDir}/config/checkstyle-test.xml")
+	reports {
+		xml.destination "$project.buildDir/reports/checkstyle/test.xml"
 	}
 }
 
@@ -90,7 +103,7 @@ task mkdocs(type: Exec) {
 
 	workingDir 'docs'
 	executable 'sh'
-	args '-c', 'mkdocs build --clean --quiet'
+	args '-c', 'mkdocs build --clean --quiet --config-file ./config/mkdocs.yml'
 
 	ignoreExitValue true
 	standardOutput = new ByteArrayOutputStream()

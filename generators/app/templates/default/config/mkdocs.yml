@@ -7,7 +7,7 @@ site_favicon: media/favicon.ico
 copyright: Copyright © <%=app.createdAt.split('/')[2]%> <%=app.authorName%>
 
 theme: mkdocs #readthedocs
-docs_dir: src
+docs_dir: ../docs
 site_dir: ../build/mkdocs
 
 pages:
