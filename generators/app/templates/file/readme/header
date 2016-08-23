@@ -6,6 +6,7 @@ case 'java':%>
 <%break;case 'python':%>
 [![Pypi version][pypi]][pypi-url]
 <%}%>
+<!---Yeoman:versionBadges--->
 [![GitHub release][release]][release-url]
 [![Travis][travis]][travis-url]
 [![Coverage Status][coverage]][coverage-url]
