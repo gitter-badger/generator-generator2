@@ -1,1 +1,1 @@
-<%=files.gitignore%>
+<%-file.gitignore_java%>

@@ -1,76 +1,91 @@
 package app;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.prefs.Preferences;
-import org.apache.commons.validator.routines.UrlValidator;
 
-final public class Config {
+/**
+ * # All application configuration holder.
+ */
+public final class Config {
 
-    public static final String ENV = System.getProperty("ENV", "production");
-    private static final Preferences prefs = Preferences.userNodeForPackage(Config.class);
+	/** */
+	private Config() {
+	}
 
-    private static final Properties envProps = new Properties();
-    private static final Properties dbProps = new Properties();
-    private static final Properties appProps = new Properties();
-    private static final Properties buildProps = new Properties();
+	/**
+	 * Name of execution environment.
+	 */
+	public static final String ENV = System.getProperty("ENV", "production");
 
-    static {
-        try {
-            envProps.load(Main.class.getResourceAsStream("/config/env.properties"));
-            dbProps.load(Main.class.getResourceAsStream("/config/db.properties"));
-            appProps.load(Main.class.getResourceAsStream("/config/app.properties"));
-            buildProps.load(Main.class.getResourceAsStream("/config/build.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	/** */
+	private static final Preferences PREFS = Preferences.userNodeForPackage(Config.class);
+	/** */
+	private static final Properties ENV_PROPS = new Properties();
+	/** */
+	private static final Properties APP_PROPS = new Properties();
+	/** */
+	private static final Properties BUILD_PROPS = new Properties();
 
-    final static public class DB {
+	/**
+	 * Load all recources configuration properties files.
+	 */
+	static {
+		try {
+			ENV_PROPS.load(Main.class.getResourceAsStream("/config/env.properties"));
+			APP_PROPS.load(Main.class.getResourceAsStream("/config/app.properties"));
+			BUILD_PROPS.load(Main.class.getResourceAsStream("/config/build.properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-        public static final String USERNAME = dbProps.getProperty("username");
-        public static final String PASSWORD = dbProps.getProperty("password");
-        public static final String DRIVER = envProps.getProperty(ENV + "." + "db.driver");
-        public static final Boolean SEED = Boolean.parseBoolean(envProps.getProperty(ENV + "." + "db.seed"));
-        public static final String URL;
+	/**
+	 * Holder for all application informations.
+	 */
+	public static final class APP {
 
-        static {
-            String url = envProps.getProperty(ENV + "." + "db.url", null);
+		/** */
+		public static final String NAME = APP_PROPS.getProperty("name");
+		/** */
+		public static final String DESCRIPTION = APP_PROPS.getProperty("description");
 
-            if(new UrlValidator().isValid(url)){
-                url = new File(getInstallPath(), url).getPath();
-            }
+	}
 
-            URL=url;
-        }
+	/**
+	 * Information holder for current build version.
+	 */
+	public static final class BUILD {
 
-    }
+		/** */
+		public static final String DATE = BUILD_PROPS.getProperty("date");
+		/** */
+		public static final String VERSION = BUILD_PROPS.getProperty("version");
 
-    final static public class APP {
+	}
 
-        public static final String NAME = appProps.getProperty("name");
-        public static final String HOMEPAGE = appProps.getProperty("homepage");
-        public static final String LICENSE = appProps.getProperty("license");
-        public static final String DESCRIPTION = appProps.getProperty("description");
-        public static final String AUTHOR_NAME = appProps.getProperty("authorName");
-        public static final String AUTHOR_EMAIL = appProps.getProperty("authorEmail");
-        public static final String AUTHOR_URL = appProps.getProperty("authorUrl");
+	/**
+	 * Set preferences installation path for the application.
+	 * <p>
+	 * In this path application will store:
+	 * <p>
+	 * - Database.
+	 * - Reading user configuration files.
+	 * - Logging output.
+	 * - etc...
+	 *
+	 * @param path Should be something like `$USER_HOME`.
+	 */
+	public static void setInstallPath(final String path) {
+		PREFS.put("installPath", path);
+	}
 
-    }
-
-    final static public class BUILD {
-
-        public static final String DATE = buildProps.getProperty("date");
-        public static final String VERSION = buildProps.getProperty("version");
-
-    }
-
-    public static void setInstallPath(String path) {
-        prefs.put("installPath", path);
-    }
-
-    public static String getInstallPath() {
-        return prefs.get("installPath", null);
-    }
+	/**
+	 * Get installation path from preferences.
+	 *
+	 * @return String or null.
+	 */
+	public static String getInstallPath() {
+		return PREFS.get("installPath", null);
+	}
 }

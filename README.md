@@ -17,6 +17,12 @@ Then generate your new project:
 yo generate
 ```
 
+## Todo
+ 
+ * Make complete readme.
+ * Make gh-pages with javadoc + mkdocs.
+ * Generate changes from git.
+
 ## Generators features
 
 Generators will set up next feature for all project templates:

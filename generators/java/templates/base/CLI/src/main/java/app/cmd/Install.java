@@ -1,7 +1,12 @@
 package app.cmd;
 
+/** */
 public class Install {
-    public Install(){
-        System.out.println("Execute cmd command...");
-    }
+
+	/**
+	 * Nice and clean code execution steps in constructor.
+	 */
+	public Install() {
+		System.out.println("Execute install command...");
+	}
 }

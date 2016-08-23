@@ -5,8 +5,9 @@ var fs = require('fs');
 var pathJoin = require('path').join;
 var prompt = require('./prompt');
 var yosay = require('yosay');
-var ejsRender = require('ejs').render;
+var ejs = require('ejs');
 var walk = require('walk');
+var chalk = require('chalk');
 
 /**
  * Default subgenerator methods that will be executed when subgenerator is started.
@@ -14,7 +15,7 @@ var walk = require('walk');
 exports.prompting = function () {
 	var self = this;
 
-	var PROMPT = (this.config.get('subgenerator') == null ? 'base' : 'module');
+	var PROMPT = (this.config.get('subgenerator') == null || this.config.get('inited') == null ? 'base' : 'module');
 	var Q = prompt.subgenerator(
 		fs.readdirSync(self.templatePath('base')),
 		fs.readdirSync(self.templatePath('module'))
@@ -33,21 +34,52 @@ exports.configuring = function () {
 
 exports.writing = function () {
 	var self = this;
+	var toDir = self.destinationPath('.');
+	var defaultDir = pathJoin(self.sourceRoot(),'../../app/templates/default');
+
 	if (self.props.base) {
-
 		var fromDir = pathJoin(self.templatePath('base'), self.props.base);
-		var toDir = self.destinationPath('.');
-
-		self._walkWithEjs(fromDir,toDir,self.async());
-
 	}
 	else{
-		if(!(self.props.module in self))
-			throw new ReferenceError('Subgenerator(' + self.config.get('app').language + ') is missing "' + self.props.module + '" method!');
-
-		self[self.props.module]();
-
+		var fromDir = pathJoin(this.templatePath('module'),this.props.module);
 	}
+
+	self._walkWithEjs(fromDir,toDir,self.async());
+
+	if(self.props.base)
+        self._walkWithEjs(defaultDir,toDir,function(){});
+};
+
+exports.conflicts = function(){
+	var self = this;
+
+	if (self.props.base)
+		var method = self.props.base;
+	else
+        var method = self.props.module;
+
+	if(!(method in self))
+		throw new ReferenceError(
+			'Subgenerator(' + self.config.get('app').language + ') is missing "' +
+			method + '" method!'
+		);
+
+	//Inject yaml to files
+	var mainYaml = utils.yamlToJson(self.templatePath('main.yml'));
+	if(method in mainYaml){
+		for(var destPath in mainYaml[method]){
+			var file = mainYaml[method][destPath];
+			if(!('flag' in file) || !('text' in file)){
+				throw new Error(chalk.red.bold(
+					"\n > Message: " + destPath + 'must have (flag,text) keys!\n' +
+					" > File: " + self.templatePath('main.yml') + '\n'
+				));
+			}
+			self._appendToFileLine(destPath,file.flag,file.text);
+		}
+	}
+
+	self[method]();
 };
 
 /**
@@ -66,28 +98,105 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 	var self = this;
 	var config = self.config.getAll();
 	var configAll = self.config.getAll();
-	configAll.files = {};
+	configAll.file = {};
 
-	var defaultsDir = pathJoin(self.sourceRoot(),'../../app/templates/defaults');
+	var defaultsDir = pathJoin(self.sourceRoot(),'../../app/templates/file');
+	var defaultFiles = utils.walkSync(defaultsDir);
 
-	//Todo: Check if this works for subgenerators methods.
-	var defaultFiles = fs.readdirSync(defaultsDir);
 	for (var i in defaultFiles) {
 		var defaultFile = defaultFiles[i];
-		configAll.files[defaultFile] = ejsRender(self.fs.read(pathJoin(defaultsDir, defaultFile)), config);
+    	var key = defaultFile.replace(defaultsDir + '/', '').replace(/\//g, '_');
+		try{
+			configAll.file[key] = ejs.render(
+				self.fs.read(defaultFile),
+				config
+			);
+		} catch(err){
+			throw new Error(chalk.red.bold(
+				"\n > Message: " + err.message + '\n' +
+				" > File: " + defaultFile + '\n'
+			));
+		}
 	}
 
-	configAll.files.license = ejsRender(self.fs.read(pathJoin(defaultsDir,'../licenses', self.config.get('app').license)), config);
+	var licensePath = pathJoin(defaultsDir, '../licenses', self.config.get('app').license);
+	try{
+		configAll.file.license = ejs.render(
+			self.fs.read(licensePath),
+			config
+		);
+	} catch (err){
+		throw new Error(chalk.red.bold(
+			"\n > Message: " + err.message + '\n' +
+			" > File: " + licensePath + '\n'
+		));
+	}
 
 	var walker = walk.walk(fromDir);
 	walker.on("file", function (root, stat, next) {
 		var from = pathJoin(root, stat.name);
-		var to = ejsRender(from.replace(fromDir, toDir), config);
-		self.fs.copyTpl(from, to, configAll);
+		try{
+			var to = ejs.render(from.replace(fromDir, toDir), config);
+			var statNameArr = stat.name.split('.');
+
+			if(['gif','png','ico'].indexOf(statNameArr[statNameArr.length-1]) > -1){
+				self.fs.copy(from,to);
+			}else{
+				self.fs.write(to,ejs.render(self.fs.read(from),configAll));
+			}
+
+		} catch (err){
+			throw new Error(chalk.red.bold(
+				"\n > Message: " + err.message + '\n' +
+				" > File: " + from + '\n'
+			));
+		}
 		next();
 	});
 
 	walker.on('end', function () {
 		done();
 	});
+};
+
+/**
+ * This method will append code array after the line where is located lineFlag.
+ *
+ * @param destFile
+ * @param lineFlag
+ * @param codeArray
+ * @private
+ */
+exports._appendToFileLine = function(destFile,lineFlag,text){
+	var codeArray = text.split('\n');
+	var filePath = this.destinationPath(destFile);
+	var oldFileLines = this.fs.read(filePath).split('\n');
+	var newFileLines = [];
+	var lineFlagFound = false;
+
+	for(var i=0;i<oldFileLines.length;i++){
+		newFileLines.push(oldFileLines[i]);
+
+		if(oldFileLines[i].indexOf(lineFlag) != -1){
+			lineFlagFound = true;
+			var whiteSpaces = '';
+			for(var j=0;j<oldFileLines[i].length;j++){
+				if(oldFileLines[i][j] == '\t' || oldFileLines[i][j] == ' '){
+					whiteSpaces += oldFileLines[i][j];
+					continue;
+				} else {
+					break;
+				}
+			}
+			newFileLines.push(whiteSpaces + codeArray.join('\n' + whiteSpaces));
+		}
+	}
+	if(!lineFlagFound){
+		throw new ReferenceError(chalk.red.bold(
+			"\n > Message: Line flag (" + lineFlag + ") not found!\n" +
+			" > File: " + filePath + '\n'
+		));
+	}
+
+	this.fs.write(destFile,newFileLines.join('\n'));
 };

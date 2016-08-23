@@ -2,28 +2,28 @@
 
 var yeoman = require('yeoman-generator');
 var subgenerator = require('../app/lib/subgenerator');
-var utils = require('../app/lib/utils');
-var pathJoin = require('path').join;
 
 module.exports = yeoman.Base.extend({
-	javafx: function () {
-		var self = this;
 
-		this.log('Execute javafx');
+	/**
+	 * Base templates...
+	 */
 
-		var fromDir = pathJoin(this.templatePath('module'),this.props.module);
-		var toDir = this.destinationPath('.');
-		var config = this.config.getAll();
+    shell: function(){ },
+    javaFx: function(){ },
+    CLI : function(){
+		this.log('\n Todo:');
+		this.log([
+			'  * Execute gradle versionEyeCreate and replace readmes VERSIONEYE_PROJECT_ID with gradle.properties(versioneye.projectid).',
+			'  * Replace readmes CODEBEAT_PROJECT_ID with actual codebeat project id.',
+			'  * Make first push to activate readme.md badges.'
+		].join('\n'));
+    },
 
-	},
-	database: function(){
-		var self = this;
+	/**
+	 * Module templates...
+	 */
 
-		this.log('Execute database');
+    database: function(){ }
 
-		var fromDir = pathJoin(this.templatePath('module'),this.props.module);
-		var toDir = this.destinationPath('.');
-		
-		self._walkWithEjs(fromDir,toDir,self.async());
-	}
 }).extend(subgenerator);
