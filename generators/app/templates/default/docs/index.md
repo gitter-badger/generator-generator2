@@ -2,8 +2,8 @@
 
 <br>
 
-<%=file.readme_header%>
+<%-file.readme_header%>
 
 <br>
 
-<%=file.readme_body%>
+<%-file.readme_body%>

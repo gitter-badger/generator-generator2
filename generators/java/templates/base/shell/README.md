@@ -1,1 +1,1 @@
-<%=files.readme%>
+<%-files.readme%>

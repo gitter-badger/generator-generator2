@@ -1,10 +1,10 @@
-site_name: <%=app.name%>
-site_url: <%=app.siteUrl%>
-repo_url: <%=app.repoUrl%>
-site_description: <%=app.description%>
-site_author: <%=app.authorName%>
+site_name: <%-app.name%>
+site_url: <%-app.siteUrl%>
+repo_url: <%-app.repoUrl%>
+site_description: <%-app.description%>
+site_author: <%-app.authorName%>
 site_favicon: media/favicon.ico
-copyright: Copyright © <%=app.createdAt.split('/')[2]%> <%=app.authorName%>
+copyright: Copyright © <%-app.createdAt.split('/')[2]%> <%-app.authorName%>
 
 theme: mkdocs #readthedocs
 docs_dir: ../docs

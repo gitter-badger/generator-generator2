@@ -1,5 +1,5 @@
 /**
- * # <%=app.name%>
- * > <%=app.description%>
+ * # <%-app.name%>
+ * > <%-app.description%>
  */
 package app;

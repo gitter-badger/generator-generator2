@@ -125,9 +125,7 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 			if(['gif','png','ico'].indexOf(statNameArr[statNameArr.length-1]) > -1){
 				self.fs.copy(from,to);
 			}else{
-				self.fs.write(to, utils.decodeHtmlChars(
-					ejs.render(self.fs.read(from),configAll)
-				));
+				self.fs.write(to,ejs.render(self.fs.read(from),configAll));
 			}
 
 		} catch (err){
@@ -183,6 +181,5 @@ exports._appendToFileLine = function(destFile,lineFlag,codeArray){
 		));
 	}
 
-	var newFile = utils.decodeHtmlChars(newFileLines.join('\n'));
-	this.fs.write(destFile,newFile);
+	this.fs.write(destFile,newFileLines.join('\n'));
 };

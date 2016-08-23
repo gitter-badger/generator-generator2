@@ -51,10 +51,10 @@ sourceSets {
 }
 
 mainClassName = 'app.Main'
-group = '<%=java.groupId%>'
+group = '<%-java.groupId%>'
 sourceCompatibility = 1.8
 version = versioning.info.full
-description = '<%=app.description%>'
+description = '<%-app.description%>'
 
 cobertura {
 	coverageFormats = ['html', 'xml']
@@ -73,7 +73,7 @@ changelog {
 }
 
 githubPages {
-	repoUri = '<%=app.repoUrl%>'
+	repoUri = '<%-app.repoUrl%>'
 	pages {
 		from('build/mkdocs') {
 		}

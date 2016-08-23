@@ -2,11 +2,11 @@
 
 <br>
 
-<%=file.readme_header%>
+<%-file.readme_header%>
 
 <br>
 
-<%=file.readme_navigation%>
+<%-file.readme_navigation%>
  * [Contributions](#additional-info)
  * [Documentation](#additional-info)
  * [Change log](#additional-info)
@@ -14,13 +14,13 @@
  
 <br>
 
-<%=file.readme_body%>
+<%-file.readme_body%>
 
 ## Additional info
 For more informations (documentation, contributions, ...etc),
-visit [**project website**](<%=app.siteUrl%>).
+visit [**project website**](<%-app.siteUrl%>).
 
 ## License
-Copyright © <%=app.createdAt.split('/')[2]%> <%=app.authorName%>
+Copyright © <%-app.createdAt.split('/')[2]%> <%-app.authorName%>
 
-<%=app.license%>
+<%-app.license%>

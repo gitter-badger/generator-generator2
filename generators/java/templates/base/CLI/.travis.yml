@@ -1,1 +1,1 @@
-<%=file.travis_java%>
+<%-file.travis_java%>
