@@ -45,7 +45,9 @@ exports.writing = function () {
 	}
 
 	self._walkWithEjs(fromDir,toDir,self.async());
-	self._walkWithEjs(defaultDir,toDir,function(){});
+
+	if(self.props.base)
+        self._walkWithEjs(defaultDir,toDir,function(){});
 };
 
 exports.conflicts = function(){
@@ -61,6 +63,21 @@ exports.conflicts = function(){
 			'Subgenerator(' + self.config.get('app').language + ') is missing "' +
 			method + '" method!'
 		);
+
+	//Inject yaml to files
+	var mainYaml = utils.yamlToJson(self.templatePath('main.yml'));
+	if(method in mainYaml){
+		for(var destPath in mainYaml[method]){
+			var file = mainYaml[method][destPath];
+			if(!('flag' in file) || !('text' in file)){
+				throw new Error(chalk.red.bold(
+					"\n > Message: " + destPath + 'must have (flag,text) keys!\n' +
+					" > File: " + self.templatePath('main.yml') + '\n'
+				));
+			}
+			self._appendToFileLine(destPath,file.flag,file.text);
+		}
+	}
 
 	self[method]();
 };
@@ -150,9 +167,9 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
  * @param codeArray
  * @private
  */
-exports._appendToFileLine = function(destFile,lineFlag,codeArray){
+exports._appendToFileLine = function(destFile,lineFlag,text){
+	var codeArray = text.split('\n');
 	var filePath = this.destinationPath(destFile);
-
 	var oldFileLines = this.fs.read(filePath).split('\n');
 	var newFileLines = [];
 	var lineFlagFound = false;

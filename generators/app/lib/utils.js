@@ -1,4 +1,6 @@
 var fs = require('fs');
+var chalk = require('chalk');
+var yaml = require('js-yaml');
 
 exports.validateWord = function (input) {
 	return /^[a-zA-Z.]+$/.test(input) == true ? true : "Use letters from a-z and A-Z with dot!";
@@ -23,4 +25,17 @@ exports.walkSync = function walk(dir) {
         else results.push(file)
     });
     return results
+};
+
+exports.yamlToJson = function(path){
+	try {
+		var doc = yaml.safeLoad(fs.readFileSync(path, 'utf8'));
+	} catch (err) {
+		throw new Error(chalk.red.bold(
+			"\n > Message: " + err.message + '\n' +
+			" > File: " + path + '\n'
+		));
+	}
+
+	return doc;
 };
