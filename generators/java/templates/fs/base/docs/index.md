@@ -2,8 +2,8 @@
 
 <br>
 
-<%-file.readme_header%>
+<%-ejs.readme_header%>
 
 <br>
 
-<%-file.readme_body%>
+<%-ejs.readme_body%>

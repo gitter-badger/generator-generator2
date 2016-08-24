@@ -2,11 +2,11 @@
 
 <br>
 
-<%-file.readme_header%>
+<%-ejs.readme_header%>
 
 <br>
 
-<%-file.readme_navigation%>
+<%-ejs.readme_navigation%>
  * [Contributions](#additional-info)
  * [Documentation](#additional-info)
  * [Change log](#additional-info)
@@ -14,7 +14,7 @@
  
 <br>
 
-<%-file.readme_body%>
+<%-ejs.readme_body%>
 
 ## Additional info
 For more informations (documentation, contributions, ...etc),

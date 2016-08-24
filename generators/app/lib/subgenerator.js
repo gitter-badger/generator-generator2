@@ -28,26 +28,33 @@ exports.prompting = function () {
 };
 
 exports.configuring = function () {
+	//Todo: Make checking for this.props.module so injection will not inject 2*.
 	if (this.props.base)
 		this.config.set('subgenerator', this.props);
 };
 
 exports.writing = function () {
-	var self = this;
-	var toDir = self.destinationPath('.');
-	var defaultDir = pathJoin(self.sourceRoot(),'../../app/templates/default');
+	var destPath = this.destinationPath('.');
+	var fsBasePath = this.templatePath('fs/base');
+	var basePath;
+	var done = this.async();
+	var finish = { basePath : false, fsBasePath: false };
 
-	if (self.props.base) {
-		var fromDir = pathJoin(self.templatePath('base'), self.props.base);
-	}
-	else{
-		var fromDir = pathJoin(this.templatePath('module'),this.props.module);
-	}
+	if (this.props.base)
+		basePath = pathJoin(this.templatePath('base'), this.props.base);
+	else
+		basePath = pathJoin(this.templatePath('module'),this.props.module);
 
-	self._walkWithEjs(fromDir,toDir,self.async());
+	this._walkWithEjs(basePath,destPath,function(){
+		finish.basePath = true;
+		if(finish.fsBasePath) done();
+	});
 
-	if(self.props.base)
-        self._walkWithEjs(defaultDir,toDir,function(){});
+	if(this.props.base)
+        this._walkWithEjs(fsBasePath,destPath,function(){
+			finish.fsBasePath = true;
+			if(finish.basePath) done();
+		});
 };
 
 exports.conflicts = function(){
@@ -57,27 +64,13 @@ exports.conflicts = function(){
 		var method = self.props.base;
 	else
         var method = self.props.module;
+		//Todo: Inject lines (use: this._appendToLine, utils.yamlToJson)
 
 	if(!(method in self))
 		throw new ReferenceError(
 			'Subgenerator(' + self.config.get('app').language + ') is missing "' +
 			method + '" method!'
 		);
-
-	//Inject yaml to files
-	var mainYaml = utils.yamlToJson(self.templatePath('main.yml'));
-	if(method in mainYaml){
-		for(var destPath in mainYaml[method]){
-			var file = mainYaml[method][destPath];
-			if(!('flag' in file) || !('text' in file)){
-				throw new Error(chalk.red.bold(
-					"\n > Message: " + destPath + 'must have (flag,text) keys!\n' +
-					" > File: " + self.templatePath('main.yml') + '\n'
-				));
-			}
-			self._appendToFileLine(destPath,file.flag,file.text);
-		}
-	}
 
 	self[method]();
 };
@@ -96,32 +89,36 @@ exports.conflicts = function(){
  */
 exports._walkWithEjs = function (fromDir, toDir, done) {
 	var self = this;
+
+	var ejsIgnore = ['gif','png','ico'];
 	var config = self.config.getAll();
-	var configAll = self.config.getAll();
-	configAll.file = {};
+	var configWithFsEjs = self.config.getAll();
+	configWithFsEjs.ejs = {};
 
-	var defaultsDir = pathJoin(self.sourceRoot(),'../../app/templates/file');
-	var defaultFiles = utils.walkSync(defaultsDir);
+	var fsEjsPath = self.templatePath('fs/ejs');
+	var fsEjsFiles = utils.walkSync(fsEjsPath);
+	var licensePath = pathJoin(self.templatePath(), '../../app/templates/licenses', self.config.get('app').license);
 
-	for (var i in defaultFiles) {
-		var defaultFile = defaultFiles[i];
-    	var key = defaultFile.replace(defaultsDir + '/', '').replace(/\//g, '_');
+	//Filling configWithFsEjs...
+	for (var i in fsEjsFiles) {
+		var fsEjsFile = fsEjsFiles[i];
+    	var key = fsEjsFile.replace(fsEjsPath + '/', '').replace(/\//g, '_');
 		try{
-			configAll.file[key] = ejs.render(
-				self.fs.read(defaultFile),
+			configWithFsEjs.ejs[key] = ejs.render(
+				self.fs.read(fsEjsFile),
 				config
 			);
 		} catch(err){
 			throw new Error(chalk.red.bold(
 				"\n > Message: " + err.message + '\n' +
-				" > File: " + defaultFile + '\n'
+				" > File: " + fsEjsFile + '\n'
 			));
 		}
 	}
 
-	var licensePath = pathJoin(defaultsDir, '../licenses', self.config.get('app').license);
+	//Filling license content to ejs.license
 	try{
-		configAll.file.license = ejs.render(
+		configWithFsEjs.ejs.license = ejs.render(
 			self.fs.read(licensePath),
 			config
 		);
@@ -139,10 +136,10 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 			var to = ejs.render(from.replace(fromDir, toDir), config);
 			var statNameArr = stat.name.split('.');
 
-			if(['gif','png','ico'].indexOf(statNameArr[statNameArr.length-1]) > -1){
+			if(ejsIgnore.indexOf(statNameArr[statNameArr.length-1]) > -1){
 				self.fs.copy(from,to);
 			}else{
-				self.fs.write(to,ejs.render(self.fs.read(from),configAll));
+				self.fs.write(to,ejs.render(self.fs.read(from),configWithFsEjs));
 			}
 
 		} catch (err){
