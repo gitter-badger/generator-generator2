@@ -4,6 +4,7 @@ var yosay = require('yosay');
 var utils = require('./lib/utils');
 var fs = require('fs');
 var Q = require('./lib/prompt').generator();
+var path = require('path');
 
 module.exports = generator.Base.extend({
 	prompting: function () {
@@ -42,7 +43,10 @@ module.exports = generator.Base.extend({
 	},
 
 	_subgenerator: function(){
-		this.composeWith('generate:' + this.config.get('app').language);
+		this.composeWith(
+			'generate:' + this.config.get('app').language,
+			{},
+			{local:path.join(__dirname,'../java')});
 	},
 
 	end: function(){
