@@ -14,7 +14,6 @@ var chalk = require('chalk');
  */
 exports.prompting = function () {
 	var self = this;
-
 	var PROMPT = (this.config.get('subgenerator') == null || this.config.get('inited') == null ? 'base' : 'module');
 	var Q = prompt.subgenerator(
 		fs.readdirSync(self.templatePath('base')),
@@ -45,16 +44,19 @@ exports.writing = function () {
 	else
 		basePath = pathJoin(this.templatePath('module'),this.props.module);
 
-	this._walkWithEjs(basePath,destPath,function(){
-		finish.basePath = true;
-		if(finish.fsBasePath) done();
-	});
-
 	if(this.props.base)
         this._walkWithEjs(fsBasePath,destPath,function(){
 			finish.fsBasePath = true;
 			if(finish.basePath) done();
 		});
+	else{
+		finish.fsBasePath = true;
+	}
+
+	this._walkWithEjs(basePath,destPath,function(){
+		finish.basePath = true;
+		if(finish.fsBasePath) done();
+	});
 };
 
 exports.conflicts = function(){
