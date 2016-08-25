@@ -1,32 +1,55 @@
 'use strict';
-var path = require('path');
+
 var assert = require('yeoman-assert');
 var helpers = require('yeoman-test');
-var fs = require('fs-extra');
+var fsx = require('fs-extra');
+var config = require('../../config/test');
 
-describe('java:CLI', function () {
+var L = 'java';
+var B = 'CLI';
+var testPath = L + '_' + B;
+
+describe(config.getText([L,B]), function () {
+
 	before(function () {
-		return helpers.run(path.join(__dirname, '../../generators/app'))
-			.withPrompts({
-				"name": "projectName",
-				"description": "This is project name description for the readme itd...",
-				"repoUrl": "https://github.com/urosjarc/projectName",
-				"siteUrl": "https://urosjarc.github.io/projectName",
-				"license": "MIT License",
-				"githubUser": "urosjarc",
-				"authorName": "Uros Jarc",
-				"versionEyeApiKey": "35bce4377c237824ed6e",
-				"language": "java",
-				"groupId": "com.github.urosjarc",
-				"base": "CLI"
-			}).toPromise();
+		return helpers
+            .run(config.getGenPath())
+            .inTmpDir(function(dir){
+				var done = this.async();
+				//Todo: Copy dir to java_cli
+			})
+            .withPrompts(config.getPrompt(L,B))
+            .toPromise();
 	});
 
 	it('creates files', function () {
+		console.log('1 it...');
 		assert.file([
 			'.yo-rc.json',
 			'README.md'
 		]);
+	});
+
+	describe(config.getText([L,B,'database']), function () {
+
+		console.log('2 describe...');
+		before(function () {
+			return helpers
+				.run(config.getGenPath())
+				.inDir(config.getTestPath(testPath))
+				.withLocalConfig(config.getConfig(L,B))
+				.withPrompts({
+					"module": "database"
+				}).toPromise();
+		});
+
+		it('creates files', function () {
+			console.log('2 it...');
+			assert.file([
+				'src/main/java/app/db'
+			]);
+		});
+
 	});
 });
 
