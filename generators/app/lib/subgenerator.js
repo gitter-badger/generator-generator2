@@ -80,9 +80,9 @@ exports.conflicts = function(){
 /**
  * This method will walk dir and replace file and path ejs templates strings with yo-rc json
  * configuration and put names of all defaults file in ejs configuration and place values
- * as content of the same file... ejs.config.file[fileNameFromDefault] = contentOfTheSameFileFromDefault.
+ * as content of the same file... ejs.fun.file[fileNameFromDefault] = contentOfTheSameFileFromDefault.
  *
- * !!! ejs.config.file.licence = licences[app.licence].readFile()
+ * !!! ejs.fun.file.licence = licences[app.licence].readFile()
  *
  * @param fromDir
  * @param toDir
