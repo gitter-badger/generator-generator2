@@ -16,10 +16,8 @@ describe(fun.getText([L, B]), function () {
 
 	before(function () {
 		return helpers
+			.cd(fun.getTestPath(testPath))
 			.run(fun.getGenPath())
-			.inTmpDir(function (dir) {
-				tempTestingDir = dir;
-			})
 			.withPrompts(fun.getPrompt(L, B))
 			.toPromise()
 			.then(function () {
