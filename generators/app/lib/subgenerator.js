@@ -14,7 +14,6 @@ var chalk = require('chalk');
  */
 exports.prompting = function () {
 	var self = this;
-
 	var PROMPT = (this.config.get('subgenerator') == null || this.config.get('inited') == null ? 'base' : 'module');
 	var Q = prompt.subgenerator(
 		fs.readdirSync(self.templatePath('base')),
@@ -35,7 +34,7 @@ exports.configuring = function () {
 
 exports.writing = function () {
 	var destPath = this.destinationPath('.');
-	var fsBasePath = this.templatePath('fs/base');
+	var fsBasePath = this.templatePath('setup/base');
 	var basePath;
 	var done = this.async();
 	var finish = { basePath : false, fsBasePath: false };
@@ -45,16 +44,19 @@ exports.writing = function () {
 	else
 		basePath = pathJoin(this.templatePath('module'),this.props.module);
 
-	this._walkWithEjs(basePath,destPath,function(){
-		finish.basePath = true;
-		if(finish.fsBasePath) done();
-	});
-
 	if(this.props.base)
         this._walkWithEjs(fsBasePath,destPath,function(){
 			finish.fsBasePath = true;
 			if(finish.basePath) done();
 		});
+	else{
+		finish.fsBasePath = true;
+	}
+
+	this._walkWithEjs(basePath,destPath,function(){
+		finish.basePath = true;
+		if(finish.fsBasePath) done();
+	});
 };
 
 exports.conflicts = function(){
@@ -78,9 +80,9 @@ exports.conflicts = function(){
 /**
  * This method will walk dir and replace file and path ejs templates strings with yo-rc json
  * configuration and put names of all defaults file in ejs configuration and place values
- * as content of the same file... ejs.config.file[fileNameFromDefault] = contentOfTheSameFileFromDefault.
+ * as content of the same file... ejs.fun.file[fileNameFromDefault] = contentOfTheSameFileFromDefault.
  *
- * !!! ejs.config.file.licence = licences[app.licence].readFile()
+ * !!! ejs.fun.file.licence = licences[app.licence].readFile()
  *
  * @param fromDir
  * @param toDir
@@ -95,7 +97,7 @@ exports._walkWithEjs = function (fromDir, toDir, done) {
 	var configWithFsEjs = self.config.getAll();
 	configWithFsEjs.ejs = {};
 
-	var fsEjsPath = self.templatePath('fs/ejs');
+	var fsEjsPath = self.templatePath('setup/ejs');
 	var fsEjsFiles = utils.walkSync(fsEjsPath);
 	var licensePath = pathJoin(self.templatePath(), '../../app/templates/licenses', self.config.get('app').license);
 
