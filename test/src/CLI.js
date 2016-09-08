@@ -12,17 +12,11 @@ var testPath = L + '_' + B;
 
 describe(fun.getText([L, B]), function () {
 
-	var tempTestingDir = null;
-
 	before(function () {
 		return helpers
-			.cd(fun.getTestPath(testPath))
 			.run(fun.getGenPath())
+			.cd(fun.getTestPath(testPath))
 			.withPrompts(fun.getPrompt(L, B))
-			.toPromise()
-			.then(function () {
-				fse.copySync(tempTestingDir, fun.getTestPath(testPath));
-			});
 	});
 
 	it('Creates default files.', function () {
@@ -38,30 +32,24 @@ describe(fun.getText([L, B]), function () {
 		]);
 	});
 
-	describe(fun.getText([L, B, 'database']), function () {
-
-		before(function () {
-			return helpers
-				.run(fun.getGenPath())
-				.inTmpDir(function (dir) {
-					tempTestingDir = dir;
-				})
-				.withLocalConfig(fun.getConfig(L, B, true))
-				.withPrompts({
-					"module": "database"
-				}).toPromise()
-				.then(function () {
-					fse.copySync(tempTestingDir, fun.getTestPath(testPath));
-				});
-		});
-
-		it('Creates base specific files.', function () {
-			assert.file([
-				'src/main/java/app/db'
-			]);
-		});
-
-	});
+	// describe(fun.getText([L, B, 'database']), function () {
+    //
+	// 	// before(function () {
+	// 	// 	return helpers
+	// 	// 		.run(fun.getGenPath())
+	// 	// 		.inTmpDir(function (dir) {
+	// 	// 			tempTestingDir = dir;
+	// 	// 		})
+	// 	// 		.withLocalConfig(fun.getConfig(L, B, true))
+	// 	// 		.withPrompts({
+	// 	// 			"module": "database"
+	// 	// 		}).toPromise()
+	// 	// 		.then(function () {
+	// 	// 			fse.copySync(tempTestingDir, fun.getTestPath(testPath));
+	// 	// 		});
+	// 	// });
+    //
+	// });
 });
 
 
