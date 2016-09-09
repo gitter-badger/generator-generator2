@@ -1,9 +1,5 @@
 var path = require('path');
 
-exports.getTestPath = function (folderName) {
-	return path.join(__dirname, '../build/test', folderName);
-};
-
 exports.getGenPath = function(){
 	return path.join(__dirname, '../generators/app');
 };
@@ -30,10 +26,6 @@ exports.getPrompt = function (language, baseName) {
 	}
 
 	return def;
-};
-
-exports.getText = function(array){
-	return array.join(':');
 };
 
 exports.getConfig = function (language,baseName,inited) {

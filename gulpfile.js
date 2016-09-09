@@ -45,6 +45,20 @@ gulp.task('test', ['pre-test'], function (cb) {
     });
 });
 
+gulp.task('e2e', function (cb) {
+	var mochaErr;
+
+	gulp.src('e2e/**/*.js')
+		.pipe(plumber())
+		.pipe(mocha({reporter: 'spec'}))
+		.on('error', function (err) {
+			mochaErr = err;
+		})
+		.on('end', function () {
+			cb(mochaErr);
+		});
+});
+
 gulp.task('watch', function () {
   gulp.watch(['generators/**/*.js', 'test/**'], ['test']);
 });

@@ -10,18 +10,19 @@ describe('Java CLI generator', function () {
 	before(function () {
 		return helpers
 			.run(fun.getGenPath())
+			.cd(__dirname)
 			.withPrompts(fun.getPrompt('java','CLI'))
 			.toPromise();
 	});
 
-	it('Creates default files.', function () {
+	it('Creates default files', function () {
 		assert.file([
 			'.yo-rc.json',
 			'LICENSE'
 		]);
 	});
 
-	it('Creates base specific files.', function () {
+	it('Creates base specific files', function () {
 		assert.file([
 			'src/main/java/app/cmd'
 		]);

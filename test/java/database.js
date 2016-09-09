@@ -16,7 +16,7 @@ describe('Java database subgen', function () {
 				}).toPromise();
 		});
 
-		it('Creates default files.',function(){
+		it('Creates default files',function(){
 			assert.file([
 				'src/main/java/app/db/Db.java'
 			]);
