@@ -19,59 +19,12 @@ yo generate
 
 ## Todo
  
- * Make complete readme.
- * Make gh-pages with javadoc + mkdocs.
- * Generate changes from git.
+ * Appi calls to services (license, versioneye, ...)
+ * Make logger for generator.
 
-## Generators features
+## Generated app features
 
-Generators will set up next feature for all project templates:
-
-#### Defaults
-
- * testing environment,
- * build tool,
- * default project logo image,
- * continuous integration tool,
- * readme structure with badges and logo image,
- * default project files: (licence, history, contributing, authors, etc...),
- * default vcs files: (gitignore, gitmodules, etc...),
- * documentation environment,
- * project arhitecture: (tests,src, etc...),
- * environent configuration (test,development,production),
- * version reading from git,
- * change log generating from git flow,
- * auto deploy (docs, exec),
- * database,
- * generate deb file for linux,
- * logger
- * error reporting
- 
-#### CLI (console line interface)
-
- * docopt,
- 
-#### GUI (graphical user interface)
-
- * docopt,
- * setup framework,
- * about framework
- * help framework,
- * module base project,
- 
-#### WEB
-
- * heroku
- 
-## Subgenerators features
-
- * http service generator,
- * module generator,
- 
-## Links
-
- * https://docs.npmjs.com/files/package.json
- * http://choosealicense.com/
+ * Todo: List this...
 
 ## Getting To Know Yeoman
 
@@ -83,7 +36,6 @@ Generators will set up next feature for all project templates:
 ## License
 
 MIT © [Uros Jarc](https://github.com/urosjarc)
-
 
 [npm-image]: https://badge.fury.io/js/generator-generate.svg
 [npm-url]: https://npmjs.org/package/generator-generate

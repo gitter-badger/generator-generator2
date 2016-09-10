@@ -16,7 +16,7 @@ describe('java CLI generator:', function () {
 		return 'gradle --project-dir ' + genPath + task;
 	};
 
-	it('Should exist in build foldere',function(){
+	it('Should exist in build folder',function(){
 		yoAssert.file([ genPath ]);
 	});
 
@@ -39,7 +39,7 @@ describe('java CLI generator:', function () {
 		});
 
 		it('test task should pass',function(done){
-			this.timeout(10000);
+			this.timeout(50000);
 			nexpect
 				.spawn(gradleTask('test'))
 				.run(function(err, stdout, exitcode){

@@ -1,9 +1,9 @@
 'use strict';
 var generator = require('yeoman-generator');
 var yosay = require('yosay');
-var utils = require('./lib/utils');
+var utils = require('./utils');
 var fs = require('fs');
-var Q = require('./lib/prompt').generator();
+var Q = require('./prompt').generator();
 var path = require('path');
 
 module.exports = generator.Base.extend({
