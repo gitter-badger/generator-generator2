@@ -39,3 +39,49 @@ exports.yamlToJson = function(path){
 
 	return doc;
 };
+
+exports.getDate = function(){
+	var date = new Date();
+	return date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
+};
+
+exports.getJsonValue = function (keyArr,json){
+	if(keyArr.length > 1){
+		var newJson = json[keyArr[0]];
+		if(newJson instanceof Object){
+			return this.getJsonValue(keyArr.slice(1),newJson)
+		} else {
+			return undefined;
+		}
+	} else {
+		return json[keyArr[0]];
+	}
+};
+
+exports.setJsonValue = function(value,keyArr,json){
+	if(keyArr.length > 1){
+		var newJson = json[keyArr[0]];
+		if(newJson instanceof Object){
+			newJson = this.getJsonValue(keyArr.slice(1),newJson);
+			return newJson;
+		} else {
+			throw new Error('Todo: Do this...');
+		}
+	} else {
+		json[keyArr[0]] = value;
+		return json;
+	}
+};
+
+exports.validateAppName = function(name){
+
+	var nameArr = name.split('-');
+
+	if(
+		nameArr[0] != 'generator' ||
+		this.validateWord(nameArr[1]) != true
+	){ throw new Error([
+		'Generator app name failed to validate!',
+		' > (generator-NAME) != ' + name
+	].join('\n'))}
+};

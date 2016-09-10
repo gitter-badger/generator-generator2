@@ -2,14 +2,14 @@
 
 var assert = require('assert');
 var yoAssert = require('yeoman-assert');
-var GenHelp = require('../GenHelp');
+var Helper = require('../helper');
 
-var genHelp = new GenHelp('java','CLI');
+var helper = new Helper('java','CLI');
 
-describe(genHelp.describe(), function () {
+describe(helper.describe(), function () {
 
 	before(function () {
-		return genHelp.runGenerator();
+		return helper.runGenerator();
 	});
 
 	it('Creates default files', function () {
@@ -28,7 +28,7 @@ describe(genHelp.describe(), function () {
 	describe('database subgenerator:',function(){
 
 		before(function () {
-			return genHelp.runSubgenerator('database');
+			return helper.runSubgenerator('database');
 		});
 
 		it('Creates default files',function(){

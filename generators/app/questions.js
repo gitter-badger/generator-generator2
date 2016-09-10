@@ -7,8 +7,7 @@ var utils = require('./utils');
  */
 exports.generator = function () {
 	return {
-		"yosay": "♥ Java ♥\n♥ TypeScript ♥\n♥ Node ♥\n♥ Python ♥",
-		"generator": [
+		"app": [
 			{
 				"type": "input",
 				"name": "name",
@@ -72,6 +71,7 @@ exports.generator = function () {
 				]
 			}
 		],
+
 		"java" : [
 			{
 				"type": "input",
@@ -89,26 +89,24 @@ exports.generator = function () {
  * @param moduleChoices
  * @returns {{subgenerator: {base: *[], module: *[]}}}
  */
-exports.subgenerator = function (baseChoices, moduleChoices) {
+exports.subGenerator = function (baseChoices, moduleChoices) {
 	return {
-		"subgenerator": {
-			"base": [
-				{
-					"type": "list",
-					"name": "base",
-					"message": "Select project base:",
-					"choices": baseChoices
-				}
-			],
-			"module": [
-				{
-					"type": "list",
-					"name": "module",
-					"message": "Select module generator:",
-					"choices": moduleChoices
-				}
-			]
-		}
+        "base": [
+            {
+                "type": "list",
+                "name": "base",
+                "message": "Select project base:",
+                "choices": baseChoices
+            }
+        ],
+        "module": [
+            {
+                "type": "list",
+                "name": "module",
+                "message": "Select module generator:",
+                "choices": moduleChoices
+            }
+        ]
 	};
 };
 

@@ -4,7 +4,7 @@ var path = require('path');
 var yoTest = require('yeoman-test');
 var fse = require('fs-extra');
 
-function GenHelp(language,baseName){
+function Helper(language, baseName){
 	this.language = language;
 	this.baseName = baseName;
 
@@ -32,7 +32,9 @@ function GenHelp(language,baseName){
 	this._prompt.base = baseName;
 }
 
-GenHelp.prototype.runGenerator = function(){
+var method = Helper.prototype;
+
+method.runGenerator = function(){
 	if(this.getTestDir().indexOf('/generator-generate/build/') == -1)
 		throw new Error( 'Test dir('+this.getTestDir()+') not in /generator-generate/build/');
 	fse.removeSync(this.getTestDir());
@@ -43,7 +45,7 @@ GenHelp.prototype.runGenerator = function(){
 		.toPromise();
 };
 
-GenHelp.prototype.runSubgenerator = function(moduleName){
+method.runSubgenerator = function(moduleName){
 	return yoTest
 		.run(this.getPath())
 		.inDirKeep(this.getTestDir())
@@ -53,7 +55,7 @@ GenHelp.prototype.runSubgenerator = function(moduleName){
 		}).toPromise();
 };
 
-GenHelp.prototype.getConfig = function (isInited) {
+method.getConfig = function (isInited) {
 	var config = this._config;
 
 	config.inited = isInited;
@@ -67,20 +69,20 @@ GenHelp.prototype.getConfig = function (isInited) {
 	return config;
 };
 
-GenHelp.prototype.getPath= function(){
+method.getPath= function(){
 	return path.join(__dirname, '../generators/app');
 };
 
-GenHelp.prototype.describe = function(){
+method.describe = function(){
 	return this.language
 		+ ' ' + this.baseName + ' generator:'
 };
 
-GenHelp.prototype.getTestDir = function(){
+method.getTestDir = function(){
 	return path.join(__dirname, '../build',this.language,this.baseName);
 };
 
-GenHelp.prototype.getPrompt = function () {
+method.getPrompt = function () {
 	var prompt = this._prompt;
 
 	if (this.language == 'java')
@@ -89,4 +91,4 @@ GenHelp.prototype.getPrompt = function () {
 	return prompt;
 };
 
-module.exports = GenHelp;
+module.exports = Helper;

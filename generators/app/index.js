@@ -1,69 +1,50 @@
 'use strict';
 var generator = require('yeoman-generator');
-var yosay = require('yosay');
-var utils = require('./utils');
-var fs = require('fs');
-var Q = require('./prompt').generator();
 var path = require('path');
+var fs = require('fs');
+
+var utils = require('./utils');
+
+var Helper = require('./helper');
 
 module.exports = generator.Base.extend({
 
-	//Setting configuration for all context methods.
-	initializing: function(){ },
+	initializing: function(){
+		this.gen = new Helper(this);
+	},
 
-	//Getting only prompts from user.
 	prompting: function () {
 		var self = this;
 
-		if (!this.config.get('inited') && !this.config.get('app')) {
+		if (this.gen.isInited()) {
 
-			this.log(yosay(Q.yosay));
+			this.gen.sayWelcome();
 
-			return this.prompt(Q.generator).then(function (A0) {
-				return self.prompt(Q[A0.language]).then(function (A1) {
+			return this.gen.initPrompt(function(answeres){
+				self.gen.createYoRc(answeres);
+			});
 
-					self.props = {
-						app: A0
-					};
-					self.props[A0.language] = A1;
+		} else {
 
-					self._configuring();
-					self._generator();
+			this.gen.sayWelcomeBack();
 
-				}.bind(self));
-			}.bind(this));
 		}
 
-		this.log(yosay(this.config.get('app').authorName + " ♥ " + this.config.get('app').name));
-		self._subgenerator();
-
-	},
-
-	//Saving configuration.
-	_configuring: function () {
-		var date = new Date();
-		this.props.app.createdAt =  date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
-		this.config.set(this.props);
-		var yoRc = { "generator-generate" : this.config.getAll() };
-		fs.writeFileSync(this.destinationPath('.yo-rc.json'),JSON.stringify(yoRc));
 	},
 
 	/**
 	 * DEFAULTS
 	 */
 	compose: function(){
-		this.composeWith(
-			'generate:' + this.config.get('app').language,
-			{},
-			{local:path.join(__dirname,'../java')});
+		this.gen.callSubGenerator(
+			this.gen.getYoRcValue('app.language')
+		);
 	},
 
 	end: function(){
 
-		if(!this.config.get('inited'))
-			this.config.set('inited',true);
+        this.gen.setYoRcValue('inited',true);
 
-		this.log('\n ♥ Yeoman loves you! ♥');
 	}
 });
 
