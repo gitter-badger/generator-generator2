@@ -10,6 +10,8 @@ import org.neo4j.ogm.config.Configuration;
 import org.neo4j.ogm.service.Components;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
+import java.util.Properties;
+import java.io.IOException;
 
 
 /**

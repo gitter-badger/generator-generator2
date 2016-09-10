@@ -1,0 +1,6 @@
+./build.gradle:
+  flag: //Yeoman:libs
+  text: |-
+    compile 'com.airhacks:afterburner.fx:1.6.2'
+    compile 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.0'
+    compile 'javax.inject:javax.inject:1'

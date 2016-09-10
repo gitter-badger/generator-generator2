@@ -66,13 +66,25 @@ exports.conflicts = function(){
 		var method = self.props.base;
 	else
         var method = self.props.module;
-		//Todo: Inject lines (use: this._appendToLine, utils.yamlToJson)
 
 	if(!(method in self))
 		throw new ReferenceError(
 			'Subgenerator(' + self.config.get('app').language + ') is missing "' +
 			method + '" method!'
 		);
+
+	var inject = utils.yamlToJson(pathJoin(
+		this.templatePath('setup/injector'),
+		method + '.yml'
+	));
+
+	for(var file in inject){
+		this._appendToFileLine(
+			file,
+			inject[file].flag,
+			inject[file].text
+		);
+	}
 
 	self[method]();
 };
