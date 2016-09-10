@@ -7,6 +7,11 @@ var Q = require('./prompt').generator();
 var path = require('path');
 
 module.exports = generator.Base.extend({
+
+	//Setting configuration for all context methods.
+	initializing: function(){ },
+
+	//Getting only prompts from user.
 	prompting: function () {
 		var self = this;
 
@@ -23,7 +28,7 @@ module.exports = generator.Base.extend({
 					self.props[A0.language] = A1;
 
 					self._configuring();
-					self._subgenerator();
+					self._generator();
 
 				}.bind(self));
 			}.bind(this));
@@ -34,6 +39,7 @@ module.exports = generator.Base.extend({
 
 	},
 
+	//Saving configuration.
 	_configuring: function () {
 		var date = new Date();
 		this.props.app.createdAt =  date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
@@ -42,7 +48,10 @@ module.exports = generator.Base.extend({
 		fs.writeFileSync(this.destinationPath('.yo-rc.json'),JSON.stringify(yoRc));
 	},
 
-	_subgenerator: function(){
+	/**
+	 * DEFAULTS
+	 */
+	compose: function(){
 		this.composeWith(
 			'generate:' + this.config.get('app').language,
 			{},

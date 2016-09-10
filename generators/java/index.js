@@ -1,7 +1,7 @@
 'use strict';
 
 var yeoman = require('yeoman-generator');
-var subgenerator = require('../app/subgenerator');
+var generator = require('../app/generator');
 
 module.exports = yeoman.Base.extend({
 
@@ -26,4 +26,4 @@ module.exports = yeoman.Base.extend({
 
     database: function(){ }
 
-}).extend(subgenerator);
+}).extend(generator);
