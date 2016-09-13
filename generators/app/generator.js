@@ -1,9 +1,7 @@
 'use strict';
 
-var utils = require('./utils');
 var questions = require('./questions');
 var fs = require('fs');
-var pathJoin = require('path').join;
 
 var Helper = require('./helper');
 
@@ -36,16 +34,15 @@ exports.prompting = function () {
 exports.configuring = function(){
 
 	if(!this.gen.isInited()) {
-		var yoRc = this.answeres;
-		yoRc.module = [];
-		this.gen.setYoRcValue('subgenerator', yoRc);
+		this.gen.setYoRcValue('subgenerator', this.answeres);
+		this.gen.setYoRcValue('subgenerator.module',[]);
 	} else
 		this.gen.setYoRcValue(
 			'subgenerator.module',
 			this.gen.getYoRcValue('subgenerator.module').push(
 				this.answeres.module
 			)
-		)
+		);
 };
 
 exports.writing = function () {
@@ -58,73 +55,12 @@ exports.writing = function () {
 };
 
 exports.conflicts = function(){
-	var self = this;
 
-	if (self.gen.isInited())
-        var method = self.answeres.module;
-	else
-		var method = self.answeres.base;
+	var subGenMethod = this.gen.isInited() ? this.answeres.module : this.answeres.base;
 
-	if(!(method in self))
-		throw new ReferenceError(
-			'Subgenerator(' + self.config.get('app').language + ') is missing "' +
-			method + '" method!'
-		);
+	this.gen.runLineInjector(subGenMethod);
 
-	var inject = utils.yamlToJson(pathJoin(
-		this.templatePath('setup/injector'),
-		method + '.yml'
-	));
+	if(subGenMethod in this)
+        this[subGenMethod]();
 
-	for(var file in inject){
-		this._appendToFileLine(
-			file,
-			inject[file].flag,
-			inject[file].text
-		);
-	}
-
-	self[method]();
-};
-
-/**
- * This method will append code array after the line where is located lineFlag.
- *
- * @param destFile
- * @param lineFlag
- * @param codeArray
- * @private
- */
-exports._appendToFileLine = function(destFile,lineFlag,text){
-	var codeArray = text.split('\n');
-	var filePath = this.destinationPath(destFile);
-	var oldFileLines = this.fs.read(filePath).split('\n');
-	var newFileLines = [];
-	var lineFlagFound = false;
-
-	for(var i=0;i<oldFileLines.length;i++){
-		newFileLines.push(oldFileLines[i]);
-
-		if(oldFileLines[i].indexOf(lineFlag) != -1){
-			lineFlagFound = true;
-			var whiteSpaces = '';
-			for(var j=0;j<oldFileLines[i].length;j++){
-				if(oldFileLines[i][j] == '\t' || oldFileLines[i][j] == ' '){
-					whiteSpaces += oldFileLines[i][j];
-					continue;
-				} else {
-					break;
-				}
-			}
-			newFileLines.push(whiteSpaces + codeArray.join('\n' + whiteSpaces));
-		}
-	}
-	if(!lineFlagFound){
-		throw new ReferenceError(chalk.red.bold(
-			"\n > Message: Line flag (" + lineFlag + ") not found!\n" +
-			" > File: " + filePath + '\n'
-		));
-	}
-
-	this.fs.write(destFile,newFileLines.join('\n'));
 };

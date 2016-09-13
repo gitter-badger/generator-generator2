@@ -111,6 +111,54 @@ method.generateModule = function(moduleName,done){
 	this.generate(basePath, destinationPath,done);
 };
 
+method.runLineInjector = function(injectorName){
+	var inject = utils.yamlToJson(
+        this.gen.templatePath('setup/injector/' + injectorName + '.yml')
+    );
+
+	for(var file in inject){
+		this.appendToFileLine(
+			file,
+			inject[file].flag,
+			inject[file].text
+		);
+	}
+};
+
+method.appendToFileLine = function(destFile, lineFlag, text){
+	var codeArray = text.split('\n');
+	var filePath = this.gen.destinationPath(destFile);
+	var oldFileLines = this.gen.fs.read(filePath).split('\n');
+	var newFileLines = [];
+	var lineFlagFound = false;
+
+	for(var i=0;i<oldFileLines.length;i++){
+		newFileLines.push(oldFileLines[i]);
+
+		if(oldFileLines[i].indexOf(lineFlag) != -1){
+			lineFlagFound = true;
+			var whiteSpaces = '';
+			for(var j=0;j<oldFileLines[i].length;j++){
+				if(oldFileLines[i][j] == '\t' || oldFileLines[i][j] == ' '){
+					whiteSpaces += oldFileLines[i][j];
+					continue;
+				} else {
+					break;
+				}
+			}
+			newFileLines.push(whiteSpaces + codeArray.join('\n' + whiteSpaces));
+		}
+	}
+	if(!lineFlagFound){
+		throw new ReferenceError(chalk.red.bold(
+			"\n > Message: Line flag (" + lineFlag + ") not found!\n" +
+			" > File: " + filePath + '\n'
+		));
+	}
+
+	this.gen.fs.write(destFile,newFileLines.join('\n'));
+};
+
 method.fileError = function(message, path){
 	throw new Error(chalk.red.bold(
 		"\n > Message: " + message + '\n' +
