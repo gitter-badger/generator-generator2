@@ -53,21 +53,21 @@ exports.getJsonValue = function (keyArr,json){
 		} else {
 			return undefined;
 		}
-	} else {
+	} else if(keyArr.length == 1){
 		return json[keyArr[0]];
+	} else {
+		return json;
 	}
 };
 
 exports.setJsonValue = function(keyArr,value,json){
 	if(keyArr.length > 1){
-		var newJson = json[keyArr[0]];
+		var newJson = json[keyArr[0]] || {};
 		if(newJson instanceof Object){
-			newJson = this.getJsonValue(keyArr.slice(1),newJson);
-			return newJson;
-		} else {
-			throw new Error('Todo: Do this...');
+			json[keyArr[0]] = this.setJsonValue(keyArr.slice(1),value,newJson);
+			return json;
 		}
-	} else {
+	} else if(keyArr.length == 1) {
 		json[keyArr[0]] = value;
 		return json;
 	}
