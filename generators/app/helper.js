@@ -225,7 +225,7 @@ method.setYoRcValue = function(keys,value){
 		value,
 		this.gen.config.getAll()
 	);
-
+	
 	this.gen.config.set(newJson);
 
 };

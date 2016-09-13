@@ -2,6 +2,7 @@
 
 var path = require('path');
 var yoTest = require('yeoman-test');
+var fs = require('fs');
 
 function Helper(language, baseName){
 	this.language = language;
@@ -39,6 +40,19 @@ method.runGenerator = function(){
 		.inDir(this.getTestDir())
 		.withPrompts(this.getPrompt())
 		.toPromise();
+};
+
+method.assertContent = function(filePath,testArr){
+	var content = fs.readFileSync(path.join(this.getTestDir(),filePath),'utf8');
+	for(var i in testArr){
+		if(testArr[i] instanceof RegExp){
+			if(!testArr[i].test(content)){
+				throw Error('Regex: "' + testArr[i] + '" failed on '+filePath);
+			}
+		} else if(content.indexOf(testArr[i]) == -1){
+			throw Error('Line: "' + testArr[i] + '" is missing in '+filePath);
+		}
+	}
 };
 
 method.runSubgenerator = function(moduleName){

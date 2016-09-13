@@ -5,7 +5,7 @@ var fs = require('fs');
 
 var Helper = require('./helper');
 
-exports.initializing = function(){
+exports.initializing = function () {
 	this.gen = new Helper(this);
 	this.answeres = {};
 };
@@ -23,7 +23,7 @@ exports.prompting = function () {
 
 	return this.gen.postPrompt(
 		questionChoices,
-		function(answeres){
+		function (answeres) {
 
 			self.answeres = answeres;
 
@@ -31,36 +31,33 @@ exports.prompting = function () {
 
 };
 
-exports.configuring = function(){
-
-	if(!this.gen.isInited()) {
+exports.configuring = function () {
+	if (this.gen.isInited()) {
+		var modules = this.gen.getYoRcValue('subgenerator.module');
+		modules.push(this.answeres.module);
+		this.gen.setYoRcValue( 'subgenerator.module', modules );
+	} else {
 		this.gen.setYoRcValue('subgenerator', this.answeres);
-		this.gen.setYoRcValue('subgenerator.module',[]);
-	} else
-		this.gen.setYoRcValue(
-			'subgenerator.module',
-			this.gen.getYoRcValue('subgenerator.module').push(
-				this.answeres.module
-			)
-		);
+		this.gen.setYoRcValue('subgenerator.module', []);
+	}
 };
 
 exports.writing = function () {
 	var done = this.async();
 
 	if (this.gen.isInited())
-		this.gen.generateModule( this.answeres.module, done);
+		this.gen.generateModule(this.answeres.module, done);
 	else
 		this.gen.generateBase(this.answeres.base, done);
 };
 
-exports.conflicts = function(){
+exports.conflicts = function () {
 
 	var subGenMethod = this.gen.isInited() ? this.answeres.module : this.answeres.base;
 
 	this.gen.runLineInjector(subGenMethod);
 
-	if(subGenMethod in this)
-        this[subGenMethod]();
+	if (subGenMethod in this)
+		this[subGenMethod]();
 
 };
