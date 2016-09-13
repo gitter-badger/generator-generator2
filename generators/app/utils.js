@@ -58,7 +58,7 @@ exports.getJsonValue = function (keyArr,json){
 	}
 };
 
-exports.setJsonValue = function(value,keyArr,json){
+exports.setJsonValue = function(keyArr,value,json){
 	if(keyArr.length > 1){
 		var newJson = json[keyArr[0]];
 		if(newJson instanceof Object){

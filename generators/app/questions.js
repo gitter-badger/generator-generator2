@@ -89,7 +89,7 @@ exports.generator = function () {
  * @param moduleChoices
  * @returns {{subgenerator: {base: *[], module: *[]}}}
  */
-exports.subGenerator = function (baseChoices, moduleChoices) {
+exports.subgenerator = function (baseChoices, moduleChoices) {
 	return {
         "base": [
             {

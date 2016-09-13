@@ -2,7 +2,6 @@
 
 var path = require('path');
 var yoTest = require('yeoman-test');
-var fse = require('fs-extra');
 
 function Helper(language, baseName){
 	this.language = language;
@@ -35,9 +34,6 @@ function Helper(language, baseName){
 var method = Helper.prototype;
 
 method.runGenerator = function(){
-	if(this.getTestDir().indexOf('/generator-generate/build/') == -1)
-		throw new Error( 'Test dir('+this.getTestDir()+') not in /generator-generate/build/');
-	fse.removeSync(this.getTestDir());
 	return yoTest
 		.run(this.getPath())
 		.inDir(this.getTestDir())

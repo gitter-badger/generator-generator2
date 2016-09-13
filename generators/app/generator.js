@@ -20,7 +20,7 @@ exports.prompting = function () {
 		fs.readdirSync(self.templatePath('module'))
 	);
 
-	return self.prompt(Q.subgenerator[PROMPT]).then(function (A0) {
+	return self.prompt(Q[PROMPT]).then(function (A0) {
 		self.props = A0;
 	}.bind(self));
 

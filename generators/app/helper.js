@@ -1,9 +1,9 @@
 var yosay = require('yosay');
 var questions = require('./questions');
-var fse = require('fs-extra');
 var utils = require('./utils');
 var pathJoin = require('path').join;
 var pac = require('../../package.json');
+var fs = require('fs');
 
 function Helper(generator){
 	this.gen = generator;
@@ -69,13 +69,12 @@ method.getYoRcValue = function (keys){
     );
 };
 
-method.setYoRcValue = function(value,keys){
+method.setYoRcValue = function(keys,value){
 	var newJson = utils.setJsonValue(
-		value,
 		keys.split('.'),
+		value,
 		this.gen.config.getAll()
 	);
-	throw new Error(JSON.stringify(newJson));
 
 };
 
