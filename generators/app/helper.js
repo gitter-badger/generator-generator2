@@ -1,9 +1,14 @@
-var yosay = require('yosay');
-var questions = require('./questions');
-var utils = require('./utils');
-var pathJoin = require('path').join;
-var pac = require('../../package.json');
+'use strict';
+
 var fs = require('fs');
+var yosay = require('yosay');
+var walk = require('walk');
+var chalk = require('chalk');
+var ejs = require('ejs');
+var pathJoin = require('path').join;
+
+var utils = require('./utils');
+var pac = require('../../package.json');
 
 function Helper(generator){
 	this.gen = generator;
@@ -18,17 +23,108 @@ function Helper(generator){
 var method = Helper.prototype;
 
 method.isInited = function(){
-	return !this.gen.config.get('inited') && !this.gen.config.get('app');
+	return this.gen.config.get('inited') &&
+		this.gen.config.get('app') &&
+		this.gen.config.get('subgenerator');
 };
 
-method.initPrompt = function(callback){
+method.generateBase = function(baseName,done){
+	var destinationPath = this.gen.destinationPath('.');
+	var setupBasePath = this.gen.templatePath('setup/base');
+	var basePath = this.gen.templatePath('base/' + baseName);
+
+	var finish = { setup: false, base: false};
+
+    this.generate(setupBasePath, destinationPath,function(){
+		if(finish.base == true) done();
+		else finish.setup = true;
+	});
+
+	this.generate(basePath,destinationPath,function(){
+		if(finish.setup == true) done();
+		else finish.base = true;
+	});
+};
+
+method.generate = function(fromDir,toDir,done){
+	var self = this;
+
+	var ejsIgnore = ['gif', 'png', 'ico'];
+	var config = self.gen.config.getAll();
+	var configWithFsEjs = self.gen.config.getAll();
+	configWithFsEjs.ejs = {};
+
+	var fsEjsPath = self.gen.templatePath('setup/ejs');
+	var fsEjsFiles = utils.walkSync(fsEjsPath);
+	var licensePath = self.gen.templatePath('../../app/templates/licenses/' + self.gen.config.get('app').license);
+
+	//Filling configWithFsEjs...
+	for (var i in fsEjsFiles) {
+		var fsEjsFile = fsEjsFiles[i];
+		var key = fsEjsFile.replace(fsEjsPath + '/', '').replace(/\//g, '_');
+		try {
+			configWithFsEjs.ejs[key] = ejs.render(
+				self.gen.fs.read(fsEjsFile),
+				config
+			);
+		} catch (err) {
+			self.fileError(err.message,fsEjsFile);
+		}
+	}
+
+	//Filling license content to ejs.license
+	try {
+		configWithFsEjs.ejs.license = ejs.render(
+			self.gen.fs.read(licensePath),
+			config
+		);
+	} catch (err) {
+		self.fileError(err.message,licensePath);
+	}
+
+	var walker = walk.walk(fromDir);
+	walker.on("file", function (root, stat, next) {
+		var from = pathJoin(root, stat.name);
+		try {
+			var to = ejs.render(from.replace(fromDir, toDir), config);
+			var statNameArr = stat.name.split('.');
+
+			if (ejsIgnore.indexOf(statNameArr[statNameArr.length - 1]) > -1) {
+				self.gen.fs.copy(from, to);
+			} else {
+				self.gen.fs.write(to, ejs.render(self.gen.fs.read(from), configWithFsEjs));
+			}
+
+		} catch (err) {
+			self.fileError(err.message,from);
+		}
+		next();
+	});
+
+	walker.on('end', done);
+};
+
+method.generateModule = function(moduleName,done){
+	var destinationPath = this.gen.destinationPath('.');
+    var basePath = pathJoin(this.gen.templatePath('module'),moduleName);
+
+	this.generate(basePath, destinationPath,done);
+};
+
+method.fileError = function(message, path){
+	throw new Error(chalk.red.bold(
+		"\n > Message: " + message + '\n' +
+		" > File: " + path + '\n'
+	));
+};
+
+method.initPrompt = function(questions,callback){
 
 	var self = this;
-	var genQuestions = questions.generator();
 
-	return this.gen.prompt(genQuestions.app).then(function (appAnswers) {
+	return this.gen.prompt(questions.app).then(function (appAnswers) {
 		var appLang = appAnswers.language;
-		return self.gen.prompt(genQuestions[appLang]).then(function (langAnswers) {
+		return self.gen.prompt(questions[appLang]).then(function (langAnswers) {
 
 			var answeres = { app: appAnswers };
 			answeres[appLang] = langAnswers;
@@ -38,6 +134,12 @@ method.initPrompt = function(callback){
 		}.bind(self.gen));
 	}.bind(this.gen));
 
+};
+
+method.postPrompt = function(questions,callback){
+	return this.gen.prompt(questions).then(function (answeres) {
+		callback(answeres);
+	}.bind(this.gen));
 };
 
 method.createYoRc = function(json){
@@ -76,6 +178,8 @@ method.setYoRcValue = function(keys,value){
 		this.gen.config.getAll()
 	);
 
+	this.gen.config.set(newJson);
+
 };
 
 method.sayWelcome = function(){
@@ -93,7 +197,6 @@ method.sayWelcomeBack = function(){
 		this.gen.config.get('app').name
 	].join(' ')));
 };
-
 method.sayGoodBye = function(){
 	this.gen.log([
 		'',

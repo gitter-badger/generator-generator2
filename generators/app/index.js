@@ -1,28 +1,29 @@
 'use strict';
 var generator = require('yeoman-generator');
-var path = require('path');
-var fs = require('fs');
-
-var utils = require('./utils');
-
+var questions = require('./questions');
 var Helper = require('./helper');
 
 module.exports = generator.Base.extend({
 
 	initializing: function(){
 		this.gen = new Helper(this);
+		this.answeres = {};
 	},
 
 	prompting: function () {
 		var self = this;
 
-		if (this.gen.isInited()) {
+		if (!this.gen.isInited()) {
 
 			this.gen.sayWelcome();
 
-			return this.gen.initPrompt(function(answeres){
-				self.gen.createYoRc(answeres);
-			});
+			return this.gen.initPrompt(
+				questions.generator(),
+				function(answeres){
+
+					self.answeres = answeres;
+
+                });
 
 		} else {
 
@@ -31,11 +32,13 @@ module.exports = generator.Base.extend({
 		}
 
 	},
+    configuring: function(){
+		if(!this.gen.isInited()){
+			this.gen.createYoRc(this.answeres);
+		}
+	},
 
-	/**
-	 * DEFAULTS
-	 */
-	compose: function(){
+	generator: function(){
 		this.gen.callSubGenerator(
 			this.gen.getYoRcValue('app.language')
 		);
@@ -44,6 +47,7 @@ module.exports = generator.Base.extend({
 	end: function(){
 
         this.gen.setYoRcValue('inited',true);
+		this.gen.sayGoodBye();
 
 	}
 });

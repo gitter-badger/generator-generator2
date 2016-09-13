@@ -1,71 +1,69 @@
 'use strict';
 
 var utils = require('./utils');
+var questions = require('./questions');
 var fs = require('fs');
 var pathJoin = require('path').join;
-var prompt = require('./questions');
-var yosay = require('yosay');
-var ejs = require('ejs');
-var walk = require('walk');
-var chalk = require('chalk');
+
+var Helper = require('./helper');
+
+exports.initializing = function(){
+	this.gen = new Helper(this);
+	this.answeres = {};
+};
 
 /**
- * Default subgenerator methods that will be executed when subgenerator is started.
+ * Todo: Make filter of modules base on subgenerator.module
  */
 exports.prompting = function () {
 	var self = this;
-	var PROMPT = (this.config.get('subgenerator') == null || this.config.get('inited') == null ? 'base' : 'module');
-	var Q = prompt.subgenerator(
+
+	var questionChoices = questions.subgenerator(
 		fs.readdirSync(self.templatePath('base')),
 		fs.readdirSync(self.templatePath('module'))
-	);
+	)[this.gen.isInited() ? 'module' : 'base'];
 
-	return self.prompt(Q[PROMPT]).then(function (A0) {
-		self.props = A0;
-	}.bind(self));
+	return this.gen.postPrompt(
+		questionChoices,
+		function(answeres){
+
+			self.answeres = answeres;
+
+		});
 
 };
 
-exports.configuring = function () {
-	//Todo: Make checking for this.props.module so injection will not inject 2*.
-	if (this.props.base)
-		this.config.set('subgenerator', this.props);
+exports.configuring = function(){
+
+	if(!this.gen.isInited()) {
+		var yoRc = this.answeres;
+		yoRc.module = [];
+		this.gen.setYoRcValue('subgenerator', yoRc);
+	} else
+		this.gen.setYoRcValue(
+			'subgenerator.module',
+			this.gen.getYoRcValue('subgenerator.module').push(
+				this.answeres.module
+			)
+		)
 };
 
 exports.writing = function () {
-	var destPath = this.destinationPath('.');
-	var fsBasePath = this.templatePath('setup/base');
-	var basePath;
 	var done = this.async();
-	var finish = { basePath : false, fsBasePath: false };
 
-	if (this.props.base)
-		basePath = pathJoin(this.templatePath('base'), this.props.base);
+	if (this.gen.isInited())
+		this.gen.generateModule( this.answeres.module, done);
 	else
-		basePath = pathJoin(this.templatePath('module'),this.props.module);
-
-	if(this.props.base)
-        this._walkWithEjs(fsBasePath,destPath,function(){
-			finish.fsBasePath = true;
-			if(finish.basePath) done();
-		});
-	else{
-		finish.fsBasePath = true;
-	}
-
-	this._walkWithEjs(basePath,destPath,function(){
-		finish.basePath = true;
-		if(finish.fsBasePath) done();
-	});
+		this.gen.generateBase(this.answeres.base, done);
 };
 
 exports.conflicts = function(){
 	var self = this;
 
-	if (self.props.base)
-		var method = self.props.base;
+	if (self.gen.isInited())
+        var method = self.answeres.module;
 	else
-        var method = self.props.module;
+		var method = self.answeres.base;
 
 	if(!(method in self))
 		throw new ReferenceError(
@@ -87,87 +85,6 @@ exports.conflicts = function(){
 	}
 
 	self[method]();
-};
-
-/**
- * This method will walk dir and replace file and path ejs templates strings with yo-rc json
- * configuration and put names of all defaults file in ejs configuration and place values
- * as content of the same file... ejs.fun.file[fileNameFromDefault] = contentOfTheSameFileFromDefault.
- *
- * !!! ejs.fun.file.licence = licences[app.licence].readFile()
- *
- * @param fromDir
- * @param toDir
- * @param done
- * @private
- */
-exports._walkWithEjs = function (fromDir, toDir, done) {
-	var self = this;
-
-	var ejsIgnore = ['gif','png','ico'];
-	var config = self.config.getAll();
-	var configWithFsEjs = self.config.getAll();
-	configWithFsEjs.ejs = {};
-
-	var fsEjsPath = self.templatePath('setup/ejs');
-	var fsEjsFiles = utils.walkSync(fsEjsPath);
-	var licensePath = pathJoin(self.templatePath(), '../../app/templates/licenses', self.config.get('app').license);
-
-	//Filling configWithFsEjs...
-	for (var i in fsEjsFiles) {
-		var fsEjsFile = fsEjsFiles[i];
-    	var key = fsEjsFile.replace(fsEjsPath + '/', '').replace(/\//g, '_');
-		try{
-			configWithFsEjs.ejs[key] = ejs.render(
-				self.fs.read(fsEjsFile),
-				config
-			);
-		} catch(err){
-			throw new Error(chalk.red.bold(
-				"\n > Message: " + err.message + '\n' +
-				" > File: " + fsEjsFile + '\n'
-			));
-		}
-	}
-
-	//Filling license content to ejs.license
-	try{
-		configWithFsEjs.ejs.license = ejs.render(
-			self.fs.read(licensePath),
-			config
-		);
-	} catch (err){
-		throw new Error(chalk.red.bold(
-			"\n > Message: " + err.message + '\n' +
-			" > File: " + licensePath + '\n'
-		));
-	}
-
-	var walker = walk.walk(fromDir);
-	walker.on("file", function (root, stat, next) {
-		var from = pathJoin(root, stat.name);
-		try{
-			var to = ejs.render(from.replace(fromDir, toDir), config);
-			var statNameArr = stat.name.split('.');
-
-			if(ejsIgnore.indexOf(statNameArr[statNameArr.length-1]) > -1){
-				self.fs.copy(from,to);
-			}else{
-				self.fs.write(to,ejs.render(self.fs.read(from),configWithFsEjs));
-			}
-
-		} catch (err){
-			throw new Error(chalk.red.bold(
-				"\n > Message: " + err.message + '\n' +
-				" > File: " + from + '\n'
-			));
-		}
-		next();
-	});
-
-	walker.on('end', function () {
-		done();
-	});
 };
 
 /**
