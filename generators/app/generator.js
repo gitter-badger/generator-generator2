@@ -43,7 +43,6 @@ exports.writing = function () {
 };
 
 exports.conflicts = function () {
-
 	var subGenMethod = this.gen.isInited() ? this.answeres.module : this.answeres.base;
 
 	this.gen.runLineInjector(subGenMethod);
