@@ -25,22 +25,10 @@ describe(helper.describe(), function () {
 		]);
 	});
 
-	it('Should have yo-rc.json content', function(){
-		helper.assertContent('.yo-rc.json',[
-			'"module": []'
-		]);
-	});
-
 	describe('database subgenerator:',function(){
 
 		before(function () {
 			return helper.runSubgenerator('database');
-		});
-
-		it('Should have yo-rc.json content', function(){
-			helper.assertContent('.yo-rc.json',[
-                /"module":\s*\[\s*"database"\s*\]/
-			]);
 		});
 
 		it('Creates default files',function(){

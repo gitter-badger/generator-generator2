@@ -13,39 +13,61 @@ var pac = require('../../package.json');
 function Helper(generator){
 	this.gen = generator;
 
-	utils.validateAppName(pac.name);
+	utils.validateGeneratorName(pac.name);
 
-	this.appName = pac.name;
-	this.genName = pac.name.split('-')[1];
+	this.ENV = {
+		name : {
+			app : pac.name,
+			generator : pac.name.split('-')[1]
+		},
+		path : {
+			getSubgenerator : function(name){ return pathJoin(__dirname,'..',name)},
+			getDestination : function() {return generator.destinationPath('.')},
+			temp : {
+				getSetupBase : function() { return generator.templatePath('setup/base');},
+				getBase : function(name){ return generator.templatePath('base/' + name);},
+				getModule : function(name){ return generator.templatePath('module/' + name)}
+			}
+		}
 
+	};
 }
 
 var method = Helper.prototype;
 
 method.isInited = function(){
-	return this.gen.config.get('inited') &&
-		this.gen.config.get('app') &&
-		this.gen.config.get('subgenerator');
+	return (
+		this.getYoRcValue('inited')
+		&& this.getYoRcValue('app')
+		&& this.getYoRcValue('subgenerator')
+	);
+};
+
+method.callSubGenerator = function (subGenName) {
+	this.gen.composeWith(
+		this.ENV.name.generator + ':' + subGenName, {}, {
+			local: this.ENV.path.getSubgenerator(subGenName)
+		}
+	);
 };
 
 method.generateBase = function(baseName,done){
-	var destinationPath = this.gen.destinationPath('.');
-	var setupBasePath = this.gen.templatePath('setup/base');
-	var basePath = this.gen.templatePath('base/' + baseName);
+	var destinationPath = this.ENV.path.getDestination();
+	var setupBasePath = this.ENV.path.temp.getSetupBase();
+	var basePath = this.ENV.path.temp.getBase(baseName);
 
 	var finish = { setup: false, base: false};
 
-    this.generate(setupBasePath, destinationPath,function(){
-		if(finish.base == true) done();
-		else finish.setup = true;
-	});
+    this.generate( setupBasePath, destinationPath, function(){
+        if(finish.base == true) done();
+        else finish.setup = true;
+    });
 
 	this.generate(basePath,destinationPath,function(){
 		if(finish.setup == true) done();
 		else finish.base = true;
 	});
 };
-
 method.generate = function(fromDir,toDir,done){
 	var self = this;
 
@@ -55,7 +77,7 @@ method.generate = function(fromDir,toDir,done){
 	configWithFsEjs.ejs = {};
 
 	var fsEjsPath = self.gen.templatePath('setup/ejs');
-	var fsEjsFiles = utils.walkSync(fsEjsPath);
+	var fsEjsFiles = utils.getAllFilesPaths(fsEjsPath);
 	var licensePath = self.gen.templatePath('../../app/templates/licenses/' + self.gen.config.get('app').license);
 
 	//Filling configWithFsEjs...
@@ -103,7 +125,6 @@ method.generate = function(fromDir,toDir,done){
 
 	walker.on('end', done);
 };
-
 method.generateModule = function(moduleName,done){
 	var destinationPath = this.gen.destinationPath('.');
     var basePath = pathJoin(this.gen.templatePath('module'),moduleName);
@@ -112,51 +133,25 @@ method.generateModule = function(moduleName,done){
 };
 
 method.runLineInjector = function(injectorName){
+	var self = this;
+
 	var inject = utils.yamlToJson(
         this.gen.templatePath('setup/injector/' + injectorName + '.yml')
     );
 
-	for(var file in inject){
-		this.appendToFileLine(
-			file,
-			inject[file].flag,
-			inject[file].text
-		);
+	for(var filePath in inject){
+		var lineFlag = inject[filePath].flag;
+		var injectArr = inject[filePath].text.split('\n');
+		utils.injectLines(filePath,lineFlag,injectArr,function(newContent){
+			self.gen.write(filePath,newContent);
+		});
 	}
 };
-
-method.appendToFileLine = function(destFile, lineFlag, text){
-	var codeArray = text.split('\n');
-	var filePath = this.gen.destinationPath(destFile);
-	var oldFileLines = this.gen.fs.read(filePath).split('\n');
-	var newFileLines = [];
-	var lineFlagFound = false;
-
-	for(var i=0;i<oldFileLines.length;i++){
-		newFileLines.push(oldFileLines[i]);
-
-		if(oldFileLines[i].indexOf(lineFlag) != -1){
-			lineFlagFound = true;
-			var whiteSpaces = '';
-			for(var j=0;j<oldFileLines[i].length;j++){
-				if(oldFileLines[i][j] == '\t' || oldFileLines[i][j] == ' '){
-					whiteSpaces += oldFileLines[i][j];
-					continue;
-				} else {
-					break;
-				}
-			}
-			newFileLines.push(whiteSpaces + codeArray.join('\n' + whiteSpaces));
+method.callSubGeneratorMethod = function(subGeneratorMethod){
+	if (subGeneratorMethod in this.gen)
+		if(this.gen[subGeneratorMethod] instanceof Function){
+			this.gen[subGeneratorMethod]();
 		}
-	}
-	if(!lineFlagFound){
-		throw new ReferenceError(chalk.red.bold(
-			"\n > Message: Line flag (" + lineFlag + ") not found!\n" +
-			" > File: " + filePath + '\n'
-		));
-	}
-
-	this.gen.fs.write(destFile,newFileLines.join('\n'));
 };
 
 method.fileError = function(message, path){
@@ -183,7 +178,6 @@ method.initPrompt = function(questions,callback){
 	}.bind(this.gen));
 
 };
-
 method.postPrompt = function(questions,callback){
 	return this.gen.prompt(questions).then(function (answeres) {
 		callback(answeres);
@@ -193,7 +187,7 @@ method.postPrompt = function(questions,callback){
 method.createYoRc = function(json){
 	var yoRc = {};
 
-	json.app.createdAt = utils.getDate();
+	json.app.createdAt = utils.getNowDate();
 	this.gen.config.set(json);
 
 	yoRc[this.appName] = json;
@@ -203,31 +197,28 @@ method.createYoRc = function(json){
 		JSON.stringify(yoRc, null, 4)
 	);
 };
-
-method.callSubGenerator = function(subGenerator){
-	this.gen.composeWith(
-		this.genName + ':' + subGenerator, {}, {
-			local: pathJoin(__dirname, '..',subGenerator)
-		}
-	);
-};
-
 method.getYoRcValue = function (keys){
     return utils.getJsonValue(
         keys.split('.'),
         this.gen.config.getAll()
     );
 };
-
 method.setYoRcValue = function(keys,value){
 	var newJson = utils.setJsonValue(
 		keys.split('.'),
 		value,
 		this.gen.config.getAll()
 	);
-	
+
 	this.gen.config.set(newJson);
 
+};
+
+method.getBasesNames = function(){
+	return fs.readdirSync(this.gen.templatePath('base'));
+};
+method.getModulesNames = function(){
+	return fs.readdirSync(this.gen.templatePath('module'));
 };
 
 method.sayWelcome = function(){

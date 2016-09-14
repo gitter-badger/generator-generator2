@@ -10,15 +10,12 @@ exports.initializing = function () {
 	this.answeres = {};
 };
 
-/**
- * Todo: Make filter of modules base on subgenerator.module
- */
 exports.prompting = function () {
 	var self = this;
 
 	var questionChoices = questions.subgenerator(
-		fs.readdirSync(self.templatePath('base')),
-		fs.readdirSync(self.templatePath('module'))
+		this.gen.getBasesNames(),
+		this.gen.getModulesNames()
 	)[this.gen.isInited() ? 'module' : 'base'];
 
 	return this.gen.postPrompt(
@@ -32,14 +29,8 @@ exports.prompting = function () {
 };
 
 exports.configuring = function () {
-	if (this.gen.isInited()) {
-		var modules = this.gen.getYoRcValue('subgenerator.module');
-		modules.push(this.answeres.module);
-		this.gen.setYoRcValue( 'subgenerator.module', modules );
-	} else {
+	if (!this.gen.isInited())
 		this.gen.setYoRcValue('subgenerator', this.answeres);
-		this.gen.setYoRcValue('subgenerator.module', []);
-	}
 };
 
 exports.writing = function () {
@@ -56,8 +47,5 @@ exports.conflicts = function () {
 	var subGenMethod = this.gen.isInited() ? this.answeres.module : this.answeres.base;
 
 	this.gen.runLineInjector(subGenMethod);
-
-	if (subGenMethod in this)
-		this[subGenMethod]();
-
+	this.gen.callSubGeneratorMethod(subGenMethod)
 };
