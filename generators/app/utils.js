@@ -1,6 +1,9 @@
 var fs = require('fs');
 var chalk = require('chalk');
 var yaml = require('js-yaml');
+var mmm = require('mmmagic');
+
+var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
 
 exports.validateWord = function (input) {
 	return /^[a-zA-Z.]+$/.test(input) == true ? true : "Use letters from a-z and A-Z with dot!";
@@ -116,4 +119,35 @@ exports.validateGeneratorName = function(name){
 		'Generator app name failed to validate!',
 		' > (generator-NAME) != ' + name
 	].join('\n'))}
+};
+
+exports.isEditable = function(filePath,callback){
+	magic.detectFile(filePath, function (err, mimeType) {
+		if (err) throw err;
+
+		var mimeTypeArr = mimeType.split('/');
+		if(mimeTypeArr.length != 2){
+			throw new Error('Mime type unvalid: ' + mimeType);
+		}
+
+		var mimeGroup = mimeTypeArr[0];
+		var mimeFile = mimeTypeArr[1];
+
+        if(
+            [
+                'video',
+                'audio',
+                'image',
+                'music',
+                'x-music'
+            ].indexOf(mimeGroup) != -1 ||
+            [
+                'pdf',
+                'octet-stream'
+            ].indexOf(mimeFile) != -1
+        ) callback(false);
+        else {
+            callback(true);
+        }
+	});
 };

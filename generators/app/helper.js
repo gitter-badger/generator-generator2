@@ -25,11 +25,12 @@ function Helper(generator){
 			getDestination : function() {return generator.destinationPath('.')},
 			temp : {
 				getSetupBase : function() { return generator.templatePath('setup/base');},
+				getSetupEjs : function(){ return generator.templatePath('setup/ejs');},
 				getBase : function(name){ return generator.templatePath('base/' + name);},
-				getModule : function(name){ return generator.templatePath('module/' + name)}
+				getModule : function(name){ return generator.templatePath('module/' + name)},
+				getLicense : function(name) { return pathJoin(__dirname,'templates/licenses',name);}
 			}
 		}
-
 	};
 }
 
@@ -37,9 +38,9 @@ var method = Helper.prototype;
 
 method.isInited = function(){
 	return (
-		this.getYoRcValue('inited')
-		&& this.getYoRcValue('app')
-		&& this.getYoRcValue('subgenerator')
+		this.getYoRc('inited')
+		&& this.getYoRc('app')
+		&& this.getYoRc('subgenerator')
 	);
 };
 
@@ -51,6 +52,12 @@ method.callSubGenerator = function (subGenName) {
 	);
 };
 
+method.generateModule = function(moduleName,done){
+	var destinationPath = this.ENV.path.getDestination();
+	var basePath = this.ENV.path.temp.getModule(moduleName);
+
+	this.generate(basePath, destinationPath,done);
+};
 method.generateBase = function(baseName,done){
 	var destinationPath = this.ENV.path.getDestination();
 	var setupBasePath = this.ENV.path.temp.getSetupBase();
@@ -68,68 +75,66 @@ method.generateBase = function(baseName,done){
 		else finish.base = true;
 	});
 };
-method.generate = function(fromDir,toDir,done){
+method.generate = function(fromPath,toPath,done){
 	var self = this;
 
-	var ejsIgnore = ['gif', 'png', 'ico'];
-	var config = self.gen.config.getAll();
-	var configWithFsEjs = self.gen.config.getAll();
-	configWithFsEjs.ejs = {};
+	var licensePath = this.ENV.path.temp.getLicense(this.getYoRc('app.license'));
+	var setupEjsPath = this.ENV.path.temp.getSetupEjs();
+	var setupEjsFilesPathsArr = utils.getAllFilesPaths(setupEjsPath);
 
-	var fsEjsPath = self.gen.templatePath('setup/ejs');
-	var fsEjsFiles = utils.getAllFilesPaths(fsEjsPath);
-	var licensePath = self.gen.templatePath('../../app/templates/licenses/' + self.gen.config.get('app').license);
+	var yoRcConfig = this.getYoRc();
+	var ejsTempConfig = this.getYoRc();
+	ejsTempConfig.ejs = {};
 
-	//Filling configWithFsEjs...
-	for (var i in fsEjsFiles) {
-		var fsEjsFile = fsEjsFiles[i];
-		var key = fsEjsFile.replace(fsEjsPath + '/', '').replace(/\//g, '_');
+	/**
+	 * Filling ejsTempConfig object
+	 */
+	for (var i in setupEjsFilesPathsArr) {
+		var setupEjsFilePath = setupEjsFilesPathsArr[i];
+		var ejsKey = setupEjsFilePath.replace(setupEjsPath + '/', '').replace(/\//g, '_');
 		try {
-			configWithFsEjs.ejs[key] = ejs.render(
-				self.gen.fs.read(fsEjsFile),
-				config
+			ejsTempConfig.ejs[ejsKey] = ejs.render(
+				this.gen.fs.read(setupEjsFilePath),
+				yoRcConfig
 			);
 		} catch (err) {
-			self.fileError(err.message,fsEjsFile);
+			this.throwFileError(err.message,setupEjsFilePath);
 		}
 	}
 
-	//Filling license content to ejs.license
+	/**
+	 * Add license to ejsTempConfig object
+	 */
 	try {
-		configWithFsEjs.ejs.license = ejs.render(
+		ejsTempConfig.ejs.license = ejs.render(
 			self.gen.fs.read(licensePath),
-			config
+			yoRcConfig
 		);
 	} catch (err) {
-		self.fileError(err.message,licensePath);
+		self.throwFileError(err.message,licensePath);
 	}
 
-	var walker = walk.walk(fromDir);
-	walker.on("file", function (root, stat, next) {
-		var from = pathJoin(root, stat.name);
+	/**
+	 * Generate and render structure with ejs rendered
+	 */
+	var walker = walk.walk(fromPath);
+	walker.on("file", function (root, file, next) {
+		var fromPath = pathJoin(root, file.name);
 		try {
-			var to = ejs.render(from.replace(fromDir, toDir), config);
-			var statNameArr = stat.name.split('.');
-
-			if (ejsIgnore.indexOf(statNameArr[statNameArr.length - 1]) > -1) {
-				self.gen.fs.copy(from, to);
-			} else {
-				self.gen.fs.write(to, ejs.render(self.gen.fs.read(from), configWithFsEjs));
-			}
-
-		} catch (err) {
-			self.fileError(err.message,from);
+			var to = ejs.render(fromPath.replace(fromPath, toPath), yoRcConfig);
+			utils.isEditable(fromPath,function(isEditable){
+				if(isEditable)
+					self.gen.fs.write(to, ejs.render(self.gen.fs.read(fromPath), ejsTempConfig));
+				else
+					self.gen.fs.copy(fromPath, to);
+				next();
+			});
+		} catch (err){
+			self.throwFileError(err.message,fromPath);
 		}
-		next();
 	});
 
 	walker.on('end', done);
-};
-method.generateModule = function(moduleName,done){
-	var destinationPath = this.gen.destinationPath('.');
-    var basePath = pathJoin(this.gen.templatePath('module'),moduleName);
-
-	this.generate(basePath, destinationPath,done);
 };
 
 method.runLineInjector = function(injectorName){
@@ -154,7 +159,7 @@ method.callSubGeneratorMethod = function(subGeneratorMethod){
 		}
 };
 
-method.fileError = function(message, path){
+method.throwFileError = function(message, path){
 	throw new Error(chalk.red.bold(
 		"\n > Message: " + message + '\n' +
 		" > File: " + path + '\n'
@@ -197,13 +202,14 @@ method.createYoRc = function(json){
 		JSON.stringify(yoRc, null, 4)
 	);
 };
-method.getYoRcValue = function (keys){
+method.getYoRc = function (keys){
+	var keysArr = keys ? keys.split('.') : [];
     return utils.getJsonValue(
-        keys.split('.'),
+		keysArr,
         this.gen.config.getAll()
     );
 };
-method.setYoRcValue = function(keys,value){
+method.setYoRc = function(keys, value){
 	var newJson = utils.setJsonValue(
 		keys.split('.'),
 		value,

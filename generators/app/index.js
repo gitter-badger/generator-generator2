@@ -40,13 +40,13 @@ module.exports = generator.Base.extend({
 
 	generator: function(){
 		this.gen.callSubGenerator(
-			this.gen.getYoRcValue('app.language')
+			this.gen.getYoRc('app.language')
 		);
 	},
 
 	end: function(){
 
-        this.gen.setYoRcValue('inited',true);
+        this.gen.setYoRc('inited',true);
 		this.gen.sayGoodBye();
 
 	}
