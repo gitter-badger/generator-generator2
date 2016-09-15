@@ -1,60 +1,48 @@
 'use strict';
 var generator = require('yeoman-generator');
-var yosay = require('yosay');
-var utils = require('./utils');
-var fs = require('fs');
-var Q = require('./prompt').generator();
-var path = require('path');
+var questions = require('./questions');
+var Helper = require('./helper');
 
 module.exports = generator.Base.extend({
+
+	initializing: function(){
+		this.gen = new Helper(this);
+		this.answeres = {};
+	},
+
 	prompting: function () {
 		var self = this;
 
-		if (!this.config.get('inited') && !this.config.get('app')) {
+		if (!this.gen.isGeneratorInited()) {
 
-			this.log(yosay(Q.yosay));
+			this.gen.sayWelcome();
 
-			return this.prompt(Q.generator).then(function (A0) {
-				return self.prompt(Q[A0.language]).then(function (A1) {
+			return this.gen.initPrompt(
+				questions.generator(),
+				function(answeres){
+					self.answeres = answeres;
+                });
 
-					self.props = {
-						app: A0
-					};
-					self.props[A0.language] = A1;
-
-					self._configuring();
-					self._subgenerator();
-
-				}.bind(self));
-			}.bind(this));
+		} else {
+			this.gen.sayWelcomeBack();
 		}
 
-		this.log(yosay(this.config.get('app').authorName + " ♥ " + this.config.get('app').name));
-		self._subgenerator();
-
+	},
+    configuring: function(){
+		if(!this.gen.isGeneratorInited()){
+			this.gen.createYoRc(this.answeres);
+		}
 	},
 
-	_configuring: function () {
-		var date = new Date();
-		this.props.app.createdAt =  date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
-		this.config.set(this.props);
-		var yoRc = { "generator-generate" : this.config.getAll() };
-		fs.writeFileSync(this.destinationPath('.yo-rc.json'),JSON.stringify(yoRc));
-	},
-
-	_subgenerator: function(){
-		this.composeWith(
-			'generate:' + this.config.get('app').language,
-			{},
-			{local:path.join(__dirname,'../java')});
+	generator: function(){
+		this.gen.callSubgenerator(
+			this.gen.getYoRc('app.language')
+		);
 	},
 
 	end: function(){
-
-		if(!this.config.get('inited'))
-			this.config.set('inited',true);
-
-		this.log('\n ♥ Yeoman loves you! ♥');
+        this.gen.setYoRc(true,'inited');
+		this.gen.sayGoodBye();
 	}
 });
 

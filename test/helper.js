@@ -2,9 +2,9 @@
 
 var path = require('path');
 var yoTest = require('yeoman-test');
-var fse = require('fs-extra');
+var fs = require('fs');
 
-function GenHelp(language,baseName){
+function Helper(language, baseName){
 	this.language = language;
 	this.baseName = baseName;
 
@@ -32,10 +32,9 @@ function GenHelp(language,baseName){
 	this._prompt.base = baseName;
 }
 
-GenHelp.prototype.runGenerator = function(){
-	if(this.getTestDir().indexOf('/generator-generate/build/') == -1)
-		throw new Error( 'Test dir('+this.getTestDir()+') not in /generator-generate/build/');
-	fse.removeSync(this.getTestDir());
+var method = Helper.prototype;
+
+method.runGenerator = function(){
 	return yoTest
 		.run(this.getPath())
 		.inDir(this.getTestDir())
@@ -43,7 +42,20 @@ GenHelp.prototype.runGenerator = function(){
 		.toPromise();
 };
 
-GenHelp.prototype.runSubgenerator = function(moduleName){
+method.assertContent = function(filePath,testArr){
+	var content = fs.readFileSync(path.join(this.getTestDir(),filePath),'utf8');
+	for(var i in testArr){
+		if(testArr[i] instanceof RegExp){
+			if(!testArr[i].test(content)){
+				throw Error('Regex: "' + testArr[i] + '" failed on '+filePath);
+			}
+		} else if(content.indexOf(testArr[i]) == -1){
+			throw Error('Line: "' + testArr[i] + '" is missing in '+filePath);
+		}
+	}
+};
+
+method.runSubgenerator = function(moduleName){
 	return yoTest
 		.run(this.getPath())
 		.inDirKeep(this.getTestDir())
@@ -53,7 +65,7 @@ GenHelp.prototype.runSubgenerator = function(moduleName){
 		}).toPromise();
 };
 
-GenHelp.prototype.getConfig = function (isInited) {
+method.getConfig = function (isInited) {
 	var config = this._config;
 
 	config.inited = isInited;
@@ -67,20 +79,20 @@ GenHelp.prototype.getConfig = function (isInited) {
 	return config;
 };
 
-GenHelp.prototype.getPath= function(){
+method.getPath= function(){
 	return path.join(__dirname, '../generators/app');
 };
 
-GenHelp.prototype.describe = function(){
+method.describe = function(){
 	return this.language
 		+ ' ' + this.baseName + ' generator:'
 };
 
-GenHelp.prototype.getTestDir = function(){
+method.getTestDir = function(){
 	return path.join(__dirname, '../build',this.language,this.baseName);
 };
 
-GenHelp.prototype.getPrompt = function () {
+method.getPrompt = function () {
 	var prompt = this._prompt;
 
 	if (this.language == 'java')
@@ -89,4 +101,4 @@ GenHelp.prototype.getPrompt = function () {
 	return prompt;
 };
 
-module.exports = GenHelp;
+module.exports = Helper;

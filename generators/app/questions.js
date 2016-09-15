@@ -1,4 +1,5 @@
 var utils = require('./utils');
+var licenser = require('licenser');
 
 /**
  * Json configuration for main generator.
@@ -7,8 +8,7 @@ var utils = require('./utils');
  */
 exports.generator = function () {
 	return {
-		"yosay": "♥ Java ♥\n♥ TypeScript ♥\n♥ Node ♥\n♥ Python ♥",
-		"generator": [
+		"app": [
 			{
 				"type": "input",
 				"name": "name",
@@ -36,15 +36,7 @@ exports.generator = function () {
 				"type": "list",
 				"name": "license",
 				"message": "License:",
-				"choices": [
-					"GNU AGPLv3",
-					"GNU GPLv3",
-					"GNU LGPLv3",
-					"Mozilla Public License 2.0",
-					"Apache License 2.0",
-					"MIT License",
-					"The Unlicense"
-				]
+				"choices": licenser.getNames()
 			},
 			{
 				"type": "input",
@@ -72,6 +64,7 @@ exports.generator = function () {
 				]
 			}
 		],
+
 		"java" : [
 			{
 				"type": "input",
@@ -91,24 +84,22 @@ exports.generator = function () {
  */
 exports.subgenerator = function (baseChoices, moduleChoices) {
 	return {
-		"subgenerator": {
-			"base": [
-				{
-					"type": "list",
-					"name": "base",
-					"message": "Select project base:",
-					"choices": baseChoices
-				}
-			],
-			"module": [
-				{
-					"type": "list",
-					"name": "module",
-					"message": "Select module generator:",
-					"choices": moduleChoices
-				}
-			]
-		}
+        "base": [
+            {
+                "type": "list",
+                "name": "base",
+                "message": "Select project base:",
+                "choices": baseChoices
+            }
+        ],
+        "module": [
+            {
+                "type": "list",
+                "name": "module",
+                "message": "Select module generator:",
+                "choices": moduleChoices
+            }
+        ]
 	};
 };
 
