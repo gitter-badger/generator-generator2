@@ -190,11 +190,14 @@ method.postPrompt = function(questions,callback){
 	}.bind(this.gen));
 };
 
+method.yoRcExist = function(){
+	return this.getYoRc()
+};
 method.createYoRc = function(json){
 	var yoRc = {};
 
 	json.app.createdAt = utils.getNowDate();
-	this.setYoRcAll(json);
+	this.setYoRc(json);
 
 	yoRc[this.appName] = json;
 
@@ -210,18 +213,18 @@ method.getYoRc = function (keys){
         this.gen.config.getAll()
     );
 };
-method.setYoRc = function(keys, value){
-	var newJson = utils.setJsonValue(
-		keys.split('.'),
-		value,
-		this.getYoRc()
-	);
+method.setYoRc = function(value,keys){
+	if(keys)
+		this.gen.config.set(
+			utils.setJsonValue(
+				keys.split('.'),
+				value,
+				this.getYoRc()
+			)
+		);
+	else
+		this.gen.config.set(value);
 
-	this.setYoRcAll(newJson);
-};
-
-method.setYoRcAll = function(value){
-	this.gen.config.set(value);
 };
 
 method.getBasesNames = function(){

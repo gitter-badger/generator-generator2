@@ -46,7 +46,7 @@ module.exports = generator.Base.extend({
 
 	end: function(){
 
-        this.gen.setYoRc('inited',true);
+        this.gen.setYoRc(true,'inited');
 		this.gen.sayGoodBye();
 
 	}

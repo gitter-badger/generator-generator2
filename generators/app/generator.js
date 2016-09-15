@@ -30,7 +30,7 @@ exports.prompting = function () {
 
 exports.configuring = function () {
 	if (!this.gen.isInited())
-		this.gen.setYoRc('subgenerator', this.answeres);
+		this.gen.setYoRc(this.answeres,'subgenerator');
 };
 
 exports.writing = function () {
