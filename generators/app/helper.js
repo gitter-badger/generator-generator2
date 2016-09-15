@@ -194,7 +194,7 @@ method.createYoRc = function(json){
 	var yoRc = {};
 
 	json.app.createdAt = utils.getNowDate();
-	this.gen.config.set(json);
+	this.setYoRcAll(json);
 
 	yoRc[this.appName] = json;
 
@@ -214,11 +214,14 @@ method.setYoRc = function(keys, value){
 	var newJson = utils.setJsonValue(
 		keys.split('.'),
 		value,
-		this.gen.config.getAll()
+		this.getYoRc()
 	);
 
-	this.gen.config.set(newJson);
+	this.setYoRcAll(newJson);
+};
 
+method.setYoRcAll = function(value){
+	this.gen.config.set(value);
 };
 
 method.getBasesNames = function(){
@@ -242,9 +245,9 @@ method.sayWelcome = function(){
 };
 method.sayWelcomeBack = function(){
 	this.gen.log(yosay([
-		this.gen.config.get('app').authorName,
+		this.getYoRc('app.authorName'),
 		"♥",
-		this.gen.config.get('app').name
+		this.getYoRc('app.name')
 	].join(' ')));
 };
 method.sayGoodBye = function(){
