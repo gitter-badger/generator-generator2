@@ -37,18 +37,24 @@ function Helper(generator){
 
 var method = Helper.prototype;
 
-method.isInited = function(){
+method.isGeneratorInited = function(){
 	return (
+		this.getYoRc() &&
+		this.getYoRc('app')
+	);
+};
+method.isSubgeneratorInited = function(){
+	return (
+		this.isGeneratorInited() &&
+		this.getYoRc('subgenerator') &&
 		this.getYoRc('inited')
-		&& this.getYoRc('app')
-		&& this.getYoRc('subgenerator')
 	);
 };
 
-method.callSubGenerator = function (subGenName) {
+method.callSubgenerator = function (subgeneratorName) {
 	this.gen.composeWith(
-		this.ENV.name.generator + ':' + subGenName, {}, {
-			local: this.ENV.path.getSubgenerator(subGenName)
+		this.ENV.name.generator + ':' + subgeneratorName, {}, {
+			local: this.ENV.path.getSubgenerator(subgeneratorName)
 		}
 	);
 };
@@ -153,10 +159,10 @@ method.runLineInjector = function(injectorName){
 		});
 	}
 };
-method.callSubGeneratorMethod = function(subGeneratorMethod){
-	if (subGeneratorMethod in this.gen)
-		if(this.gen[subGeneratorMethod] instanceof Function){
-			this.gen[subGeneratorMethod]();
+method.callSubgeneratorMethod = function(methodName){
+	if (methodName in this.gen)
+		if(this.gen[methodName] instanceof Function){
+			this.gen[methodName]();
 		}
 };
 
@@ -190,9 +196,6 @@ method.postPrompt = function(questions,callback){
 	}.bind(this.gen));
 };
 
-method.yoRcExist = function(){
-	return this.getYoRc()
-};
 method.createYoRc = function(json){
 	var yoRc = {};
 

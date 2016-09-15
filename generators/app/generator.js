@@ -16,7 +16,7 @@ exports.prompting = function () {
 	var questionChoices = questions.subgenerator(
 		this.gen.getBasesNames(),
 		this.gen.getModulesNames()
-	)[this.gen.isInited() ? 'module' : 'base'];
+	)[this.gen.isSubgeneratorInited() ? 'module' : 'base'];
 
 	return this.gen.postPrompt(
 		questionChoices,
@@ -29,22 +29,22 @@ exports.prompting = function () {
 };
 
 exports.configuring = function () {
-	if (!this.gen.isInited())
+	if (!this.gen.isSubgeneratorInited())
 		this.gen.setYoRc(this.answeres,'subgenerator');
 };
 
 exports.writing = function () {
 	var done = this.async();
 
-	if (this.gen.isInited())
+	if (this.gen.isSubgeneratorInited())
 		this.gen.generateModule(this.answeres.module, done);
 	else
 		this.gen.generateBase(this.answeres.base, done);
 };
 
 exports.conflicts = function () {
-	var subGenMethod = this.gen.isInited() ? this.answeres.module : this.answeres.base;
-
+	var subGenMethod = this.gen.isSubgeneratorInited() ? this.answeres.module : this.answeres.base;
+	
 	this.gen.runLineInjector(subGenMethod);
-	this.gen.callSubGeneratorMethod(subGenMethod)
+	this.gen.callSubgeneratorMethod(subGenMethod)
 };

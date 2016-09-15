@@ -13,42 +13,36 @@ module.exports = generator.Base.extend({
 	prompting: function () {
 		var self = this;
 
-		if (!this.gen.isInited()) {
-
+		if (!this.gen.isGeneratorInited()) {
+			
 			this.gen.sayWelcome();
-
+			
 			return this.gen.initPrompt(
 				questions.generator(),
 				function(answeres){
-
 					self.answeres = answeres;
-
                 });
-
+			
 		} else {
-
 			this.gen.sayWelcomeBack();
-
 		}
 
 	},
     configuring: function(){
-		if(!this.gen.isInited()){
+		if(!this.gen.isGeneratorInited()){
 			this.gen.createYoRc(this.answeres);
 		}
 	},
 
 	generator: function(){
-		this.gen.callSubGenerator(
+		this.gen.callSubgenerator(
 			this.gen.getYoRc('app.language')
 		);
 	},
 
 	end: function(){
-
         this.gen.setYoRc(true,'inited');
 		this.gen.sayGoodBye();
-
 	}
 });
 
