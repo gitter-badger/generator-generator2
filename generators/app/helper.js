@@ -6,6 +6,7 @@ var walk = require('walk');
 var chalk = require('chalk');
 var ejs = require('ejs');
 var pathJoin = require('path').join;
+var licenser = require('licenser');
 
 var utils = require('./utils');
 var pac = require('../../package.json');
@@ -28,7 +29,6 @@ function Helper(generator){
 				getSetupEjs : function(){ return generator.templatePath('setup/ejs');},
 				getBase : function(name){ return generator.templatePath('base/' + (name || '.'));},
 				getModule : function(name){ return generator.templatePath('module/' + (name || '.'))},
-				getLicense : function(name) { return pathJoin(__dirname,'templates/licenses',(name || '.'));},
 				getSetupInjector : function(name) { return generator.templatePath('setup/injector/'+name+'.yml');}
 			}
 		}
@@ -59,6 +59,14 @@ method.callSubgenerator = function (subgeneratorName) {
 	);
 };
 
+method.getLicense = function(){
+	return licenser.getLicense(
+		this.getYoRc('app.license'),
+		new Date().getFullYear(),
+		this.getYoRc('app.authorName')
+	);
+};
+
 method.generateModule = function(moduleName,done){
 	var destinationPath = this.ENV.path.getDestination();
 	var basePath = this.ENV.path.temp.getModule(moduleName);
@@ -85,13 +93,13 @@ method.generateBase = function(baseName,done){
 method.generate = function(fromDir,toDir,done){
 	var self = this;
 
-	var licensePath = this.ENV.path.temp.getLicense(this.getYoRc('app.license'));
 	var setupEjsPath = this.ENV.path.temp.getSetupEjs();
 	var setupEjsFilesPathsArr = utils.getAllFilesPaths(setupEjsPath);
 
 	var yoRcConfig = this.getYoRc();
 	var ejsTempConfig = this.getYoRc();
-	ejsTempConfig.ejs = {};
+
+	ejsTempConfig.ejs = { };
 
 	/**
 	 * Filling ejsTempConfig object
@@ -110,16 +118,9 @@ method.generate = function(fromDir,toDir,done){
 	}
 
 	/**
-	 * Add license to ejsTempConfig object
+	 * Set license to ejsTempConfig object
 	 */
-	try {
-		ejsTempConfig.ejs.license = ejs.render(
-			self.gen.fs.read(licensePath),
-			yoRcConfig
-		);
-	} catch (err) {
-		self.throwFileError(err.message,licensePath);
-	}
+	ejsTempConfig.ejs.license = this.getLicense();
 
 	/**
 	 * Generate and render structure with ejs rendered

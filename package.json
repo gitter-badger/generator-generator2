@@ -22,7 +22,8 @@
     "mmmagic": "^0.4.5",
     "walk": "^2.3.9",
     "yeoman-generator": "^0.23.0",
-    "yosay": "^1.0.0"
+    "yosay": "^1.0.0",
+	"licenser": "github:urosjarc/licenser.js#feature/preTesting"
   },
   "devDependencies": {
     "assert": "^1.4.1",

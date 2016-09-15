@@ -1,4 +1,5 @@
 var utils = require('./utils');
+var licenser = require('licenser');
 
 /**
  * Json configuration for main generator.
@@ -35,15 +36,7 @@ exports.generator = function () {
 				"type": "list",
 				"name": "license",
 				"message": "License:",
-				"choices": [
-					"GNU AGPLv3",
-					"GNU GPLv3",
-					"GNU LGPLv3",
-					"Mozilla Public License 2.0",
-					"Apache License 2.0",
-					"MIT License",
-					"The Unlicense"
-				]
+				"choices": licenser.getNames()
 			},
 			{
 				"type": "input",

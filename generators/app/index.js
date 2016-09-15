@@ -14,15 +14,15 @@ module.exports = generator.Base.extend({
 		var self = this;
 
 		if (!this.gen.isGeneratorInited()) {
-			
+
 			this.gen.sayWelcome();
-			
+
 			return this.gen.initPrompt(
 				questions.generator(),
 				function(answeres){
 					self.answeres = answeres;
                 });
-			
+
 		} else {
 			this.gen.sayWelcomeBack();
 		}
