@@ -21,8 +21,11 @@ yo generate
  
  * Appi calls to services (license, versioneye, ...)
  * Make logger for generator.
+ * Make unittests.
+ * Make extensive hand made tests for every possible error and case.
+ * Verbose and neat error printing.
 
-## Generated app features
+## Generated apps features
 
  * Todo: List this...
 
