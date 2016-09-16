@@ -3,8 +3,6 @@
 var fs = require('fs');
 var yosay = require('yosay');
 var walk = require('walk');
-var chalk = require('chalk');
-var ejs = require('ejs');
 var os = require('os');
 var process = require('process');
 var pathJoin = require('path').join;
@@ -26,12 +24,16 @@ function Helper(generator) {
             timestamp: false,
             filename: generator.destinationPath('generator.debug'),
 			formatter: function (options) {
-				return options.level.toUpperCase() + ' ' +
-					(undefined !== options.message ? options.message : '') +
-					(options.meta && Object.keys(options.meta).length
-						? ' ' + JSON.stringify(options.meta,null,'\t')
-						: ''
-					);
+				var level = options.level.toUpperCase();
+				var message = options.message ? options.message : '';
+				var meta;
+
+				generator.log(options);
+                if(Object.keys(options.meta).length != 0) {
+                    meta = ': ' + JSON.stringify(options.meta,null,'\t');
+                } else meta = '';
+
+				return level + ' ' + message + meta;
 			},
             json: false,
             eol: '\n',
@@ -97,23 +99,22 @@ method.initLogger = function(){
 };
 
 method.isGeneratorInited = function () {
-	var ret = (
+	return (
 		this.getYoRc() &&
 		this.getYoRc('app')
 	) ? true : false;
-	this.logger.info('Is generator inited: ',ret);
-	return ret;
 };
 method.isSubgeneratorInited = function () {
-	var ret = (
+	return (
 		this.isGeneratorInited() &&
 		this.getYoRc('subgenerator') &&
 		this.getYoRc('inited')
 	) ? true : false;
-	this.logger.info('Is subgenerator inited: ',ret);
 };
 
 method.callSubgenerator = function (subgeneratorName) {
+	this.logger.info('Call subgenerator:',subgeneratorName);
+
 	this.gen.composeWith(
 		this.ENV.name.generator + ':' + subgeneratorName, {}, {
 			local: this.ENV.path.getSubgenerator(subgeneratorName)
@@ -122,20 +123,26 @@ method.callSubgenerator = function (subgeneratorName) {
 };
 
 method.getLicense = function () {
+	var licenseName = this.getYoRc('app.license');
+
 	return licenser.getLicense(
-		this.getYoRc('app.license'),
+		licenseName,
 		new Date().getFullYear(),
 		this.getYoRc('app.authorName')
 	);
 };
 
 method.generateModule = function (moduleName, done) {
+	this.logger.info('Generate module:',moduleName);
+
 	var destinationPath = this.ENV.path.getDestination();
 	var basePath = this.ENV.path.temp.getModule(moduleName);
 
 	this.generate(basePath, destinationPath, done);
 };
 method.generateBase = function (baseName, done) {
+	this.logger.info('Generate base:',baseName);
+
 	var destinationPath = this.ENV.path.getDestination();
 	var setupBasePath = this.ENV.path.temp.getSetupBase();
 	var basePath = this.ENV.path.temp.getBase(baseName);
@@ -169,14 +176,10 @@ method.generate = function (fromDir, toDir, done) {
 	for (var i in setupEjsFilesPathsArr) {
 		var setupEjsFilePath = setupEjsFilesPathsArr[i];
 		var ejsKey = setupEjsFilePath.replace(setupEjsPath + '/', '').replace(/\//g, '_');
-		try {
-			ejsTempConfig.ejs[ejsKey] = ejs.render(
-				this.gen.fs.read(setupEjsFilePath),
-				yoRcConfig
-			);
-		} catch (err) {
-			this.throwFileError(err.message, setupEjsFilePath);
-		}
+        ejsTempConfig.ejs[ejsKey] = utils.ejsRender(
+            setupEjsFilePath,
+            yoRcConfig
+        );
 	}
 
 	/**
@@ -190,24 +193,25 @@ method.generate = function (fromDir, toDir, done) {
 	var walker = walk.walk(fromDir);
 	walker.on("file", function (root, file, next) {
 		var filePath = pathJoin(root, file.name);
-		try {
-			var renderedToPath = ejs.render(filePath.replace(fromDir, toDir), yoRcConfig);
-			utils.isEditable(filePath, function (isEditable) {
-				if (isEditable)
-					self.gen.fs.write(renderedToPath, ejs.render(self.gen.fs.read(filePath), ejsTempConfig));
-				else
-					self.gen.fs.copy(filePath, renderedToPath);
-				next();
-			});
-		} catch (err) {
-			self.throwFileError(err.message, filePath);
-		}
+        var renderedToPath = utils.ejsRenderPath(filePath.replace(fromDir, toDir), yoRcConfig);
+        utils.isEditable(filePath, function (isEditable) {
+            if (isEditable) {
+                self.logger.debug('Write:',renderedToPath);
+                self.gen.fs.write(renderedToPath, utils.ejsRender(filePath, ejsTempConfig));
+            } else {
+                self.logger.debug('Copy:',renderedToPath);
+                self.gen.fs.copy(filePath, renderedToPath);
+            }
+            next();
+        });
 	});
 
 	walker.on('end', done);
 };
 
 method.runLineInjector = function (injectorName) {
+	this.logger.info('Run line injector:',injectorName);
+
 	var self = this;
 
 	var inject = utils.yamlToJson(
@@ -217,6 +221,11 @@ method.runLineInjector = function (injectorName) {
 	for (var filePath in inject) {
 		var lineFlag = inject[filePath].flag;
 		var injectArr = inject[filePath].text.split('\n');
+		this.logger.debug('Inject:',{
+			filePath:filePath,
+			lineFlag:lineFlag,
+			injectArr: injectArr
+		});
 		utils.injectLines(filePath, lineFlag, injectArr, function (newContent) {
 			self.gen.fs.write(filePath, newContent);
 		});
@@ -225,19 +234,12 @@ method.runLineInjector = function (injectorName) {
 method.callSubgeneratorMethod = function (methodName) {
 	if (methodName in this.gen)
 		if (this.gen[methodName] instanceof Function) {
+			this.logger.info('Call subgenerator method:',methodName);
 			this.gen[methodName]();
 		}
 };
 
-method.throwFileError = function (message, path) {
-	throw new Error(chalk.red.bold(
-		"\n > Message: " + message + '\n' +
-		" > File: " + path + '\n'
-	));
-};
-
 method.initPrompt = function (questions, callback) {
-
 	var self = this;
 
 	return this.gen.prompt(questions.app).then(function (appAnswers) {
@@ -247,6 +249,7 @@ method.initPrompt = function (questions, callback) {
 			var answeres = {app: appAnswers};
 			answeres[appLang] = langAnswers;
 
+			self.logger.info('Init prompt answeres',answeres);
 			callback(answeres);
 
 		}.bind(self.gen));
@@ -254,7 +257,10 @@ method.initPrompt = function (questions, callback) {
 
 };
 method.postPrompt = function (questions, callback) {
+	var self = this;
+
 	return this.gen.prompt(questions).then(function (answeres) {
+		self.logger.info('Post prompt answeres',answeres);
 		callback(answeres);
 	}.bind(this.gen));
 };
@@ -266,6 +272,8 @@ method.createYoRc = function (json) {
 	this.setYoRc(json);
 
 	yoRc[this.appName] = json;
+
+	this.logger.info('Create .yo-rc.json',yoRc);
 
 	fs.writeFileSync(
 		this.ENV.path.getDestination('.yo-rc.json'),
@@ -280,6 +288,11 @@ method.getYoRc = function (keys) {
 	);
 };
 method.setYoRc = function (value, keys) {
+	this.logger.info('Set yoRc config',{
+		value: value,
+		keys: keys
+	});
+
 	if (keys)
 		this.gen.config.set(
 			utils.setJsonValue(
@@ -290,6 +303,8 @@ method.setYoRc = function (value, keys) {
 		);
 	else
 		this.gen.config.set(value);
+
+	this.logger.info('New yoRc config',this.getYoRc());
 
 };
 
@@ -305,7 +320,6 @@ method.getModulesNames = function () {
 };
 
 method.sayWelcome = function () {
-	this.logger.info('Say welcome');
 	this.gen.log(yosay([
 		"♥ Java ♥",
 		"♥ TypeScript ♥",
@@ -314,7 +328,6 @@ method.sayWelcome = function () {
 	].join('\n')));
 };
 method.sayWelcomeBack = function () {
-	this.logger.info('Say welcome back');
 	this.gen.log(yosay([
 		this.getYoRc('app.authorName'),
 		"♥",
@@ -322,7 +335,6 @@ method.sayWelcomeBack = function () {
 	].join(' ')));
 };
 method.sayGoodBye = function () {
-	this.logger.info('Say good bye');
 	this.gen.log([
 		'',
 		' ♥ Yeoman loves you! ♥'

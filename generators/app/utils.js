@@ -2,6 +2,7 @@ var fs = require('fs');
 var chalk = require('chalk');
 var yaml = require('js-yaml');
 var mmm = require('mmmagic');
+var ejs = require('ejs');
 
 var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
 
@@ -150,4 +151,31 @@ exports.isEditable = function(filePath,callback){
             callback(true);
         }
 	});
+};
+
+exports.ejsRenderPath = function(filePath,config){
+	try{
+		return ejs.render(
+			filePath,
+			config
+		);
+	} catch (err){
+		throw new Error(chalk.red.bold(
+			"\n > Message: " + message + '\n' +
+			" > File: " + filePath + '\n'
+		));
+	}
+};
+exports.ejsRender = function(filePath,config){
+	try{
+		return ejs.render(
+			fs.readFileSync(filePath,'utf-8'),
+			config
+		);
+	} catch (err){
+		throw new Error(chalk.red.bold(
+			"\n > Message: " + message + '\n' +
+			" > File: " + filePath + '\n'
+		));
+	}
 };
