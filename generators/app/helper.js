@@ -16,30 +16,40 @@ function Helper(generator) {
 
 	utils.validateGeneratorName(pac.name);
 
+	this.ENV;
+	this.logger;
+
+	this.initEnv();
+	this.initLogger();
+}
+
+var method = Helper.prototype;
+
+method.initEnv = function(){
+	var self = this;
 	this.ENV = {
 		logger : {
-            level: 'silly',
-            silent: generator.options.debug ? false : true,
-            colorize: false,
-            timestamp: false,
-            filename: generator.destinationPath('generator.debug'),
+			level: 'silly',
+			silent: self.gen.options.debug ? false : true,
+			colorize: false,
+			timestamp: false,
+			filename: self.gen.destinationPath('generator.debug'),
 			formatter: function (options) {
 				var level = options.level.toUpperCase();
 				var message = options.message ? options.message : '';
 				var meta;
 
-				generator.log(options);
-                if(Object.keys(options.meta).length != 0) {
-                    meta = ': ' + JSON.stringify(options.meta,null,'\t');
-                } else meta = '';
+				if(Object.keys(options.meta).length != 0) {
+					meta = ': ' + JSON.stringify(options.meta,null,'\t');
+				} else meta = '';
 
 				return level + ' ' + message + meta;
 			},
-            json: false,
-            eol: '\n',
-            prettyPrint: true,
-            showLevel: true,
-            options : { flags: 'w' }
+			json: false,
+			eol: '\n',
+			prettyPrint: true,
+			showLevel: true,
+			options : { flags: 'w' }
 		},
 		name: {
 			app: pac.name,
@@ -50,30 +60,28 @@ function Helper(generator) {
 				return pathJoin(__dirname, '..', name)
 			},
 			getDestination: function (file) {
-				return generator.destinationPath(file || '.')
+				return self.gen.destinationPath(file || '.')
 			},
 			temp: {
 				getSetupBase: function () {
-					return generator.templatePath('setup/base');
+					return self.gen.templatePath('setup/base');
 				},
 				getSetupEjs: function () {
-					return generator.templatePath('setup/ejs');
+					return self.gen.templatePath('setup/ejs');
 				},
 				getBase: function (name) {
-					return generator.templatePath('base/' + (name || '.'));
+					return self.gen.templatePath('base/' + (name || '.'));
 				},
 				getModule: function (name) {
-					return generator.templatePath('module/' + (name || '.'))
+					return self.gen.templatePath('module/' + (name || '.'))
 				},
 				getSetupInjector: function (name) {
-					return generator.templatePath('setup/injector/' + name + '.yml');
+					return self.gen.templatePath('setup/injector/' + name + '.yml');
 				}
 			}
 		}
 	};
-}
-
-var method = Helper.prototype;
+};
 
 method.initLogger = function(){
 	this.logger = new winston.Logger({
