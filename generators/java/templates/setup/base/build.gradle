@@ -15,7 +15,6 @@ plugins {
 	id 'checkstyle'
 	id 'net.saliman.cobertura' version '2.3.2'
 	id 'net.nemerosa.versioning' version '1.5.0'
-	id 'org.standardout.versioneye' version '1.4.0'
 	id 'org.ajoberstar.github-pages' version '1.5.1'
 	id 'com.selesse.git.changelog' version '0.2.1'
 }

@@ -16,7 +16,6 @@ function Helper(language, baseName){
 		license: "MIT License",
 		githubUser: "GITHUB_USER",
 		authorName: "AUTHOR_NAME",
-		versionEyeApiKey: "VERSION_EYE_API_KEY",
 		createdAt: 'CREATED_AT',
 		language: language
 	};
