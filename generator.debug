@@ -1,0 +1,21 @@
+INFO System info {
+	"node": "v6.2.2",
+	"argv": [
+		"/usr/bin/nodejs",
+		"/usr/bin/yo",
+		"generate",
+		"--debug"
+	],
+	"os": {
+		"patform": "linux",
+		"release": "4.4.0-36-generic",
+		"type": "Linux"
+	}
+}
+INFO Generator info {
+	"version": "0.0.0",
+	"yoRc": {}
+}
+INFO Run context: PROMTING
+INFO Is generator inited:  false
+INFO Say welcome

@@ -19,11 +19,12 @@
     "chalk": "^1.0.0",
     "ejs": "^2.5.1",
     "js-yaml": "^3.6.1",
+    "licenser": "github:urosjarc/licenser.js#feature/preTesting",
     "mmmagic": "^0.4.5",
     "walk": "^2.3.9",
+    "winston": "^2.2.0",
     "yeoman-generator": "^0.23.0",
-    "yosay": "^1.0.0",
-	"licenser": "github:urosjarc/licenser.js#feature/preTesting"
+    "yosay": "^1.0.0"
   },
   "devDependencies": {
     "assert": "^1.4.1",

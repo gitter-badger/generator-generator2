@@ -5,9 +5,11 @@ var yosay = require('yosay');
 var walk = require('walk');
 var chalk = require('chalk');
 var ejs = require('ejs');
+var os = require('os');
+var process = require('process');
 var pathJoin = require('path').join;
 var licenser = require('licenser');
-
+var winston = require('winston');
 var utils = require('./utils');
 var pac = require('../../package.json');
 
@@ -17,6 +19,26 @@ function Helper(generator) {
 	utils.validateGeneratorName(pac.name);
 
 	this.ENV = {
+		logger : {
+            level: 'silly',
+            silent: generator.options.debug ? false : true,
+            colorize: false,
+            timestamp: false,
+            filename: generator.destinationPath('generator.debug'),
+			formatter: function (options) {
+				return options.level.toUpperCase() + ' ' +
+					(undefined !== options.message ? options.message : '') +
+					(options.meta && Object.keys(options.meta).length
+						? ' ' + JSON.stringify(options.meta,null,'\t')
+						: ''
+					);
+			},
+            json: false,
+            eol: '\n',
+            prettyPrint: true,
+            showLevel: true,
+            options : { flags: 'w' }
+		},
 		name: {
 			app: pac.name,
 			generator: pac.name.split('-')[1]
@@ -51,18 +73,44 @@ function Helper(generator) {
 
 var method = Helper.prototype;
 
+method.initLogger = function(){
+	this.logger = new winston.Logger({
+		transports: [
+			new (winston.transports.File)(this.ENV.logger)
+		],
+        exitOnError : false
+	});
+
+	this.logger.info('System info',{
+		node : process.version,
+		argv : process.argv,
+		os : {
+			patform : os.platform(),
+			release : os.release(),
+			type : os.type()
+		}
+	});
+	this.logger.info('Generator info',{
+		version : pac.version,
+		yoRc : this.getYoRc()
+	});
+};
+
 method.isGeneratorInited = function () {
-	return (
+	var ret = (
 		this.getYoRc() &&
 		this.getYoRc('app')
-	);
+	) ? true : false;
+	this.logger.info('Is generator inited: ',ret);
+	return ret;
 };
 method.isSubgeneratorInited = function () {
-	return (
+	var ret = (
 		this.isGeneratorInited() &&
 		this.getYoRc('subgenerator') &&
 		this.getYoRc('inited')
-	);
+	) ? true : false;
+	this.logger.info('Is subgenerator inited: ',ret);
 };
 
 method.callSubgenerator = function (subgeneratorName) {
@@ -257,6 +305,7 @@ method.getModulesNames = function () {
 };
 
 method.sayWelcome = function () {
+	this.logger.info('Say welcome');
 	this.gen.log(yosay([
 		"♥ Java ♥",
 		"♥ TypeScript ♥",
@@ -265,6 +314,7 @@ method.sayWelcome = function () {
 	].join('\n')));
 };
 method.sayWelcomeBack = function () {
+	this.logger.info('Say welcome back');
 	this.gen.log(yosay([
 		this.getYoRc('app.authorName'),
 		"♥",
@@ -272,6 +322,7 @@ method.sayWelcomeBack = function () {
 	].join(' ')));
 };
 method.sayGoodBye = function () {
+	this.logger.info('Say good bye');
 	this.gen.log([
 		'',
 		' ♥ Yeoman loves you! ♥'
