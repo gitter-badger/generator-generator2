@@ -28,29 +28,6 @@ var method = Helper.prototype;
 method.initEnv = function(){
 	var self = this;
 	this.ENV = {
-		logger : {
-			level: 'silly',
-			silent: self.gen.options.debug ? false : true,
-			colorize: false,
-			timestamp: false,
-			filename: self.gen.destinationPath('generator.debug'),
-			formatter: function (options) {
-				var level = options.level.toUpperCase();
-				var message = options.message ? options.message : '';
-				var meta;
-
-				if(Object.keys(options.meta).length != 0) {
-					meta = ': ' + JSON.stringify(options.meta,null,'\t');
-				} else meta = '';
-
-				return level + ' ' + message + meta;
-			},
-			json: false,
-			eol: '\n',
-			prettyPrint: true,
-			showLevel: true,
-			options : { flags: 'w' }
-		},
 		name: {
 			app: pac.name,
 			generator: pac.name.split('-')[1]
@@ -85,9 +62,47 @@ method.initEnv = function(){
 method.initLogger = function(){
 	this.logger = new winston.Logger({
 		transports: [
-			new (winston.transports.File)(this.ENV.logger)
+			new (winston.transports.File)({
+				handleExceptions: true,
+				humanReadableUnhandledException: true,
+				level: 'silly',
+				silent: this.gen.options.debug ? false : true,
+				colorize: false,
+				timestamp: false,
+				filename: this.gen.destinationPath('generator.debug'),
+				formatter: function (options) {
+					var level = options.level.toUpperCase();
+					var message = options.message ? options.message : '';
+					var meta;
+
+					if (Object.keys(options.meta).length != 0) {
+						meta = ': ' + JSON.stringify(options.meta, null, '\t');
+					} else meta = '';
+
+					return level + ' ' + message + meta;
+				},
+				json: false,
+				eol: '\n',
+				prettyPrint: true,
+				showLevel: true,
+				options: {flags: 'w'}
+			}),
+			new (winston.transports.Console)({
+				handleExceptions: true,
+				humanReadableUnhandledException: true,
+				prettyPrint: true,
+				silent: false,
+				json: false,
+				stringify: true,
+				colorize: true,
+				level: 'exception',
+				showLevel: false,
+				formatter: function (options) {
+                    return options.meta.stack.join('\n');
+				}
+			})
 		],
-        exitOnError : false
+		exitOnError: false
 	});
 
 	this.logger.info('System info',{
@@ -111,6 +126,7 @@ method.registerEvents = function(){
     process.on('exit', function(code){
 		self.logger.info('Process exit:',code);
     });
+
 };
 
 method.isGeneratorInited = function () {
