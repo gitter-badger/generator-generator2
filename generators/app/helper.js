@@ -11,25 +11,39 @@ var licenser = require('licenser');
 var utils = require('./utils');
 var pac = require('../../package.json');
 
-function Helper(generator){
+function Helper(generator) {
 	this.gen = generator;
 
 	utils.validateGeneratorName(pac.name);
 
 	this.ENV = {
-		name : {
-			app : pac.name,
-			generator : pac.name.split('-')[1]
+		name: {
+			app: pac.name,
+			generator: pac.name.split('-')[1]
 		},
-		path : {
-			getSubgenerator : function(name){ return pathJoin(__dirname,'..',name)},
-			getDestination : function(file) {return generator.destinationPath(file || '.')},
-			temp : {
-				getSetupBase : function() { return generator.templatePath('setup/base');},
-				getSetupEjs : function(){ return generator.templatePath('setup/ejs');},
-				getBase : function(name){ return generator.templatePath('base/' + (name || '.'));},
-				getModule : function(name){ return generator.templatePath('module/' + (name || '.'))},
-				getSetupInjector : function(name) { return generator.templatePath('setup/injector/'+name+'.yml');}
+		path: {
+			getSubgenerator: function (name) {
+				return pathJoin(__dirname, '..', name)
+			},
+			getDestination: function (file) {
+				return generator.destinationPath(file || '.')
+			},
+			temp: {
+				getSetupBase: function () {
+					return generator.templatePath('setup/base');
+				},
+				getSetupEjs: function () {
+					return generator.templatePath('setup/ejs');
+				},
+				getBase: function (name) {
+					return generator.templatePath('base/' + (name || '.'));
+				},
+				getModule: function (name) {
+					return generator.templatePath('module/' + (name || '.'))
+				},
+				getSetupInjector: function (name) {
+					return generator.templatePath('setup/injector/' + name + '.yml');
+				}
 			}
 		}
 	};
@@ -37,13 +51,13 @@ function Helper(generator){
 
 var method = Helper.prototype;
 
-method.isGeneratorInited = function(){
+method.isGeneratorInited = function () {
 	return (
 		this.getYoRc() &&
 		this.getYoRc('app')
 	);
 };
-method.isSubgeneratorInited = function(){
+method.isSubgeneratorInited = function () {
 	return (
 		this.isGeneratorInited() &&
 		this.getYoRc('subgenerator') &&
@@ -59,7 +73,7 @@ method.callSubgenerator = function (subgeneratorName) {
 	);
 };
 
-method.getLicense = function(){
+method.getLicense = function () {
 	return licenser.getLicense(
 		this.getYoRc('app.license'),
 		new Date().getFullYear(),
@@ -67,30 +81,30 @@ method.getLicense = function(){
 	);
 };
 
-method.generateModule = function(moduleName,done){
+method.generateModule = function (moduleName, done) {
 	var destinationPath = this.ENV.path.getDestination();
 	var basePath = this.ENV.path.temp.getModule(moduleName);
 
-	this.generate(basePath, destinationPath,done);
+	this.generate(basePath, destinationPath, done);
 };
-method.generateBase = function(baseName,done){
+method.generateBase = function (baseName, done) {
 	var destinationPath = this.ENV.path.getDestination();
 	var setupBasePath = this.ENV.path.temp.getSetupBase();
 	var basePath = this.ENV.path.temp.getBase(baseName);
 
-	var finish = { setup: false, base: false};
+	var finish = {setup: false, base: false};
 
-    this.generate( setupBasePath, destinationPath, function(){
-        if(finish.base == true) done();
-        else finish.setup = true;
-    });
+	this.generate(setupBasePath, destinationPath, function () {
+		if (finish.base == true) done();
+		else finish.setup = true;
+	});
 
-	this.generate(basePath,destinationPath,function(){
-		if(finish.setup == true) done();
+	this.generate(basePath, destinationPath, function () {
+		if (finish.setup == true) done();
 		else finish.base = true;
 	});
 };
-method.generate = function(fromDir,toDir,done){
+method.generate = function (fromDir, toDir, done) {
 	var self = this;
 
 	var setupEjsPath = this.ENV.path.temp.getSetupEjs();
@@ -99,7 +113,7 @@ method.generate = function(fromDir,toDir,done){
 	var yoRcConfig = this.getYoRc();
 	var ejsTempConfig = this.getYoRc();
 
-	ejsTempConfig.ejs = { };
+	ejsTempConfig.ejs = {};
 
 	/**
 	 * Filling ejsTempConfig object
@@ -113,7 +127,7 @@ method.generate = function(fromDir,toDir,done){
 				yoRcConfig
 			);
 		} catch (err) {
-			this.throwFileError(err.message,setupEjsFilePath);
+			this.throwFileError(err.message, setupEjsFilePath);
 		}
 	}
 
@@ -130,51 +144,51 @@ method.generate = function(fromDir,toDir,done){
 		var filePath = pathJoin(root, file.name);
 		try {
 			var renderedToPath = ejs.render(filePath.replace(fromDir, toDir), yoRcConfig);
-			utils.isEditable(filePath,function(isEditable){
-				if(isEditable)
+			utils.isEditable(filePath, function (isEditable) {
+				if (isEditable)
 					self.gen.fs.write(renderedToPath, ejs.render(self.gen.fs.read(filePath), ejsTempConfig));
 				else
 					self.gen.fs.copy(filePath, renderedToPath);
 				next();
 			});
-		} catch (err){
-			self.throwFileError(err.message,filePath);
+		} catch (err) {
+			self.throwFileError(err.message, filePath);
 		}
 	});
 
 	walker.on('end', done);
 };
 
-method.runLineInjector = function(injectorName){
+method.runLineInjector = function (injectorName) {
 	var self = this;
 
 	var inject = utils.yamlToJson(
 		this.ENV.path.temp.getSetupInjector(injectorName)
-    );
+	);
 
-	for(var filePath in inject){
+	for (var filePath in inject) {
 		var lineFlag = inject[filePath].flag;
 		var injectArr = inject[filePath].text.split('\n');
-		utils.injectLines(filePath,lineFlag,injectArr,function(newContent){
-			self.gen.fs.write(filePath,newContent);
+		utils.injectLines(filePath, lineFlag, injectArr, function (newContent) {
+			self.gen.fs.write(filePath, newContent);
 		});
 	}
 };
-method.callSubgeneratorMethod = function(methodName){
+method.callSubgeneratorMethod = function (methodName) {
 	if (methodName in this.gen)
-		if(this.gen[methodName] instanceof Function){
+		if (this.gen[methodName] instanceof Function) {
 			this.gen[methodName]();
 		}
 };
 
-method.throwFileError = function(message, path){
+method.throwFileError = function (message, path) {
 	throw new Error(chalk.red.bold(
 		"\n > Message: " + message + '\n' +
 		" > File: " + path + '\n'
 	));
 };
 
-method.initPrompt = function(questions,callback){
+method.initPrompt = function (questions, callback) {
 
 	var self = this;
 
@@ -182,7 +196,7 @@ method.initPrompt = function(questions,callback){
 		var appLang = appAnswers.language;
 		return self.gen.prompt(questions[appLang]).then(function (langAnswers) {
 
-			var answeres = { app: appAnswers };
+			var answeres = {app: appAnswers};
 			answeres[appLang] = langAnswers;
 
 			callback(answeres);
@@ -191,13 +205,13 @@ method.initPrompt = function(questions,callback){
 	}.bind(this.gen));
 
 };
-method.postPrompt = function(questions,callback){
+method.postPrompt = function (questions, callback) {
 	return this.gen.prompt(questions).then(function (answeres) {
 		callback(answeres);
 	}.bind(this.gen));
 };
 
-method.createYoRc = function(json){
+method.createYoRc = function (json) {
 	var yoRc = {};
 
 	json.app.createdAt = utils.getNowDate();
@@ -210,15 +224,15 @@ method.createYoRc = function(json){
 		JSON.stringify(yoRc, null, 4)
 	);
 };
-method.getYoRc = function (keys){
+method.getYoRc = function (keys) {
 	var keysArr = keys ? keys.split('.') : [];
-    return utils.getJsonValue(
+	return utils.getJsonValue(
 		keysArr,
-        this.gen.config.getAll()
-    );
+		this.gen.config.getAll()
+	);
 };
-method.setYoRc = function(value,keys){
-	if(keys)
+method.setYoRc = function (value, keys) {
+	if (keys)
 		this.gen.config.set(
 			utils.setJsonValue(
 				keys.split('.'),
@@ -231,18 +245,18 @@ method.setYoRc = function(value,keys){
 
 };
 
-method.getBasesNames = function(){
+method.getBasesNames = function () {
 	return fs.readdirSync(
 		this.ENV.path.temp.getBase()
 	);
 };
-method.getModulesNames = function(){
+method.getModulesNames = function () {
 	return fs.readdirSync(
 		this.ENV.path.temp.getModule()
 	);
 };
 
-method.sayWelcome = function(){
+method.sayWelcome = function () {
 	this.gen.log(yosay([
 		"♥ Java ♥",
 		"♥ TypeScript ♥",
@@ -250,14 +264,14 @@ method.sayWelcome = function(){
 		"♥ Python ♥"
 	].join('\n')));
 };
-method.sayWelcomeBack = function(){
+method.sayWelcomeBack = function () {
 	this.gen.log(yosay([
 		this.getYoRc('app.authorName'),
 		"♥",
 		this.getYoRc('app.name')
 	].join(' ')));
 };
-method.sayGoodBye = function(){
+method.sayGoodBye = function () {
 	this.gen.log([
 		'',
 		' ♥ Yeoman loves you! ♥'

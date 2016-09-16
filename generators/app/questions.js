@@ -49,11 +49,6 @@ exports.generator = function () {
 				"message": "Authors name:"
 			},
 			{
-				"type" : "input",
-				"name" : "versionEyeApiKey",
-				"message": "VersionEye api key (versioneye.com/settings/api): "
-			},
-			{
 				"type": "list",
 				"name": "language",
 				"message": "Select programming language:",
@@ -64,7 +59,6 @@ exports.generator = function () {
 				]
 			}
 		],
-
 		"java" : [
 			{
 				"type": "input",
