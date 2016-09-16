@@ -82,7 +82,6 @@ method.initEnv = function(){
 		}
 	};
 };
-
 method.initLogger = function(){
 	this.logger = new winston.Logger({
 		transports: [
@@ -104,6 +103,14 @@ method.initLogger = function(){
 		version : pac.version,
 		yoRc : this.getYoRc()
 	});
+};
+
+method.registerEvents = function(){
+	var self = this;
+
+    process.on('exit', function(code){
+		self.logger.info('Process exit:',code);
+    });
 };
 
 method.isGeneratorInited = function () {
@@ -350,3 +357,4 @@ method.sayGoodBye = function () {
 };
 
 module.exports = Helper;
+
