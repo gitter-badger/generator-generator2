@@ -1,11 +1,11 @@
 'use strict';
 
 var assert = require('assert');
-var utils = require('../../../generators/app/utils');
-var sinon = require('sinon');
 var assert = require('assert');
 var path = require('path');
 var fs = require('fs');
+
+var utils = require('../../../generators/app/utils');
 
 describe('utils', function () {
 
@@ -322,14 +322,15 @@ describe('utils', function () {
             utils.isEditable(path.join(__dirname,'NOT_EXIST'),function(err){
                 assert(/ENOENT/.test(err.message));
                 assert(/NOT_EXIST/.test(err.message));
-                done();
+				done();
             });
 		});
-		it('')
-		it('throw error if path is directory',function(){
+		
+		it('throw error if path is directory',function(done){
 			utils.isEditable(__dirname,function(err,pass){
 				if(err) done(err);
 				assert(!pass);
+				done();
 			});
 		});
 	});

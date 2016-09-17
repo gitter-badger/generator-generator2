@@ -163,21 +163,16 @@ exports.isEditable = function (filePath, callback) {
 
 	try{
 		if(!fs.lstatSync(filePath).isFile()){
-			return false;
+			return callback(undefined,false);
 		}
 	} catch (err){
-		callback(err);
+		return callback(err);
 	}
 
 	magic.detectFile(filePath, function (err, mimeType) {
 		if (err) callback(err);
 
 		var mimeTypeArr = mimeType.split('/');
-		if (mimeTypeArr.length != 2) {
-			callback(
-				new Error('Mime type unvalid: ' + mimeType)
-			);
-		}
 
 		var mimeGroup = mimeTypeArr[0];
 		var mimeFile = mimeTypeArr[1];
