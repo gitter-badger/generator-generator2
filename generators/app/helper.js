@@ -14,7 +14,12 @@ var pac = require('../../package.json');
 function Helper(generator) {
 	this.gen = generator;
 
-	utils.validateGeneratorName(pac.name);
+	if(!utils.testGeneratorName(pac.name)){
+		throw new Error([
+			'Helper app name failed to validate!',
+			' > (generator-NAME) != ' + name
+		].join('\n'))
+	}
 
 	this.ENV;
 	this.logger;
@@ -225,7 +230,8 @@ method.generate = function (fromDir, toDir, done) {
 	walker.on("file", function (root, file, next) {
 		var filePath = pathJoin(root, file.name);
         var renderedToPath = utils.ejsRenderPath(filePath.replace(fromDir, toDir), yoRcConfig);
-        utils.isEditable(filePath, function (isEditable) {
+        utils.isEditable(filePath, function (err,isEditable) {
+			if(err) throw err;
             if (isEditable) {
                 self.logger.debug('Write:',renderedToPath);
                 self.gen.fs.write(renderedToPath, utils.ejsRender(filePath, ejsTempConfig));
@@ -257,9 +263,10 @@ method.runLineInjector = function (injectorName) {
 			lineFlag:lineFlag,
 			injectArr: injectArr
 		});
-		utils.injectLines(filePath, lineFlag, injectArr, function (newContent) {
-			self.gen.fs.write(filePath, newContent);
-		});
+		self.gen.fs.write(
+			filePath,
+			utils.injectLines(filePath, lineFlag, injectArr)
+		);
 	}
 };
 method.callSubgeneratorMethod = function (methodName) {

@@ -74,7 +74,7 @@ exports.getAllFilesPaths = function getAllFilesPaths(dir) {
 	return results
 };
 
-exports.injectLines = function (filePath, lineFlag, injectArr, callback) {
+exports.injectLines = function (filePath, lineFlag, injectArr) {
 	var oldFileLines = fs.readFileSync(filePath, 'utf8').split('\n');
 	var newFileLines = [];
 	var lineFlagFound = false;
@@ -102,7 +102,7 @@ exports.injectLines = function (filePath, lineFlag, injectArr, callback) {
 			" > File: " + filePath + '\n'
 		));
 	} else {
-		callback(newFileLines.join('\n'));
+		return newFileLines.join('\n');
 	}
 };
 
@@ -152,35 +152,37 @@ exports.setJsonValue = function (keyArr, value, json) {
 	}
 };
 
-exports.validateGeneratorName = function (name) {
+exports.testGeneratorName = function (name) {
 
 	var nameArr = name.split('-');
 
-	if (
-		nameArr[0] != 'generator' ||
-		this.validateWord(nameArr[1]) != true
-	) {
-		throw new Error([
-			'Helper app name failed to validate!',
-			' > (generator-NAME) != ' + name
-		].join('\n'))
-	}
+	return !(nameArr[0] != 'generator' || this.validateWord(nameArr[1]) != true);
 };
 
 exports.isEditable = function (filePath, callback) {
+
+	try{
+		if(!fs.lstatSync(filePath).isFile()){
+			return false;
+		}
+	} catch (err){
+		callback(err);
+	}
+
 	magic.detectFile(filePath, function (err, mimeType) {
-		if (err) throw err;
+		if (err) callback(err);
 
 		var mimeTypeArr = mimeType.split('/');
 		if (mimeTypeArr.length != 2) {
-			throw new Error('Mime type unvalid: ' + mimeType);
+			callback(
+				new Error('Mime type unvalid: ' + mimeType)
+			);
 		}
 
 		var mimeGroup = mimeTypeArr[0];
 		var mimeFile = mimeTypeArr[1];
 
-		if (
-			[
+		if ([
 				'video',
 				'audio',
 				'image',
@@ -191,9 +193,9 @@ exports.isEditable = function (filePath, callback) {
 				'pdf',
 				'octet-stream'
 			].indexOf(mimeFile) != -1
-		) callback(false);
+		) callback(null,false);
 		else {
-			callback(true);
+			callback(null,true);
 		}
 	});
 };
