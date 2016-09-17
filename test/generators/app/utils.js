@@ -28,7 +28,13 @@ describe('utils', function () {
 	});
 
 	describe('#validateUrl',function(){
-
+		it('pass on good url',function(){
+			assert.equal(utils.validateUrl('https://github.com'),true);
+		});
+		
+		it('fail on good url',function(){
+			assert.equal(typeof utils.validateUrl('https:// github.com'),'string');
+		});
 	});
 
 	describe('#getJsonValue', function () {
