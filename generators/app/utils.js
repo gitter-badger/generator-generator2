@@ -8,7 +8,7 @@ var process = require('process');
 var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
 
 exports.validateWord = function (input) {
-	return /^[a-zA-Z.]+$/.test(input) == true ? true : "Use letters from a-z and A-Z with dot!";
+	return /^[a-zA-Z._-]+$/.test(input) == true ? true : "Type single word with characters (A-Z a-z . - _)!";
 };
 
 exports.validateUrl = function (input) {

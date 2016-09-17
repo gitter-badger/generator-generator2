@@ -7,6 +7,29 @@ var assert = require('assert');
 
 describe('utils', function () {
 
+	describe('#validateWord',function(){
+		it('return true on nice word',function(){
+			assert.equal(utils.validateWord('aA._-'),true);
+		});
+
+		it('return false on space',function(){
+			assert.equal(
+				typeof utils.validateWord('word word'),
+				'string'
+			);
+		});
+
+		it('return false on bad character',function(){
+			assert.equal(
+				typeof utils.validateWord('?'),
+				'string'
+			);
+		});
+	});
+
+	describe('#validateUrl',function(){
+
+	});
 
 	describe('#getJsonValue', function () {
 
@@ -95,7 +118,7 @@ describe('utils', function () {
 			};
 			assert.deepEqual(json,this.json);
 		});
-		
+
 		it('create key on third level',function(){
 			var json = utils.setJsonValue(['NOT_EXIST','NOT_EXIST','NOT_EXIST'],'newValue',this.json);
 			this.json.NOT_EXIST = {
