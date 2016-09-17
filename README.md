@@ -19,7 +19,6 @@ yo generate
 
 ## Todo
  
- * Appi calls to services (license, versioneye, ...)
  * Make logger for generator.
  * Make unittests.
  * Make extensive hand made tests for every possible error and case.

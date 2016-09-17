@@ -2,6 +2,8 @@ var fs = require('fs');
 var chalk = require('chalk');
 var yaml = require('js-yaml');
 var mmm = require('mmmagic');
+var ejs = require('ejs');
+var process = require('process');
 
 var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
 
@@ -19,19 +21,19 @@ exports.validateEmail = function (email) {
 };
 
 exports.getAllFilesPaths = function getAllFilesPaths(dir) {
-    var results = [];
-    var list = fs.readdirSync(dir);
-    list.forEach(function(file) {
-        file = dir + '/' + file;
-        var stat = fs.statSync(file);
-        if (stat && stat.isDirectory()) results = results.concat(getAllFilesPaths(file));
-        else results.push(file)
-    });
-    return results
+	var results = [];
+	var list = fs.readdirSync(dir);
+	list.forEach(function (file) {
+		file = dir + '/' + file;
+		var stat = fs.statSync(file);
+		if (stat && stat.isDirectory()) results = results.concat(getAllFilesPaths(file));
+		else results.push(file)
+	});
+	return results
 };
 
-exports.injectLines = function(filePath,lineFlag,injectArr,callback){
-	var oldFileLines = fs.readFileSync(filePath,'utf8').split('\n');
+exports.injectLines = function (filePath, lineFlag, injectArr, callback) {
+	var oldFileLines = fs.readFileSync(filePath, 'utf8').split('\n');
 	var newFileLines = [];
 	var lineFlagFound = false;
 
@@ -62,7 +64,7 @@ exports.injectLines = function(filePath,lineFlag,injectArr,callback){
 	}
 };
 
-exports.yamlToJson = function(path){
+exports.yamlToJson = function (path) {
 	try {
 		var doc = yaml.safeLoad(fs.readFileSync(path, 'utf8'));
 	} catch (err) {
@@ -75,79 +77,108 @@ exports.yamlToJson = function(path){
 	return doc;
 };
 
-exports.getNowDate = function(){
+exports.getNowDate = function () {
 	var date = new Date();
 	return date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
 };
 
-exports.getJsonValue = function (keyArr,json){
-	if(keyArr.length > 1){
+exports.getJsonValue = function (keyArr, json) {
+	if (keyArr.length > 1) {
 		var newJson = json[keyArr[0]];
-		if(newJson instanceof Object){
-			return this.getJsonValue(keyArr.slice(1),newJson)
+		if (newJson instanceof Object) {
+			return this.getJsonValue(keyArr.slice(1), newJson)
 		} else {
 			return undefined;
 		}
-	} else if(keyArr.length == 1){
+	} else if (keyArr.length == 1) {
 		return json[keyArr[0]];
 	} else {
 		return json;
 	}
 };
 
-exports.setJsonValue = function(keyArr,value,json){
-	if(keyArr.length > 1){
+exports.setJsonValue = function (keyArr, value, json) {
+	if (keyArr.length > 1) {
 		var newJson = json[keyArr[0]] || {};
-		if(newJson instanceof Object){
-			json[keyArr[0]] = this.setJsonValue(keyArr.slice(1),value,newJson);
+		if (newJson instanceof Object) {
+			json[keyArr[0]] = this.setJsonValue(keyArr.slice(1), value, newJson);
 			return json;
 		}
-	} else if(keyArr.length == 1) {
+	} else if (keyArr.length == 1) {
 		json[keyArr[0]] = value;
 		return json;
 	}
 };
 
-exports.validateGeneratorName = function(name){
+exports.validateGeneratorName = function (name) {
 
 	var nameArr = name.split('-');
 
-	if(
+	if (
 		nameArr[0] != 'generator' ||
 		this.validateWord(nameArr[1]) != true
-	){ throw new Error([
-		'Generator app name failed to validate!',
-		' > (generator-NAME) != ' + name
-	].join('\n'))}
+	) {
+		throw new Error([
+			'Helper app name failed to validate!',
+			' > (generator-NAME) != ' + name
+		].join('\n'))
+	}
 };
 
-exports.isEditable = function(filePath,callback){
+exports.isEditable = function (filePath, callback) {
 	magic.detectFile(filePath, function (err, mimeType) {
 		if (err) throw err;
 
 		var mimeTypeArr = mimeType.split('/');
-		if(mimeTypeArr.length != 2){
+		if (mimeTypeArr.length != 2) {
 			throw new Error('Mime type unvalid: ' + mimeType);
 		}
 
 		var mimeGroup = mimeTypeArr[0];
 		var mimeFile = mimeTypeArr[1];
 
-        if(
-            [
-                'video',
-                'audio',
-                'image',
-                'music',
-                'x-music'
-            ].indexOf(mimeGroup) != -1 ||
-            [
-                'pdf',
-                'octet-stream'
-            ].indexOf(mimeFile) != -1
-        ) callback(false);
-        else {
-            callback(true);
-        }
+		if (
+			[
+				'video',
+				'audio',
+				'image',
+				'music',
+				'x-music'
+			].indexOf(mimeGroup) != -1 ||
+			[
+				'pdf',
+				'octet-stream'
+			].indexOf(mimeFile) != -1
+		) callback(false);
+		else {
+			callback(true);
+		}
 	});
+};
+
+exports.ejsRenderPath = function (filePath, config) {
+	try {
+		return ejs.render(
+			filePath,
+			config
+		);
+	} catch (err) {
+		throw new Error(chalk.red.bold(
+			"\n > Message: " + message + '\n' +
+			" > File: " + filePath + '\n'
+		));
+	}
+};
+exports.ejsRender = function (filePath, config) {
+	try {
+		return ejs.render(
+			fs.readFileSync(filePath, 'utf-8'),
+			config
+		);
+	} catch (err) {
+		throw new Error(chalk.red.bold(
+			"\n > Message: " + message + '\n' +
+			" > File: " + filePath + '\n'
+		));
+	}
 };

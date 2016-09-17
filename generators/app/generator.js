@@ -11,6 +11,8 @@ exports.initializing = function () {
 };
 
 exports.prompting = function () {
+	this.gen.logger.info('Run context:','PROMTING');
+
 	var self = this;
 
 	var questionChoices = questions.subgenerator(
@@ -29,11 +31,15 @@ exports.prompting = function () {
 };
 
 exports.configuring = function () {
+	this.gen.logger.info('Run context:','CONFIGURING');
+
 	if (!this.gen.isSubgeneratorInited())
 		this.gen.setYoRc(this.answeres,'subgenerator');
 };
 
 exports.writing = function () {
+	this.gen.logger.info('Run context:','WRITING');
+
 	var done = this.async();
 
 	if (this.gen.isSubgeneratorInited())
@@ -43,8 +49,10 @@ exports.writing = function () {
 };
 
 exports.conflicts = function () {
+	this.gen.logger.info('Run context:','CONFLICTS');
+
 	var subGenMethod = this.gen.isSubgeneratorInited() ? this.answeres.module : this.answeres.base;
-	
+
 	this.gen.runLineInjector(subGenMethod);
 	this.gen.callSubgeneratorMethod(subGenMethod)
 };
