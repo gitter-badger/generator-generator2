@@ -200,19 +200,6 @@ exports.isEditable = function (filePath, callback) {
 	});
 };
 
-exports.ejsRenderPath = function (filePath, config) {
-	try {
-		return ejs.render(
-			filePath,
-			config
-		);
-	} catch (err) {
-		throw new Error(chalk.red.bold(
-			"\n > Message: " + message + '\n' +
-			" > File: " + filePath + '\n'
-		));
-	}
-};
 exports.ejsRender = function (filePath, config) {
 	try {
 		return ejs.render(
@@ -221,7 +208,7 @@ exports.ejsRender = function (filePath, config) {
 		);
 	} catch (err) {
 		throw new Error(chalk.red.bold(
-			"\n > Message: " + message + '\n' +
+			"\n > Message: " + err.message + '\n' +
 			" > File: " + filePath + '\n'
 		));
 	}

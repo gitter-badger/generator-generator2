@@ -90,8 +90,9 @@ describe('utils', function () {
 
 	describe('#injectLines',function(){
 		beforeEach(function(){
+			this.passPath = path.join(__dirname,'../../data/injectLines/pass');
 			this.returnPass = utils.injectLines(
-				path.join(__dirname,'../../data/injectLines/pass'),
+				this.passPath,
 				'#line2',['line21','line22']
 			);
 		});
@@ -106,12 +107,22 @@ describe('utils', function () {
 			].join('\n'));
 		});
 
-		it('fail on false file',function(done){
+		it('fail on bad path',function(done){
 			try{
 				utils.injectLines(__dirname,'NOT_FOUND',[]);
 				done('Should not pass');
 			} catch(err){
 				assert(/EISDIR/.test(err.message));
+				done();
+			}
+		});
+
+		it('fail on flag not found',function(done){
+			try{
+				utils.injectLines(this.passPath,'NOT_FOUND',[]);
+				done('Should not pass');
+			} catch(err){
+				assert(/Line flag \(NOT_FOUND\) not found!/.test(err.message));
 				done();
 			}
 		});
@@ -201,6 +212,10 @@ describe('utils', function () {
 			assert.equal(value, undefined);
 		});
 
+		it('returns undefined on second level',function(){
+			var value = utils.getJsonValue(['key1','key1key','NOT_EXIST'], this.json);
+			assert.equal(value, undefined);
+		})
 
 	});
 
@@ -310,6 +325,7 @@ describe('utils', function () {
                 done();
             });
 		});
+		it('')
 		it('throw error if path is directory',function(){
 			utils.isEditable(__dirname,function(err,pass){
 				if(err) done(err);
@@ -318,10 +334,28 @@ describe('utils', function () {
 		});
 	});
 
-	describe('#ejsRenderPath',function(){
-		it('returns rendered path',function(){
-			assert.equal(utils.ejsRenderPath()'/test/<%-dir%>/testing','/test/dir/testing')		
+	describe('#ejsRender',function(){
+		beforeEach(function(){
+			this.passPath = path.join(__dirname,'../../data/ejsRender/pass');
 		});
+		it('returns rendered path',function(){
+			assert.equal(utils.ejsRender(
+				this.passPath,{content:'content'}),
+				'content'
+			);
+		});
+		it('throw error on bad path',function(done){
+			try{
+				utils.ejsRender( path.join(__dirname,'NOT_EXIST'),{});
+				done('Should not pass');
+			} catch (err){
+				assert(/ENOENT/.test(err.message));
+				assert(/NOT_EXIST/.test(err.message));
+				done();
+			}
+
+		});
+
 	});
 
 });

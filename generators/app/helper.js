@@ -4,6 +4,7 @@ var fs = require('fs');
 var yosay = require('yosay');
 var walk = require('walk');
 var os = require('os');
+var ejs = require('ejs');
 var process = require('process');
 var pathJoin = require('path').join;
 var licenser = require('licenser');
@@ -229,7 +230,7 @@ method.generate = function (fromDir, toDir, done) {
 	var walker = walk.walk(fromDir);
 	walker.on("file", function (root, file, next) {
 		var filePath = pathJoin(root, file.name);
-        var renderedToPath = utils.ejsRenderPath(filePath.replace(fromDir, toDir), yoRcConfig);
+        var renderedToPath = ejs.render(filePath.replace(fromDir, toDir), yoRcConfig);
         utils.isEditable(filePath, function (err,isEditable) {
 			if(err) throw err;
             if (isEditable) {
