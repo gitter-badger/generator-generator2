@@ -113,9 +113,64 @@ describe('Helper', function () {
 				sinon.match.number,
 				sinon.match.string
 			));
-			
+
 			this.helper.getYoRc.restore();
 			licenser.getLicense.restore();
+		});
+	});
+
+	describe('#generateModule',function(){
+		it('logs informations and call generate',function() {
+			sinon.spy(this.helper.logger, 'info');
+			sinon.stub(this.helper, 'generate');
+			var done = sinon.stub();
+
+			this.helper.generateModule('moduleName',done);
+
+			assert(this.helper.logger.info
+				.withArgs('Generate module:', 'moduleName')
+				.calledOnce
+			);
+			assert(this.helper.generate
+				.withArgs(
+					sinon.match.string,
+					sinon.match.string,
+					done
+				).calledOnce
+			);
+
+			this.helper.generate.restore();
+			this.helper.logger.info.restore();
+		});
+	});
+
+	describe('#generateBase',function(){
+		it('logs informations and call generate on setupBase and base',function(){
+			sinon.spy(this.helper.logger, 'info');
+			sinon.stub(this.helper, 'generate');
+
+			this.helper.generateBase('baseName',function(){});
+
+			assert(this.helper.logger.info
+				.withArgs('Generate base:', 'baseName')
+				.calledOnce
+			);
+			assert(this.helper.generate
+				.withArgs(
+					sinon.match.string,
+					sinon.match.string,
+					sinon.match.func
+				).calledTwice
+			);
+
+			this.helper.generate.restore();
+			this.helper.logger.info.restore();
+		});
+	});
+
+	describe('#generate',function(){
+		it('should exist and be function',function(){
+			assert.equal(typeof this.helper.generate,'function');
 		});
 	});
 });
