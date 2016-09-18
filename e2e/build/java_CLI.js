@@ -5,7 +5,7 @@ var yoAssert = require('yeoman-assert');
 var nexpect = require('nexpect');
 var path = require('path');
 
-describe('java CLI generator:', function () {
+describe('java CLI build:', function () {
 
     const genPath = path.join(__dirname,'../build/java/CLI');
 	const gradleTask = function(task){

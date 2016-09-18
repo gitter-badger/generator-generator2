@@ -77,16 +77,27 @@ describe('Helper', function () {
 
 	describe('#callSubgenerator',function(){
 		it('should call composeWith',function(){
-			// sinon.spy(this.helper.gen,'composeWith');
-			// sinon.spy(this.helper.ENV.path,'getSubgenerator');
-            //
-			// this.helper.callSubgenerator('java');
-            //
-			// assert(this.helper.gen.composeWith.calledOnce);
-			// assert(this.helper.ENV.path.getSubgenerator.withArgs('java').calledOnce);
-			//
-			// this.helper.gen.composeWith.restore();
-			// this.helper.ENV.path.getSubgenerator.restore();
+			sinon.stub(this.helper.gen,'composeWith');
+
+			this.helper.callSubgenerator('NAME');
+
+			assert(this.helper.gen.composeWith.calledOnce);
+
+			this.helper.gen.composeWith.restore();
 		});
+		it('should call logger',function(){
+			sinon.stub(this.helper.gen,'composeWith');
+			sinon.stub(this.helper.logger,'info');
+
+			this.helper.callSubgenerator('NAME');
+
+			assert(this.helper.logger.info.calledOnce);
+
+			this.helper.logger.info.restore();
+		});
+	});
+	
+	describe('#getLicense',function(){
+		it('calls licenser with good arguments');	
 	});
 });
