@@ -57,7 +57,7 @@ method.assertContent = function(filePath,testArr){
 method.runSubgenerator = function(moduleName){
 	return yoTest
 		.run(this.getPath())
-		.inDirKeep(this.getTestDir())
+		.cd(this.getTestDir())
 		.withLocalConfig(this.getConfig(true))
 		.withPrompts({
 			"module": moduleName

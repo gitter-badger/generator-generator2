@@ -9,6 +9,10 @@ var utils = require('../../../generators/app/utils');
 
 describe('utils', function () {
 
+    const getUtilsPath = function(fsPath){
+        return path.join(__dirname,'../../data/utils',fsPath || '');
+    };
+
 	describe('#validateWord',function(){
 		it('return true on nice word',function(){
 			assert.equal(utils.validateWord('aA._-'),true);
@@ -60,7 +64,7 @@ describe('utils', function () {
 
 	describe('#getAllFilesPaths',function(){
 		beforeEach(function(){
-			var dir = path.join(__dirname, '../../data/getAllFilesPaths');
+			var dir = getUtilsPath('getAllFilesPaths');
 			this.return = utils.getAllFilesPaths(dir);
 			for(var i in this.return){
 				this.return[i] = this.return[i].replace(dir,'');
@@ -90,7 +94,7 @@ describe('utils', function () {
 
 	describe('#injectLines',function(){
 		beforeEach(function(){
-			this.passPath = path.join(__dirname,'../../data/injectLines/pass');
+			this.passPath = getUtilsPath('injectLines/pass');
 			this.returnPass = utils.injectLines(
 				this.passPath,
 				'#line2',['line21','line22']
@@ -130,11 +134,11 @@ describe('utils', function () {
 
 	describe('#yamlToJson',function(){
 		beforeEach(function(){
-			this.corupt = path.join(__dirname,'../../data/yamlToJson/corupt');
-			this.return = utils.yamlToJson(path.join(__dirname,'../../data/yamlToJson/pass'));
+			this.coruptPath = getUtilsPath('yamlToJson/corupt');
+			this.passPath = getUtilsPath('yamlToJson/pass');
 		});
 		it('returns json content',function(){
-			assert.deepEqual(this.return,{
+			assert.deepEqual(utils.yamlToJson(this.passPath),{
 				'./file' : {
 					flag : 'flag',
 					text : 'line0\nline1'
@@ -144,11 +148,11 @@ describe('utils', function () {
 
 		it('fail on bad yaml content',function(done){
 			try{
-				utils.yamlToJson(this.corupt);
+				utils.yamlToJson(this.coruptPath);
 				done('Should not pass');
 			} catch (err){
 				assert(/bad indentation/.test(err.message));
-				assert(/data\/yamlToJson\/corupt/.test(err.message));
+				assert(/data\/utils\/yamlToJson\/corupt/.test(err.message));
 				done();
 			}
 		});
@@ -279,8 +283,8 @@ describe('utils', function () {
 
 	describe('#isEditable',function(){
 		beforeEach(function(){
-			var failPath = path.join(__dirname,'../../data/isEditable/fail');
-			var passPath = path.join(__dirname,'../../data/isEditable/pass');
+			var failPath = getUtilsPath('isEditable/fail');
+			var passPath = getUtilsPath('isEditable/pass');
 			this.passPathsArr = fs.readdirSync(passPath);
 			this.failPathsArr = fs.readdirSync(failPath);
 			for(var i in this.passPathsArr){
@@ -325,7 +329,7 @@ describe('utils', function () {
 				done();
             });
 		});
-		
+
 		it('throw error if path is directory',function(done){
 			utils.isEditable(__dirname,function(err,pass){
 				if(err) done(err);
@@ -337,7 +341,7 @@ describe('utils', function () {
 
 	describe('#ejsRender',function(){
 		beforeEach(function(){
-			this.passPath = path.join(__dirname,'../../data/ejsRender/pass');
+			this.passPath = getUtilsPath('ejsRender/pass');
 		});
 		it('returns rendered path',function(){
 			assert.equal(utils.ejsRender(
