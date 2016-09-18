@@ -16,7 +16,7 @@ module.exports = generator.Base.extend({
 
 	initializing: function () {
 		this.gen = new Helper(this);
-		this.gen.registerEvents();
+		this.gen.registerProcessEvents();
 		this.answeres = {};
 	},
 

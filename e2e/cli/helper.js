@@ -79,7 +79,7 @@ method.getConfig = function (isInited) {
 };
 
 method.getPath= function(){
-	return path.join(__dirname, '../generators/app');
+	return path.join(__dirname, '../../generators/app');
 };
 
 method.describe = function(){
@@ -88,7 +88,7 @@ method.describe = function(){
 };
 
 method.getTestDir = function(){
-	return path.join(__dirname, '../build',this.language,this.baseName);
+	return path.join(__dirname, '../../build',this.language,this.baseName);
 };
 
 method.getPrompt = function () {

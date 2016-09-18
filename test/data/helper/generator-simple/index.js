@@ -9,9 +9,5 @@ module.exports = generator.Base.extend({
 			type: Boolean,
 			default: false
 		});
-		this.AAAAAAAAA = ' lkj';
-	},
-	AAAAAAAAAAAA: function(){
-		return new Helper(this);
 	}
 });

@@ -2,7 +2,7 @@
 
 var assert = require('assert');
 var yoAssert = require('yeoman-assert');
-var Helper = require('../helper');
+var Helper = require('./helper');
 
 var helper = new Helper('java','CLI');
 

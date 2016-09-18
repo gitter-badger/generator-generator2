@@ -156,7 +156,7 @@ exports.testGeneratorName = function (name) {
 
 	var nameArr = name.split('-');
 
-	return !(nameArr[0] != 'generator' || this.validateWord(nameArr[1]) != true);
+	return (nameArr[0] == 'generator' && this.validateWord(nameArr[1]) == true);
 };
 
 exports.isEditable = function (filePath, callback) {

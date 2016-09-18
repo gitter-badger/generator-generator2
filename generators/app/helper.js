@@ -18,20 +18,20 @@ function Helper(generator) {
 	if(!utils.testGeneratorName(pac.name)){
 		throw new Error([
 			'Helper app name failed to validate!',
-			' > (generator-NAME) != ' + name
+			' > (generator-NAME) != ' + pac.name
 		].join('\n'))
 	}
 
 	this.ENV;
 	this.logger;
 
-	this.initEnv();
-	this.initLogger();
+	this._initEnv();
+	this._initLogger();
 }
 
 var method = Helper.prototype;
 
-method.initEnv = function(){
+method._initEnv = function(){
 	var self = this;
 	this.ENV = {
 		name: {
@@ -39,33 +39,20 @@ method.initEnv = function(){
 			generator: pac.name.split('-')[1]
 		},
 		path: {
-			getSubgenerator: function (name) {
-				return pathJoin(__dirname, '..', name)
-			},
-			getDestination: function (file) {
-				return self.gen.destinationPath(file || '.')
-			},
+			getSubgenerator: function (name) { return pathJoin(__dirname, '..', name) },
+			getDestination: function (file) { return self.gen.destinationPath(file || '.') },
 			temp: {
-				getSetupBase: function () {
-					return self.gen.templatePath('setup/base');
-				},
-				getSetupEjs: function () {
-					return self.gen.templatePath('setup/ejs');
-				},
-				getBase: function (name) {
-					return self.gen.templatePath('base/' + (name || '.'));
-				},
-				getModule: function (name) {
-					return self.gen.templatePath('module/' + (name || '.'))
-				},
-				getSetupInjector: function (name) {
-					return self.gen.templatePath('setup/injector/' + name + '.yml');
-				}
+				getSetupBase: function () { return self.gen.templatePath('setup/base'); },
+				getSetupEjs: function () { return self.gen.templatePath('setup/ejs'); },
+				getBase: function (name) { return self.gen.templatePath('base/' + (name || '.')); },
+				getModule: function (name) { return self.gen.templatePath('module/' + (name || '.')) },
+				getSetupInjector: function (name) { return self.gen.templatePath('setup/injector/' + name + '.yml'); }
 			}
 		}
 	};
 };
-method.initLogger = function(){
+method._initLogger = function(){
+
 	this.logger = new winston.Logger({
 		transports: [
 			new (winston.transports.File)({
@@ -126,13 +113,12 @@ method.initLogger = function(){
 	});
 };
 
-method.registerEvents = function(){
+method.registerProcessEvents = function(){
 	var self = this;
 
-    process.on('exit', function(code){
-		self.logger.info('Process exit:',code);
-    });
-
+	process.on('exit', function (code) {
+		self.logger.info('Process exit:', code);
+	});
 };
 
 method.isGeneratorInited = function () {
