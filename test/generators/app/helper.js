@@ -4,6 +4,7 @@ var fs = require('fs');
 var sinon = require('sinon');
 var yoEnv = require('yeoman-environment');
 var process = require('process');
+var licenser = require('licenser');
 
 var utils = require('../../../generators/app/utils');
 var generator = require('../../data/helper/generator-simple');
@@ -96,8 +97,25 @@ describe('Helper', function () {
 			this.helper.logger.info.restore();
 		});
 	});
-	
+
 	describe('#getLicense',function(){
-		it('calls licenser with good arguments');	
+		it('calls licenser with good arguments',function(){
+			sinon.stub(this.helper,'getYoRc')
+				.withArgs('app.license')
+				.returns('licenseName');
+			sinon.stub(licenser,'getLicense')
+				.returns('licenseContent');
+
+			this.helper.getLicense();
+
+			assert(licenser.getLicense.withArgs(
+				'licenseName',
+				sinon.match.number,
+				sinon.match.string
+			));
+			
+			this.helper.getYoRc.restore();
+			licenser.getLicense.restore();
+		});
 	});
 });
