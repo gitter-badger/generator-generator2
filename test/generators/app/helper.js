@@ -381,4 +381,65 @@ describe('Helper', function () {
 
 		});
 	});
+
+	describe('#createYoRc',function(){
+		beforeEach(function(){
+			this.getNowDate = sinon.stub(utils,'getNowDate').returns('1234');
+			this.setYoRc = sinon.spy(this.helper,'setYoRc');
+			this.info = sinon.spy(this.helper.logger,'info');
+			this.fsWriteFileSync = sinon.stub(fs,'writeFileSync');
+			this.getDestination = sinon.stub(this.helper.ENV.path,'getDestination')
+				.withArgs('.yo-rc.json').returns('yoRcDestination');
+
+			this.args = {
+				app : {
+					key : 'jsonYoRc',
+					createdAt : '1234'
+				}
+			};
+		});
+		afterEach(function(){
+			this.getNowDate.restore();
+			this.setYoRc.restore();
+			this.info.restore();
+			this.fsWriteFileSync.restore();
+			this.helper.ENV.path.getDestination.restore();
+		});
+
+		it('calls setYoRc',function(){
+			this.helper.createYoRc(this.args);
+			assert(this.setYoRc.withArgs(this.args).calledOnce);
+		});
+
+		it('logs execution',function(){
+			this.helper.createYoRc(this.args);
+			assert(this.info.withArgs('Create .yo-rc.json',{'generator-generate' : this.args}).calledOnce);
+		});
+
+		it('writes file to destination',function(){
+			this.helper.createYoRc(this.args);
+			assert(this.fsWriteFileSync
+				.withArgs('yoRcDestination',JSON.stringify({'generator-generate' : this.args},null,4))
+				.calledOnce
+			);
+		});
+	});
+
+	describe('#getYoRc',function(){
+		beforeEach(function(){
+			this.return = {key:'value'};
+			this.getAll = sinon.stub(this.helper.gen.config,'getAll')
+				.returns(this.return);
+		});
+		afterEach(function(){
+			this.getAll.restore();
+		});
+
+		it('returns all config',function(){
+			assert.deepEqual(this.helper.getYoRc(),this.return);
+		});
+		it('returns value',function(){
+			assert.deepEqual(this.helper.getYoRc('key'),this.return.key);
+		});
+	});
 });

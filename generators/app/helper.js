@@ -295,7 +295,7 @@ method.createYoRc = function (json) {
 	json.app.createdAt = utils.getNowDate();
 	this.setYoRc(json);
 
-	yoRc[this.appName] = json;
+	yoRc[this.ENV.name.app] = json;
 
 	this.logger.info('Create .yo-rc.json',yoRc);
 
