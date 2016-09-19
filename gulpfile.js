@@ -35,7 +35,7 @@ gulp.task('test', ['pre-test'], function (cb) {
 
   gulp.src([
 	  'test/**/*.js',
-	  // 'e2e/cli/**/*.js'
+	  'e2e/cli/**/*.js'
   ]).pipe(plumber())
     .pipe(mocha({reporter: 'spec'}))
     .on('error', function (err) {

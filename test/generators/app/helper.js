@@ -6,6 +6,7 @@ var yoEnv = require('yeoman-environment');
 var process = require('process');
 var licenser = require('licenser');
 
+var questions = require('../../../generators/app/questions');
 var utils = require('../../../generators/app/utils');
 var generator = require('../../data/helper/constructor/generator');
 var Helper = require('../../../generators/app/helper');
@@ -293,6 +294,55 @@ describe('Helper', function () {
 
 			assert(!this.methodName.calledOnce);
 			assert(!this.info.calledOnce);
+		});
+	});
+
+	describe('#initPrompt',function(){
+		beforeEach(function(){
+			var self = this;
+
+			this.prompt = sinon.stub(this.helper.gen,'prompt');
+			this.info = sinon.spy(this.helper.logger,'info');
+
+			this.answeres = {
+				app : { language : 'language'},
+				language : 'langValue'
+			};
+			this.questions = {
+				app : 'appQuestions',
+				language : 'languageQuestions'
+			};
+
+			this.prompt
+				.withArgs(this.questions.app)
+				.returns(new Promise(function(resolve){
+                    resolve(self.answeres.app);
+                }));
+
+			this.prompt
+				.withArgs(this.questions.language)
+				.returns(new Promise(function(resolve){
+                    resolve(self.answeres.language);
+                }));
+		});
+
+		afterEach(function(){
+			this.prompt.restore();
+			this.info.restore();
+		});
+
+		it('should call callback with answeres',function(done){
+			var self=this;
+
+			this.helper.initPrompt(self.questions,function(answeres){
+				var error = 0;
+				assert(self.prompt.withArgs(self.questions.app).calledOnce,'Err: ' + error++);
+				assert(self.prompt.withArgs(self.questions.language).calledOnce,'Err: ' + error++);
+				assert(self.info.withArgs('Init prompt answeres',self.answeres),'Err: ' + error++);
+				assert.deepEqual(answeres,self.answeres,'Err: ' + error++);
+				done();
+			});
+
 		});
 	});
 });
