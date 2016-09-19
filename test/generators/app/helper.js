@@ -7,7 +7,7 @@ var process = require('process');
 var licenser = require('licenser');
 
 var utils = require('../../../generators/app/utils');
-var generator = require('../../data/helper/generator-simple');
+var generator = require('../../data/helper/constructor/generator');
 var Helper = require('../../../generators/app/helper');
 
 describe('Helper', function () {
@@ -29,7 +29,7 @@ describe('Helper', function () {
 		});
 		it('throw error on bad app name',function(done){
 			var testGeneratorName = sinon.stub(utils,'testGeneratorName');
-			testGeneratorName.onFirstCall().returns(false);
+			testGeneratorName.returns(false);
 			try{
 				new Helper(this.generator);
 				done('Should not pass');
@@ -101,7 +101,6 @@ describe('Helper', function () {
 	describe('#getLicense',function(){
 		it('calls licenser with good arguments',function(){
 			sinon.stub(this.helper,'getYoRc')
-				.withArgs('app.license')
 				.returns('licenseName');
 			sinon.stub(licenser,'getLicense')
 				.returns('licenseContent');
@@ -169,8 +168,102 @@ describe('Helper', function () {
 	});
 
 	describe('#generate',function(){
-		it('should exist and be function',function(){
-			assert.equal(typeof this.helper.generate,'function');
+		beforeEach(function(){
+			this.getLicense = sinon.stub(this.helper,'getLicense');
+			this.getSetupEjs = sinon.stub(this.helper.ENV.path.temp,'getSetupEjs');
+			this.getYoRc = sinon.stub(this.helper,'getYoRc');
+			this.fsWrite = sinon.stub(this.helper.gen.fs,'write');
+			this.fsCopy = sinon.stub(this.helper.gen.fs,'copy');
+			this.debug = sinon.stub(this.helper.logger,'debug');
+
+			this.fromDir = path.join(__dirname,'../../data/helper/generate/fromDir');
+
+			this.getSetupEjs.returns(path.join(__dirname,'../../data/helper/generate/setupEjs'));
+			this.getLicense.returns('licenseContent');
+			this.getYoRc.returns({
+				getYoRc_key0 : 'getYoRc_value0',
+				getYoRc_key1 : 'getYoRc_value1'
+			});
+		});
+
+		afterEach(function(){
+			this.helper.getLicense.restore();
+			this.getSetupEjs.restore();
+			this.getYoRc.restore();
+			this.fsWrite.restore();
+			this.fsCopy.restore();
+			this.debug.restore();
+		});
+
+		it('should write editable files and copy unditable and log',function(done){
+			var self = this;
+
+			this.helper.generate(this.fromDir,'toDir',function(){
+
+				var error = 0;
+
+				assert(self.debug.withArgs('Write:','toDir/file0').calledOnce,'Err: ' + error++);
+				assert(self.fsWrite.withArgs('toDir/file0','content0').calledOnce,'Err: ' + error++);
+
+				assert(self.debug.withArgs('Write:','toDir/file1').calledOnce,'Err: ' + error++);
+				assert(self.fsWrite.withArgs('toDir/file1','content1').calledOnce,'Err: '+error++);
+
+				assert(self.debug.withArgs('Write:','toDir/dir0/file0').calledOnce,'Err: '+error++);
+				assert(self.fsWrite.withArgs('toDir/dir0/file0','dir0.content0').calledOnce,'Err: '+error++);
+
+				assert(self.debug.withArgs('Write:','toDir/getYoRc_value0/getYoRc_value1').calledOnce,'Err: '+error++);
+				assert(self.fsWrite.withArgs('toDir/getYoRc_value0/getYoRc_value1','value0').calledOnce,'Err: '+error++);
+
+				assert(self.debug.withArgs('Copy:', 'toDir/getYoRc_value0/mp3.py').calledOnce,'Err: '+error++);
+				assert(self.fsCopy.withArgs(
+					path.join(self.fromDir,'<%-getYoRc_key0%>/mp3.py'),
+                    'toDir/getYoRc_value0/mp3.py').calledOnce,'Err: '+error++);
+
+				done();
+			});
+		});
+
+	});
+
+	describe('#runLineInjector',function(){
+		beforeEach(function(){
+			this.injectLines = sinon.stub(utils,'injectLines');
+			this.getSetupInjector = sinon.stub(this.helper.ENV.path.temp,'getSetupInjector');
+			this.fsWrite = sinon.stub(this.helper.gen.fs,'write');
+			this.info = sinon.stub(this.helper.logger,'info');
+			this.debug = sinon.stub(this.helper.logger,'debug');
+
+			this.getSetupInjector.returns(
+				path.join(__dirname,'../../data/helper/runLineInjector/injector')
+			);
+
+			this.injectLines.returns(
+				'injectLines'
+			);
+
+		});
+		afterEach(function(){
+			this.injectLines.restore();
+			this.getSetupInjector.restore();
+			this.fsWrite.restore();
+			this.info.restore();
+			this.debug.restore();
+		});
+
+		it('should log and write',function(){
+			var self = this;
+
+			this.helper.runLineInjector('injectorName');
+
+			var error = 0;
+
+            assert(self.fsWrite.withArgs(sinon.match.string,'injectLines').calledOnce,'Err: ' + error++);
+            assert(self.info.withArgs('Run line injector:','injectorName').calledOnce,'Err: ' + error++);
+            assert(self.debug.withArgs('Inject:',{
+                filePath: sinon.match.string,
+                lineFlag: 'flag',
+                injectArr: ['line0','line1']
+            }).calledOnce,'Err: ' + error++);
 		});
 	});
 });

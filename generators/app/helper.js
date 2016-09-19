@@ -236,23 +236,22 @@ method.generate = function (fromDir, toDir, done) {
 method.runLineInjector = function (injectorName) {
 	this.logger.info('Run line injector:',injectorName);
 
-	var self = this;
-
 	var inject = utils.yamlToJson(
 		this.ENV.path.temp.getSetupInjector(injectorName)
 	);
 
 	for (var filePath in inject) {
+		var destFilePath = this.ENV.path.getDestination(filePath);
 		var lineFlag = inject[filePath].flag;
 		var injectArr = inject[filePath].text.split('\n');
 		this.logger.debug('Inject:',{
-			filePath:filePath,
+			filePath:destFilePath,
 			lineFlag:lineFlag,
 			injectArr: injectArr
 		});
-		self.gen.fs.write(
-			filePath,
-			utils.injectLines(filePath, lineFlag, injectArr)
+		this.gen.fs.write(
+			destFilePath,
+			utils.injectLines(destFilePath, lineFlag, injectArr)
 		);
 	}
 };
