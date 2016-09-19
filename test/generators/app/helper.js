@@ -297,6 +297,42 @@ describe('Helper', function () {
 		});
 	});
 
+	describe('#postPrompt',function(){
+		beforeEach(function(){
+			var self = this;
+
+			this.prompt = sinon.stub(this.helper.gen,'prompt');
+			this.info = sinon.spy(this.helper.logger,'info');
+
+			this.answeres = 'answeres';
+			this.questions = 'questions';
+
+			this.prompt
+				.withArgs(this.questions)
+				.returns(new Promise(function(resolve){
+					resolve(self.answeres);
+				}));
+		});
+
+		afterEach(function(){
+			this.prompt.restore();
+			this.info.restore();
+		});
+
+		it('should call callback with answeres',function(done){
+			var self=this;
+
+			this.helper.postPrompt(self.questions,function(answeres){
+				var error = 0;
+				assert(self.prompt.withArgs(self.questions).calledOnce,'Err: ' + error++);
+				assert(self.info.withArgs('Post prompt answeres',self.answeres),'Err: ' + error++);
+				assert.equal(answeres,self.answeres,'Err: ' + error++);
+				done();
+			});
+
+		});
+	});
+
 	describe('#initPrompt',function(){
 		beforeEach(function(){
 			var self = this;
