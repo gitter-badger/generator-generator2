@@ -266,4 +266,33 @@ describe('Helper', function () {
             }).calledOnce,'Err: ' + error++);
 		});
 	});
+
+	describe('#callSubgeneratorMethod',function(){
+
+		beforeEach(function(){
+			this.helper.gen.methodName = function(){};
+
+			this.methodName = sinon.stub(this.helper.gen,'methodName');
+			this.info = sinon.stub(this.helper.logger,'info');
+		});
+
+		afterEach(function(){
+			this.methodName.restore();
+			this.info.restore();
+		});
+
+		it('call method if exist and log',function(){
+			this.helper.callSubgeneratorMethod('methodName');
+
+			assert(this.methodName.calledOnce);
+			assert(this.info.withArgs('Call subgenerator method:','methodName').calledOnce);
+		});
+
+		it('call method and log if dont exist',function(){
+			this.helper.callSubgeneratorMethod('NOT_EXIST');
+
+			assert(!this.methodName.calledOnce);
+			assert(!this.info.calledOnce);
+		});
+	});
 });
