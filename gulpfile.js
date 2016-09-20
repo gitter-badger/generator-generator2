@@ -8,6 +8,7 @@ var istanbul = require('gulp-istanbul');
 var nsp = require('gulp-nsp');
 var plumber = require('gulp-plumber');
 var coveralls = require('gulp-coveralls');
+var jsdoc = require('gulp-jsdoc3');
 
 gulp.task('static', function () {
   return gulp.src('**/*.js')
@@ -45,6 +46,15 @@ gulp.task('test', ['pre-test'], function (cb) {
     .on('end', function () {
       cb(mochaErr);
     });
+});
+
+gulp.task('docs',function(cb){
+    var config = require('./jsdoc.json');
+    gulp.src([
+		'./generators/**/*.js',
+		'./README.md'
+	], {read: false})
+        .pipe(jsdoc(config, cb));
 });
 
 gulp.task('e2e', function (cb) {
@@ -86,7 +96,7 @@ gulp.task('coveralls', ['test'], function () {
     return;
   }
 
-  return gulp.src(path.join(__dirname, 'coverage/lcov.info'))
+  return gulp.src(path.join(__dirname, 'build/coverage/lcov.info'))
     .pipe(coveralls());
 });
 

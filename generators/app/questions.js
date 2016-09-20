@@ -1,11 +1,6 @@
 var utils = require('./utils');
 var licenser = require('licenser');
 
-/**
- * Json configuration for main generator.
- *
- * @returns {{yosay: string, generator: *[]}}
- */
 exports.generator = function () {
 	return {
 		"app": [
@@ -69,13 +64,6 @@ exports.generator = function () {
 	};
 };
 
-/**
- * Json configuration for all subgenerators.
- *
- * @param baseChoices
- * @param moduleChoices
- * @returns {{subgenerator: {base: *[], module: *[]}}}
- */
 exports.subgenerator = function (baseChoices, moduleChoices) {
 	return {
         "base": [
