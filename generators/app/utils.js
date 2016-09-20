@@ -8,11 +8,53 @@ var process = require('process');
 var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
 
 exports.validateWord = function (input) {
-	return /^[a-zA-Z.]+$/.test(input) == true ? true : "Use letters from a-z and A-Z with dot!";
+	return /^[a-zA-Z._-]+$/.test(input) == true ? true : "Type single word with characters (A-Z a-z . - _)!";
 };
 
+/**
+ * Src: https://gist.github.com/dperini/729294
+ * @param input
+ * @returns {*}
+ */
 exports.validateUrl = function (input) {
-	return /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(input) == true ? true : "Url is invalid!"
+	var reWebUrl = new RegExp(
+		"^" +
+		// protocol identifier
+		"(?:(?:https?|ftp)://)" +
+		// user:pass authentication
+		"(?:\\S+(?::\\S*)?@)?" +
+		"(?:" +
+		// IP address exclusion
+		// private & local networks
+		"(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
+		"(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
+		"(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +
+		// IP address dotted notation octets
+		// excludes loopback network 0.0.0.0
+		// excludes reserved space >= 224.0.0.0
+		// excludes network & broacast addresses
+		// (first & last IP address of each class)
+		"(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
+		"(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
+		"(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
+		"|" +
+		// host name
+		"(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" +
+		// domain name
+		"(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" +
+		// TLD identifier
+		"(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
+		// TLD may end with dot
+		"\\.?" +
+		")" +
+		// port number
+		"(?::\\d{2,5})?" +
+		// resource path
+		"(?:[/?#]\\S*)?" +
+		"$", "i"
+	);
+
+	return reWebUrl.test(input) == true ? true : "Url should be (http://name.com/path)!"
 };
 
 exports.validateEmail = function (email) {
@@ -32,7 +74,7 @@ exports.getAllFilesPaths = function getAllFilesPaths(dir) {
 	return results
 };
 
-exports.injectLines = function (filePath, lineFlag, injectArr, callback) {
+exports.injectLines = function (filePath, lineFlag, injectArr) {
 	var oldFileLines = fs.readFileSync(filePath, 'utf8').split('\n');
 	var newFileLines = [];
 	var lineFlagFound = false;
@@ -60,7 +102,7 @@ exports.injectLines = function (filePath, lineFlag, injectArr, callback) {
 			" > File: " + filePath + '\n'
 		));
 	} else {
-		callback(newFileLines.join('\n'));
+		return newFileLines.join('\n');
 	}
 };
 
@@ -110,35 +152,32 @@ exports.setJsonValue = function (keyArr, value, json) {
 	}
 };
 
-exports.validateGeneratorName = function (name) {
+exports.testGeneratorName = function (name) {
 
 	var nameArr = name.split('-');
 
-	if (
-		nameArr[0] != 'generator' ||
-		this.validateWord(nameArr[1]) != true
-	) {
-		throw new Error([
-			'Helper app name failed to validate!',
-			' > (generator-NAME) != ' + name
-		].join('\n'))
-	}
+	return (nameArr[0] == 'generator' && this.validateWord(nameArr[1]) == true);
 };
 
 exports.isEditable = function (filePath, callback) {
+
+	try{
+		if(!fs.lstatSync(filePath).isFile()){
+			return callback(undefined,false);
+		}
+	} catch (err){
+		return callback(err);
+	}
+
 	magic.detectFile(filePath, function (err, mimeType) {
-		if (err) throw err;
+		if (err) callback(err);
 
 		var mimeTypeArr = mimeType.split('/');
-		if (mimeTypeArr.length != 2) {
-			throw new Error('Mime type unvalid: ' + mimeType);
-		}
 
 		var mimeGroup = mimeTypeArr[0];
 		var mimeFile = mimeTypeArr[1];
 
-		if (
-			[
+		if ([
 				'video',
 				'audio',
 				'image',
@@ -149,26 +188,13 @@ exports.isEditable = function (filePath, callback) {
 				'pdf',
 				'octet-stream'
 			].indexOf(mimeFile) != -1
-		) callback(false);
+		) callback(null,false);
 		else {
-			callback(true);
+			callback(null,true);
 		}
 	});
 };
 
-exports.ejsRenderPath = function (filePath, config) {
-	try {
-		return ejs.render(
-			filePath,
-			config
-		);
-	} catch (err) {
-		throw new Error(chalk.red.bold(
-			"\n > Message: " + message + '\n' +
-			" > File: " + filePath + '\n'
-		));
-	}
-};
 exports.ejsRender = function (filePath, config) {
 	try {
 		return ejs.render(
@@ -177,7 +203,7 @@ exports.ejsRender = function (filePath, config) {
 		);
 	} catch (err) {
 		throw new Error(chalk.red.bold(
-			"\n > Message: " + message + '\n' +
+			"\n > Message: " + err.message + '\n' +
 			" > File: " + filePath + '\n'
 		));
 	}

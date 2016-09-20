@@ -6,3 +6,4 @@ coverage
 build
 npm-debug.log
 generator.debug
+!e2e/build

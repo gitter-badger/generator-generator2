@@ -4,6 +4,7 @@ var fs = require('fs');
 var yosay = require('yosay');
 var walk = require('walk');
 var os = require('os');
+var ejs = require('ejs');
 var process = require('process');
 var pathJoin = require('path').join;
 var licenser = require('licenser');
@@ -14,18 +15,23 @@ var pac = require('../../package.json');
 function Helper(generator) {
 	this.gen = generator;
 
-	utils.validateGeneratorName(pac.name);
+	if(!utils.testGeneratorName(pac.name)){
+		throw new Error([
+			'Helper app name failed to validate!',
+			' > (generator-NAME) != ' + pac.name
+		].join('\n'))
+	}
 
 	this.ENV;
 	this.logger;
 
-	this.initEnv();
-	this.initLogger();
+	this._initEnv();
+	this._initLogger();
 }
 
 var method = Helper.prototype;
 
-method.initEnv = function(){
+method._initEnv = function(){
 	var self = this;
 	this.ENV = {
 		name: {
@@ -33,36 +39,18 @@ method.initEnv = function(){
 			generator: pac.name.split('-')[1]
 		},
 		path: {
-			getSubgenerator: function (name) {
-				return pathJoin(__dirname, '..', name)
-			},
-			getDestination: function (file) {
-				return self.gen.destinationPath(file || '.')
-			},
+			getSubgenerator: function (name) { return pathJoin(__dirname, '..', name) },
+			getDestination: function (file) { return self.gen.destinationPath(file || '.') },
 			temp: {
-				getSetupBase: function () {
-					return self.gen.templatePath('setup/base');
-				},
-				getSetupEjs: function () {
-					return self.gen.templatePath('setup/ejs');
-				},
-				getBase: function (name) {
-					return self.gen.templatePath('base/' + (name || '.'));
-				},
-				getModule: function (name) {
-					return self.gen.templatePath('module/' + (name || '.'))
-				},
-				getSetupInjector: function (name) {
-					return self.gen.templatePath('setup/injector/' + name + '.yml');
-				}
+				getSetupBase: function () { return self.gen.templatePath('setup/base'); },
+				getSetupEjs: function () { return self.gen.templatePath('setup/ejs'); },
+				getBase: function (name) { return self.gen.templatePath('base/' + (name || '.')); },
+				getModule: function (name) { return self.gen.templatePath('module/' + (name || '.')) },
+				getSetupInjector: function (name) { return self.gen.templatePath('setup/injector/' + name + '.yml'); }
 			}
-		}
-	};
-};
-method.initLogger = function(){
-	this.logger = new winston.Logger({
-		transports: [
-			new (winston.transports.File)({
+		},
+		logger : {
+			file : {
 				handleExceptions: true,
 				humanReadableUnhandledException: true,
 				level: 'silly',
@@ -86,8 +74,8 @@ method.initLogger = function(){
 				prettyPrint: true,
 				showLevel: true,
 				options: {flags: 'w'}
-			}),
-			new (winston.transports.Console)({
+			},
+			console : {
 				handleExceptions: true,
 				humanReadableUnhandledException: true,
 				prettyPrint: true,
@@ -100,7 +88,16 @@ method.initLogger = function(){
 				formatter: function (options) {
                     return options.meta.stack.join('\n');
 				}
-			})
+			}
+		}
+	};
+};
+method._initLogger = function(){
+
+	this.logger = new winston.Logger({
+		transports: [
+			new (winston.transports.File)(this.ENV.logger.file),
+			new (winston.transports.Console)(this.ENV.logger.console)
 		],
 		exitOnError: false
 	});
@@ -120,13 +117,12 @@ method.initLogger = function(){
 	});
 };
 
-method.registerEvents = function(){
+method.registerProcessEvents = function(){
 	var self = this;
 
-    process.on('exit', function(code){
-		self.logger.info('Process exit:',code);
-    });
-
+	process.on('exit', function (code) {
+		self.logger.info('Process exit:', code);
+	});
 };
 
 method.isGeneratorInited = function () {
@@ -224,8 +220,9 @@ method.generate = function (fromDir, toDir, done) {
 	var walker = walk.walk(fromDir);
 	walker.on("file", function (root, file, next) {
 		var filePath = pathJoin(root, file.name);
-        var renderedToPath = utils.ejsRenderPath(filePath.replace(fromDir, toDir), yoRcConfig);
-        utils.isEditable(filePath, function (isEditable) {
+        var renderedToPath = ejs.render(filePath.replace(fromDir, toDir), yoRcConfig);
+        utils.isEditable(filePath, function (err,isEditable) {
+			if(err) throw err;
             if (isEditable) {
                 self.logger.debug('Write:',renderedToPath);
                 self.gen.fs.write(renderedToPath, utils.ejsRender(filePath, ejsTempConfig));
@@ -243,23 +240,23 @@ method.generate = function (fromDir, toDir, done) {
 method.runLineInjector = function (injectorName) {
 	this.logger.info('Run line injector:',injectorName);
 
-	var self = this;
-
 	var inject = utils.yamlToJson(
 		this.ENV.path.temp.getSetupInjector(injectorName)
 	);
 
 	for (var filePath in inject) {
+		var destFilePath = this.ENV.path.getDestination(filePath);
 		var lineFlag = inject[filePath].flag;
 		var injectArr = inject[filePath].text.split('\n');
 		this.logger.debug('Inject:',{
-			filePath:filePath,
+			filePath:destFilePath,
 			lineFlag:lineFlag,
 			injectArr: injectArr
 		});
-		utils.injectLines(filePath, lineFlag, injectArr, function (newContent) {
-			self.gen.fs.write(filePath, newContent);
-		});
+		this.gen.fs.write(
+			destFilePath,
+			utils.injectLines(destFilePath, lineFlag, injectArr)
+		);
 	}
 };
 method.callSubgeneratorMethod = function (methodName) {
@@ -302,7 +299,7 @@ method.createYoRc = function (json) {
 	json.app.createdAt = utils.getNowDate();
 	this.setYoRc(json);
 
-	yoRc[this.appName] = json;
+	yoRc[this.ENV.name.app] = json;
 
 	this.logger.info('Create .yo-rc.json',yoRc);
 

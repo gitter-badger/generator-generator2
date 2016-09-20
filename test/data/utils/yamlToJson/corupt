@@ -1,0 +1,4 @@
+./build.gradle:
+flag: //Yeoman:libs
+  text: |-
+    compile 'org.springframework.shell:spring-shell:1.2.0.RELEASE

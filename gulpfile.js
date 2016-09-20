@@ -33,8 +33,10 @@ gulp.task('pre-test', function () {
 gulp.task('test', ['pre-test'], function (cb) {
   var mochaErr;
 
-  gulp.src('test/**/*.js')
-    .pipe(plumber())
+  gulp.src([
+	  'test/**/*.js',
+	  'e2e/cli/**/*.js'
+  ]).pipe(plumber())
     .pipe(mocha({reporter: 'spec'}))
     .on('error', function (err) {
       mochaErr = err;
@@ -48,7 +50,23 @@ gulp.task('test', ['pre-test'], function (cb) {
 gulp.task('e2e', function (cb) {
 	var mochaErr;
 
-	gulp.src('e2e/**/*.js')
+	gulp.src([
+		'e2e/cli/**/*.js',
+		'e2e/build/**/*.js'
+	]).pipe(plumber())
+		.pipe(mocha({reporter: 'spec'}))
+		.on('error', function (err) {
+			mochaErr = err;
+		})
+		.on('end', function () {
+			cb(mochaErr);
+		});
+});
+
+gulp.task('e2e-cli', function (cb) {
+	var mochaErr;
+
+	gulp.src('e2e/cli/**/*.js')
 		.pipe(plumber())
 		.pipe(mocha({reporter: 'spec'}))
 		.on('error', function (err) {

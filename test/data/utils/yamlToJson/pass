@@ -1,0 +1,5 @@
+./file:
+  flag: flag
+  text: |-
+    line0
+    line1
