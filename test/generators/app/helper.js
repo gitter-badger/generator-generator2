@@ -3,6 +3,7 @@ var path = require('path');
 var fs = require('fs');
 var sinon = require('sinon');
 var yoEnv = require('yeoman-environment');
+var yosay = require('yosay');
 var process = require('process');
 var licenser = require('licenser');
 
@@ -440,6 +441,113 @@ describe('Helper', function () {
 		});
 		it('returns value',function(){
 			assert.deepEqual(this.helper.getYoRc('key'),this.return.key);
+		});
+	});
+
+	describe('#setYoRc',function(){
+		beforeEach(function(){
+			this.config = {key:'value'};
+			this.set= sinon.stub(this.helper.gen.config,'set');
+			this.getYoRc = sinon.stub(this.helper,'getYoRc').returns(this.config);
+			this.info = sinon.stub(this.helper.logger,'info');
+		});
+		afterEach(function(){
+			this.set.restore();
+			this.getYoRc.restore();
+			this.info.restore();
+		});
+
+		it('sets config value for key',function(){
+			this.helper.setYoRc('value1','key');
+			assert(this.set.withArgs({key:'value1'}).calledOnce);
+		});
+		it('sets all config json',function(){
+			this.helper.setYoRc({key1:'value2'});
+			assert(this.set.withArgs({key1:'value2'}).calledOnce);
+		});
+		it('logs informations',function(){
+			this.helper.setYoRc('value1','key1');
+			var error = 0;
+			assert(this.info.withArgs('Set yoRc config',{
+				value:'value1',
+				keys:'key1'
+			}).calledOnce,'Err: ' + error++);
+			assert(this.info.withArgs('New yoRc config',sinon.match.object).calledOnce,'Err: ' + error++);
+			assert(this.getYoRc.withArgs().calledTwice,'Err: ' + error++);
+		});
+	});
+
+	describe('#getBasesNames',function(){
+		beforeEach(function(){
+			this.getBase = sinon.stub(this.helper.ENV.path.temp,'getBase')
+				.returns(path.join(__dirname,'../../data/helper/getBasesNames'));
+		});
+		afterEach(function(){
+			this.getBase.restore();
+		});
+
+		it('returns bases names',function(){
+			assert.deepEqual(this.helper.getBasesNames(),[
+				'base0','base1'
+			]);
+		});
+	});
+	
+	describe('#getModulesNames', function () {
+		beforeEach(function () {
+			this.getModule = sinon.stub(this.helper.ENV.path.temp, 'getModule')
+				.returns(path.join(__dirname, '../../data/helper/getModulesNames'));
+		});
+		afterEach(function () {
+			this.getModule.restore();
+		});
+
+		it('returns modules names', function () {
+			assert.deepEqual(this.helper.getModulesNames(), [
+				'module0', 'module1'
+			]);
+		});
+	});
+
+	describe('#sayWelcome', function () {
+		beforeEach(function () {
+			this.log = sinon.stub(this.helper.gen,'log');
+		});
+		afterEach(function () {
+			this.log.restore();
+		});
+
+		it('logs yosay string', function () {
+			this.helper.sayWelcome();
+			assert(this.log.withArgs(sinon.match.string).calledOnce);
+		});
+	});
+	
+	describe('#sayWelcomeBack', function () {
+		beforeEach(function () {
+			this.log = sinon.stub(this.helper.gen,'log');
+		});
+		afterEach(function () {
+			this.log.restore();
+		});
+
+		it('logs yosay string', function () {
+			this.helper.sayWelcomeBack();
+			assert(this.log.withArgs(sinon.match.string).calledOnce);
+		});
+	});
+	
+	describe('#sayGoodBye', function () {
+		beforeEach(function () {
+			this.log = sinon.stub(this.helper.gen,'log');
+		});
+		afterEach(function () {
+			this.log.restore();
+		});
+
+		it('logs yosay string', function () {
+			this.helper.sayGoodBye();
+			assert(this.log.withArgs(sinon.match.string).calledOnce);
 		});
 	});
 });
