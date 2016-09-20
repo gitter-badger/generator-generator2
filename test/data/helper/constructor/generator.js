@@ -1,5 +1,4 @@
 var generator = require('yeoman-generator');
-var Helper = require('../../../../generators/app/helper');
 
 module.exports = generator.Base.extend({
 	constructor: function () {

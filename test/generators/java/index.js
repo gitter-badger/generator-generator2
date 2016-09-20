@@ -9,7 +9,7 @@ describe('java subgenerator', function () {
 	beforeEach(function () {
 		this.javaSubGen = new yoEnv().instantiate(javaSubGen);
 	});
-	
+
 	describe('#shell',function(){
 		it('should exist',function(){
 			this.javaSubGen.shell();
@@ -31,5 +31,5 @@ describe('java subgenerator', function () {
 			this.javaSubGen.database();
 		});
 	});
-	
+
 });

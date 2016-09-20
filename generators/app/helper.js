@@ -9,8 +9,8 @@ var process = require('process');
 var pathJoin = require('path').join;
 var licenser = require('licenser');
 var winston = require('winston');
-var utils = require('../utils');
-var pac = require('../../../package.json');
+var utils = require('./utils');
+var pac = require('../../package.json');
 
 function Helper(generator) {
 	this.gen = generator;

@@ -45,12 +45,6 @@
     "yeoman-assert": "^2.0.0",
     "yeoman-test": "^1.5.1"
   },
-  "eslintConfig": {
-    "extends": "xo-space",
-    "env": {
-      "mocha": true
-    }
-  },
   "repository": "urosjarc/generator-generate",
   "scripts": {
     "prepublish": "gulp prepublish",
