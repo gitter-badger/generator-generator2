@@ -1,9 +1,8 @@
 node_modules
-coverage
 .idea
 
 .gradle
 build
 npm-debug.log
 generator.debug
-!e2e/build
+!test/build

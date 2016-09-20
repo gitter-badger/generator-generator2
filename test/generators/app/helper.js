@@ -9,8 +9,8 @@ var licenser = require('licenser');
 
 var questions = require('../../../generators/app/questions');
 var utils = require('../../../generators/app/utils');
-var generator = require('../../data/helper/constructor/generator');
 var Helper = require('../../../generators/app/helper');
+var generator = require('../../data/helper/constructor/generator');
 
 describe('Helper', function () {
 

@@ -41,8 +41,8 @@ gulp.task('test', ['pre-test'], function (cb) {
 	var mochaErr;
 
 	gulp.src([
-		'test/**/*.js',
-		'e2e/cli/**/*.js'
+		'test/generators/**/*.js',
+		'test/cli/**/*.js'
 	]).pipe(plumber())
 		.pipe(mocha({reporter: 'spec'}))
 		.on('error', function (err) {
@@ -70,8 +70,8 @@ gulp.task('e2e', function (cb) {
 	var mochaErr;
 
 	gulp.src([
-		'e2e/cli/**/*.js',
-		'e2e/build/**/*.js'
+		'test/cli/**/*.js',
+		'test/build/**/*.js'
 	]).pipe(plumber())
 		.pipe(mocha({reporter: 'spec'}))
 		.on('error', function (err) {
@@ -83,7 +83,11 @@ gulp.task('e2e', function (cb) {
 });
 
 gulp.task('watch', function () {
-	gulp.watch(['generators/**/*.js', 'test/**'], ['test']);
+	gulp.watch([
+		'generators/**/*.js',
+		'test/generators/**',
+		'test/cli/**'
+	], ['test']);
 });
 
 gulp.task('coveralls', ['test'], function () {
