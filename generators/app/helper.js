@@ -48,14 +48,9 @@ method._initEnv = function(){
 				getModule: function (name) { return self.gen.templatePath('module/' + (name || '.')) },
 				getSetupInjector: function (name) { return self.gen.templatePath('setup/injector/' + name + '.yml'); }
 			}
-		}
-	};
-};
-method._initLogger = function(){
-
-	this.logger = new winston.Logger({
-		transports: [
-			new (winston.transports.File)({
+		},
+		logger : {
+			file : {
 				handleExceptions: true,
 				humanReadableUnhandledException: true,
 				level: 'silly',
@@ -79,8 +74,8 @@ method._initLogger = function(){
 				prettyPrint: true,
 				showLevel: true,
 				options: {flags: 'w'}
-			}),
-			new (winston.transports.Console)({
+			},
+			console : {
 				handleExceptions: true,
 				humanReadableUnhandledException: true,
 				prettyPrint: true,
@@ -93,7 +88,16 @@ method._initLogger = function(){
 				formatter: function (options) {
                     return options.meta.stack.join('\n');
 				}
-			})
+			}
+		}
+	};
+};
+method._initLogger = function(){
+
+	this.logger = new winston.Logger({
+		transports: [
+			new (winston.transports.File)(this.ENV.logger.file),
+			new (winston.transports.Console)(this.ENV.logger.console)
 		],
 		exitOnError: false
 	});

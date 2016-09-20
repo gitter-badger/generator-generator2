@@ -45,6 +45,58 @@ describe('Helper', function () {
 		});
 	});
 
+	describe('#_initEnv',function(){
+		describe('#ENV.logger.file.formater',function(){
+			beforeEach(function(){
+				this.fileFormater = this.helper.ENV.logger.file.formatter;
+			});
+			it('formats without meta object',function(){
+				var options = {
+					message: 'Message',
+					level: 'level',
+					meta: {}
+				};
+				assert.equal(
+					this.fileFormater(options),
+					'LEVEL Message'
+				);
+			});
+			it('formats with meta object',function(){
+				var options = {
+					message: 'Message',
+					level: 'level',
+					meta: {
+						key0 : 'value0',
+						key1 : {
+							key2 : 'value1',
+							key3 : {
+								key4 : 'value4'
+							}
+						}
+					}
+				};
+				assert.equal(
+					this.fileFormater(options),
+					'LEVEL Message: ' + JSON.stringify(options.meta,null,'\t')
+				);
+			});
+		});
+		describe('#ENV.logger.console.formater',function(){
+			beforeEach(function () {
+				this.fileFormater = this.helper.ENV.logger.console.formatter;
+			});
+			it('returns joined meta stack', function () {
+				var options = {
+					meta: { stack : ['line0','line1']}
+				};
+				assert.equal(
+					this.fileFormater(options),
+					'line0\nline1'
+				);
+			});
+		});
+	});
+
 	describe('#registerEvents',function(){
 		it('register exit signal',function(){
 			process.setMaxListeners(0);
@@ -492,7 +544,7 @@ describe('Helper', function () {
 			]);
 		});
 	});
-	
+
 	describe('#getModulesNames', function () {
 		beforeEach(function () {
 			this.getModule = sinon.stub(this.helper.ENV.path.temp, 'getModule')
@@ -522,7 +574,7 @@ describe('Helper', function () {
 			assert(this.log.withArgs(sinon.match.string).calledOnce);
 		});
 	});
-	
+
 	describe('#sayWelcomeBack', function () {
 		beforeEach(function () {
 			this.log = sinon.stub(this.helper.gen,'log');
@@ -536,7 +588,7 @@ describe('Helper', function () {
 			assert(this.log.withArgs(sinon.match.string).calledOnce);
 		});
 	});
-	
+
 	describe('#sayGoodBye', function () {
 		beforeEach(function () {
 			this.log = sinon.stub(this.helper.gen,'log');
