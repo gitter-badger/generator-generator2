@@ -10,6 +10,10 @@ var plumber = require('gulp-plumber');
 var coveralls = require('gulp-coveralls');
 var jsdoc = require('gulp-jsdoc3');
 var shell = require('gulp-shell');
+var process = require('process');
+var chalk = require('chalk');
+var fs = require('fs');
+var childProcess = require('child_process');
 
 gulp.task('mkdocs', shell.task([
 	'mkdocs build --clean --quiet --config-file ./config/mkdocs.yml'
@@ -57,7 +61,7 @@ gulp.task('test', ['pre-test'], function (cb) {
 		});
 });
 
-gulp.task('docs', ['test-docs'], function (cb) {
+gulp.task('docs', function (cb) {
 	var config = require('./config/jsdoc.json');
 	gulp.src([
 		'./generators/**/*.js',
@@ -66,9 +70,31 @@ gulp.task('docs', ['test-docs'], function (cb) {
 		.pipe(jsdoc(config, cb));
 });
 
-gulp.task('test-docs',shell.task([
-	'inchjs list'
-]));
+gulp.task('test-docs',function(){
+	childProcess.execSync('./node_modules/.bin/inchjs');
+	var docs = require('./docs.json');
+	var report = [];
+
+	var undocs = 0;
+	for(var i in docs.objects){
+		var object = docs.objects[i];
+		if(object.undocumented == true){
+			report.push(
+				' - ' + object.meta.path + ' '
+				+ object.meta.filename + ' '
+				+ object.meta.lineno
+			);
+			undocs++;
+		}
+	}
+	if(undocs!=0){
+		console.error(chalk.red(
+			'\n > Undocumented:\n' +
+			report.join('\n')
+		));
+		process.exit(1);
+	}
+});
 
 gulp.task('e2e', function (cb) {
 	var mochaErr;
@@ -104,4 +130,4 @@ gulp.task('coveralls', ['test'], function () {
 });
 
 gulp.task('prepublish', ['nsp']);
-gulp.task('default', ['static', 'test', 'coveralls']);
+gulp.task('default', ['static', 'test', 'coveralls','test-docs']);
