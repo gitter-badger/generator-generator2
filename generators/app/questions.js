@@ -2,9 +2,13 @@ var utils = require('./utils');
 var licenser = require('licenser');
 
 /**
- * Json configuration for main generator.
- *
- * @returns {{yosay: string, generator: *[]}}
+ * Module which holds prompt questions for user to answere.
+ * @module questions
+ */
+
+/**
+ * Questions for users on first time when generator run.
+ * @returns {object} See inquirer npm package.
  */
 exports.generator = function () {
 	return {
@@ -70,11 +74,10 @@ exports.generator = function () {
 };
 
 /**
- * Json configuration for all subgenerators.
- *
- * @param baseChoices
- * @param moduleChoices
- * @returns {{subgenerator: {base: *[], module: *[]}}}
+ * Questions for users when generator is running the second time.
+ * @param baseChoices {array<string>} Array of bases from template folder of subgenerator.
+ * @param moduleChoices {array<string>} Array of modules from template folder of subgenerator.
+ * @returns {object} See inquirer npm package.
  */
 exports.subgenerator = function (baseChoices, moduleChoices) {
 	return {

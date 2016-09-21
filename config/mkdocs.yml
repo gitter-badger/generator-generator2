@@ -1,0 +1,17 @@
+site_name: generator-generate
+site_url: https://github.com/urosjarc/generator-generate
+repo_url: https://github.com/urosjarc/generator-generate
+site_description: Generator for generating various projects.
+site_author: Uros Jarc
+site_favicon: media/favicon.ico
+copyright: Copyright © 2016 Uros Jarc
+
+theme: mkdocs #readthedocs
+docs_dir: docs
+site_dir: build/mkdocs
+
+pages:
+ - 'Home': index.md
+ - 'Contribution': contribution.md
+ - 'Documentation': documentation.md
+ - 'Changes': changes.md

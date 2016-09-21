@@ -3,8 +3,20 @@ var generator = require('yeoman-generator');
 var questions = require('./questions');
 var Helper = require('./helper');
 
+/**
+ * Main subgenerator with extended inner methods.
+ * @module app
+ */
+
+/**
+ * @type {yeoman-generator.Base.extend({})}
+ */
 module.exports = generator.Base.extend({
 
+	/**
+	 * Constructor method with added cli options.
+	 * Set debug options which starts logger to be loud.
+	 */
 	constructor: function () {
 		generator.Base.apply(this, arguments);
 		this.option('debug', {
@@ -14,12 +26,19 @@ module.exports = generator.Base.extend({
 		});
 	},
 
+	/**
+	 * Initialize helper and register helper events.
+	 * Also init answeres property.
+	 */
 	initializing: function () {
 		this.gen = new Helper(this);
 		this.gen.registerProcessEvents();
 		this.answeres = {};
 	},
 
+	/**
+	 * Prompt user for the first time. And set answer property.
+	 */
 	prompting: function () {
 		this.gen.logger.info('Run context:','PROMTING');
 
@@ -40,6 +59,10 @@ module.exports = generator.Base.extend({
 		}
 
 	},
+
+	/**
+	 * Set `yo-rc.json` values.
+	 */
 	configuring: function () {
 		this.gen.logger.info('Run context:','CONFIGURING');
 
@@ -48,6 +71,9 @@ module.exports = generator.Base.extend({
 		}
 	},
 
+	/**
+	 * Call subgenerator.
+	 */
 	compose: function () {
 		this.gen.logger.info('Run context:','COMPOSE');
 
@@ -56,6 +82,9 @@ module.exports = generator.Base.extend({
 		);
 	},
 
+	/**
+	 * Init end procedure.
+	 */
 	end: function () {
 		this.gen.logger.info('Run context:','END');
 

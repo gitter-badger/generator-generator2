@@ -7,14 +7,25 @@ var process = require('process');
 
 var magic = new mmm.Magic(mmm.MAGIC_MIME_TYPE);
 
+/**
+ * General utility module.
+ * @module utils
+ */
+
+/**
+ * Regex validation for word.
+ * @param input {string} Input that will be validated.
+ * @returns {boolean|string} On pass return true else string.
+ */
 exports.validateWord = function (input) {
 	return /^[a-zA-Z._-]+$/.test(input) == true ? true : "Type single word with characters (A-Z a-z . - _)!";
 };
 
 /**
- * Src: https://gist.github.com/dperini/729294
- * @param input
- * @returns {*}
+ * Regex validation for url.
+ * @link https://gist.github.com/dperini/729294
+ * @param input {string} Input that will be validated.
+ * @returns {boolean|string} On pass return true else string.
  */
 exports.validateUrl = function (input) {
 	var reWebUrl = new RegExp(
@@ -57,11 +68,21 @@ exports.validateUrl = function (input) {
 	return reWebUrl.test(input) == true ? true : "Url should be (http://name.com/path)!"
 };
 
+/**
+ * Regex validation for email.
+ * @param input {string} Input that will be validated.
+ * @returns {boolean|string} On pass return true else string.
+ */
 exports.validateEmail = function (email) {
 	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return re.test(email) == true ? true : "Email is unvalid!";
 };
 
+/**
+ * Method will scan directory arhitecture for all the files.
+ * @param dir {string} Absolute path of directory which will be scanned.
+ * @returns {Array<string>} Returns all files absolute path from directory.
+ */
 exports.getAllFilesPaths = function getAllFilesPaths(dir) {
 	var results = [];
 	var list = fs.readdirSync(dir);
@@ -74,6 +95,13 @@ exports.getAllFilesPaths = function getAllFilesPaths(dir) {
 	return results
 };
 
+/**
+ * Inject file content and return rendered content.
+ * @param filePath {string} File which content will be injected.
+ * @param lineFlag {string} Line flag where injecting will be executed.
+ * @param injectArr {array<string>} Array of code which will be injected after lineFlag.
+ * @returns {string} New injected file content.
+ */
 exports.injectLines = function (filePath, lineFlag, injectArr) {
 	var oldFileLines = fs.readFileSync(filePath, 'utf8').split('\n');
 	var newFileLines = [];
@@ -106,6 +134,11 @@ exports.injectLines = function (filePath, lineFlag, injectArr) {
 	}
 };
 
+/**
+ * Parse yaml file and turn it to json object.
+ * @param path {string} Path of yaml file.
+ * @returns {Object} Json variation of yaml format.
+ */
 exports.yamlToJson = function (path) {
 	try {
 		var doc = yaml.safeLoad(fs.readFileSync(path, 'utf8'));
@@ -119,11 +152,21 @@ exports.yamlToJson = function (path) {
 	return doc;
 };
 
+/**
+ * Gets formated now date.
+ * @returns {string} Formated date `dd/MM/yyyy`.
+ */
 exports.getNowDate = function () {
 	var date = new Date();
 	return date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear();
 };
 
+/**
+ * Get json value from object.
+ * @param keyArr {array<string>} Key array example `[key1,key2]`.
+ * @param json {object} Json object on which value will be searched.
+ * @returns {object|string} Returns json value example `json[key1][key2]`.
+ */
 exports.getJsonValue = function (keyArr, json) {
 	if (keyArr.length > 1) {
 		var newJson = json[keyArr[0]];
@@ -139,6 +182,13 @@ exports.getJsonValue = function (keyArr, json) {
 	}
 };
 
+/**
+ * Sets json value from object.
+ * @param keyArr {array<string>} Key array example `[key1,key2]`.
+ * @param json {object} Json object on which value will be searched.
+ * @param value {*} New value example `json[key1][key2] = value`.
+ * @returns {object|string} Returns json value example `json[key1][key2]`.
+ */
 exports.setJsonValue = function (keyArr, value, json) {
 	if (keyArr.length > 1) {
 		var newJson = json[keyArr[0]] || {};
@@ -152,6 +202,11 @@ exports.setJsonValue = function (keyArr, value, json) {
 	}
 };
 
+/**
+ * Tests generator name for yeoman generator name.
+ * @param name {string} Name of generator.
+ * @returns {boolean} If name is ok return `true` else `false`.
+ */
 exports.testGeneratorName = function (name) {
 
 	var nameArr = name.split('-');
@@ -159,6 +214,11 @@ exports.testGeneratorName = function (name) {
 	return (nameArr[0] == 'generator' && this.validateWord(nameArr[1]) == true);
 };
 
+/**
+ * Check if file text can be editable.
+ * @param filePath {string} Absolute file path that will be tested.
+ * @param callback {function} Will be executed with <error,boolean>.
+ */
 exports.isEditable = function (filePath, callback) {
 
 	try{
@@ -195,6 +255,12 @@ exports.isEditable = function (filePath, callback) {
 	});
 };
 
+/**
+ * Render file with ejs templating language.
+ * @param filePath {string} File that will be rendered.
+ * @param config {object} Ejs configuration for template keys.
+ * @returns {String} Rendered file content.
+ */
 exports.ejsRender = function (filePath, config) {
 	try {
 		return ejs.render(

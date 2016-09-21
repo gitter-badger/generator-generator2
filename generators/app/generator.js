@@ -2,14 +2,27 @@
 
 var questions = require('./questions');
 var fs = require('fs');
-
 var Helper = require('./helper');
 
+/**
+ * Generator methods.
+ * All subgenerators will inherite its methods.
+ * @module generator
+ */
+
+/**
+ * Initialize generator.
+ * Setup helper and variables.
+ */
 exports.initializing = function () {
 	this.gen = new Helper(this);
 	this.answeres = {};
 };
 
+/**
+ * Ask user questions.
+ * For module or base, depending on yo-rc.json file.
+ */
 exports.prompting = function () {
 	this.gen.logger.info('Run context:','PROMTING');
 
@@ -30,6 +43,10 @@ exports.prompting = function () {
 
 };
 
+/**
+ * Save user answeres.
+ * Save answeres to yo-rc.json file.
+ */
 exports.configuring = function () {
 	this.gen.logger.info('Run context:','CONFIGURING');
 
@@ -37,6 +54,9 @@ exports.configuring = function () {
 		this.gen.setYoRc(this.answeres,'subgenerator');
 };
 
+/**
+ * Create file arhitecture.
+ */
 exports.writing = function () {
 	this.gen.logger.info('Run context:','WRITING');
 
@@ -48,6 +68,10 @@ exports.writing = function () {
 		this.gen.generateBase(this.answeres.base, done);
 };
 
+/**
+ * Inject and call method.
+ * Methods must be defined in subgenerator.
+ */
 exports.conflicts = function () {
 	this.gen.logger.info('Run context:','CONFLICTS');
 
