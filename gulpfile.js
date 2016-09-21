@@ -57,7 +57,7 @@ gulp.task('test', ['pre-test'], function (cb) {
 		});
 });
 
-gulp.task('docs', function (cb) {
+gulp.task('docs', ['test-docs'], function (cb) {
 	var config = require('./config/jsdoc.json');
 	gulp.src([
 		'./generators/**/*.js',
@@ -65,6 +65,10 @@ gulp.task('docs', function (cb) {
 	], {read: false})
 		.pipe(jsdoc(config, cb));
 });
+
+gulp.task('test-docs',shell.task([
+	'inchjs list'
+]));
 
 gulp.task('e2e', function (cb) {
 	var mochaErr;

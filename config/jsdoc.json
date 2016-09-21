@@ -16,8 +16,7 @@
 		"excludePattern": "(^|\\/|\\\\)_"
 	},
 	"plugins": [
-		"plugins/markdown",
-		"plugins/summarize"
+		"plugins/markdown"
 	],
 	"templates": {
 		"cleverLinks": true,

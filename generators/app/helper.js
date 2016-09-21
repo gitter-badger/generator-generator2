@@ -12,8 +12,44 @@ var winston = require('winston');
 var utils = require('./utils');
 var pac = require('../../package.json');
 
-function Helper(generator) {
+/**
+ * Helper module for generator and subgenerator.
+ * Module that hold all hard logic.
+ * @module helper
+ */
+
+/**
+ * Constructor. Wraps generator instance generated with
+ * `require('yeoman-generator').Base.extend({})`.
+ *
+ * @constructor
+ * @param generator {yeoman-generator.Base} Generator/subgenerator instance.
+ *
+ * @class Helper class which holds most hard logic,
+ * so that generators/subgenerators methods can be
+ * as clean as possible.
+ *
+ * @type {module.Helper}
+ */
+var Helper = module.exports = function Helper(generator) {
+
+	/**
+	 * Holds generator instance.
+	 * @member
+	 */
 	this.gen = generator;
+
+	/**
+	 * Holds class configuration.
+	 * @member
+	 */
+	this.ENV;
+
+	/**
+	 * Main class logger.
+	 * @member
+	 */
+	this.logger;
 
 	if(!utils.testGeneratorName(pac.name)){
 		throw new Error([
@@ -22,16 +58,15 @@ function Helper(generator) {
 		].join('\n'))
 	}
 
-	this.ENV;
-	this.logger;
-
 	this._initEnv();
 	this._initLogger();
-}
+};
 
-var method = Helper.prototype;
-
-method._initEnv = function(){
+/**
+ * Setup ENV property.
+ * @private
+ */
+Helper.prototype._initEnv = function(){
 	var self = this;
 	this.ENV = {
 		name: {
@@ -92,7 +127,12 @@ method._initEnv = function(){
 		}
 	};
 };
-method._initLogger = function(){
+
+/**
+ * Setup logger with winston logger instance.
+ * @private
+ */
+Helper.prototype._initLogger = function(){
 
 	this.logger = new winston.Logger({
 		transports: [
@@ -117,7 +157,10 @@ method._initLogger = function(){
 	});
 };
 
-method.registerProcessEvents = function(){
+/**
+ * Register and catch process events.
+ */
+Helper.prototype.registerProcessEvents = function (){
 	var self = this;
 
 	process.on('exit', function (code) {
@@ -125,13 +168,22 @@ method.registerProcessEvents = function(){
 	});
 };
 
-method.isGeneratorInited = function () {
+/**
+ * Check if generator is inited in `yo-rc.json`.
+ * @returns {boolean}
+ */
+Helper.prototype.isGeneratorInited = function () {
 	return (
 		this.getYoRc() &&
 		this.getYoRc('app')
 	) ? true : false;
 };
-method.isSubgeneratorInited = function () {
+
+/**
+ * Check if subgenerator is inited in `yo-rc.json`.
+ * @returns {boolean}
+ */
+Helper.prototype.isSubgeneratorInited = function () {
 	return (
 		this.isGeneratorInited() &&
 		this.getYoRc('subgenerator') &&
@@ -139,7 +191,11 @@ method.isSubgeneratorInited = function () {
 	) ? true : false;
 };
 
-method.callSubgenerator = function (subgeneratorName) {
+/**
+ * Run local subgenerator run context.
+ * @param subgeneratorName {string} Subgenerator name.
+ */
+Helper.prototype.callSubgenerator = function (subgeneratorName) {
 	this.logger.info('Call subgenerator:',subgeneratorName);
 
 	this.gen.composeWith(
@@ -149,7 +205,11 @@ method.callSubgenerator = function (subgeneratorName) {
 	);
 };
 
-method.getLicense = function () {
+/**
+ * Generate license content base on `yo-rc.json` property `app.license'.
+ * @returns {string} Generated license content.
+ */
+Helper.prototype.getLicense = function () {
 	var licenseName = this.getYoRc('app.license');
 
 	return licenser.getLicense(
@@ -159,7 +219,12 @@ method.getLicense = function () {
 	);
 };
 
-method.generateModule = function (moduleName, done) {
+/**
+ * Generate module structure base on subgenerator template.
+ * @param moduleName {string} Module name.
+ * @param done {function} Execute on done.
+ */
+Helper.prototype.generateModule = function (moduleName, done) {
 	this.logger.info('Generate module:',moduleName);
 
 	var destinationPath = this.ENV.path.getDestination();
@@ -167,7 +232,13 @@ method.generateModule = function (moduleName, done) {
 
 	this.generate(basePath, destinationPath, done);
 };
-method.generateBase = function (baseName, done) {
+
+/**
+ * Generate base structure base on subgenerator template.
+ * @param baseName {string} Base name.
+ * @param done {function} Execute on done.
+ */
+Helper.prototype.generateBase = function (baseName, done) {
 	this.logger.info('Generate base:',baseName);
 
 	var destinationPath = this.ENV.path.getDestination();
@@ -186,7 +257,15 @@ method.generateBase = function (baseName, done) {
 		else finish.base = true;
 	});
 };
-method.generate = function (fromDir, toDir, done) {
+
+/**
+ * Main generate method which generate ejs configuration from
+ * `yo-rc.json` file and subgenerator templates.
+ * @param fromDir {string} Absolute path of source code.
+ * @param toDir {string} Absolute path of destination.
+ * @param done {function} Execute on done.
+ */
+Helper.prototype.generate = function (fromDir, toDir, done) {
 	var self = this;
 
 	var setupEjsPath = this.ENV.path.temp.getSetupEjs();
@@ -237,7 +316,11 @@ method.generate = function (fromDir, toDir, done) {
 	walker.on('end', done);
 };
 
-method.runLineInjector = function (injectorName) {
+/**
+ * It will inject lines in files base on template injector setup.
+ * @param injectorName {string} Injector name.
+ */
+Helper.prototype.runLineInjector = function (injectorName) {
 	this.logger.info('Run line injector:',injectorName);
 
 	var inject = utils.yamlToJson(
@@ -259,7 +342,12 @@ method.runLineInjector = function (injectorName) {
 		);
 	}
 };
-method.callSubgeneratorMethod = function (methodName) {
+
+/**
+ * It will call subgenerator method with user specific code.
+ * @param methodName {string} Subgenerator method name.
+ */
+Helper.prototype.callSubgeneratorMethod = function (methodName) {
 	if (methodName in this.gen)
 		if (this.gen[methodName] instanceof Function) {
 			this.logger.info('Call subgenerator method:',methodName);
@@ -267,7 +355,13 @@ method.callSubgeneratorMethod = function (methodName) {
 		}
 };
 
-method.initPrompt = function (questions, callback) {
+/**
+ * Ask user questions base on provided questions array.
+ * @param questions {array} Array of questions.
+ * @param callback {function} Will execute when all the questions will be answered.
+ * Callback will execute with answered object.
+ */
+Helper.prototype.initPrompt = function (questions, callback) {
 	var self = this;
 
 	return this.gen.prompt(questions.app).then(function (appAnswers) {
@@ -284,7 +378,13 @@ method.initPrompt = function (questions, callback) {
 	}.bind(this.gen));
 
 };
-method.postPrompt = function (questions, callback) {
+
+/**
+ * Ask user questions specific to base or module.
+ * @param questions {array} Array of questions.
+ * @param callback {function} Execute with answered object.
+ */
+Helper.prototype.postPrompt = function (questions, callback) {
 	var self = this;
 
 	return this.gen.prompt(questions).then(function (answeres) {
@@ -293,7 +393,11 @@ method.postPrompt = function (questions, callback) {
 	}.bind(this.gen));
 };
 
-method.createYoRc = function (json) {
+/**
+ * It will create `yo-rc.json` file to destination.
+ * @param json {object} `yo-rc.json` content.
+ */
+Helper.prototype.createYoRc = function (json) {
 	var yoRc = {};
 
 	json.app.createdAt = utils.getNowDate();
@@ -308,14 +412,29 @@ method.createYoRc = function (json) {
 		JSON.stringify(yoRc, null, 4)
 	);
 };
-method.getYoRc = function (keys) {
+
+/**
+ * Get `yo-rc.json` content.
+ * @param keys {string} If keys is `null` method will return
+ * whole `yo-rc.json` content. If keys type will be string like `key.anotherKey`, it
+ * will return key value or undefined.
+ * @returns {object | string | undefined}
+ */
+Helper.prototype.getYoRc = function (keys) {
 	var keysArr = keys ? keys.split('.') : [];
 	return utils.getJsonValue(
 		keysArr,
 		this.gen.config.getAll()
 	);
 };
-method.setYoRc = function (value, keys) {
+
+/**
+ * Set `yo-rc.json` content.
+ * @param value {*} Value of key provided in parameters.
+ * @param keys {string} Example `key.anotherKey`, it will create json if sub key
+ * don't exist and set child key to value provided in parameters.
+ */
+Helper.prototype.setYoRc = function (value, keys) {
 	this.logger.info('Set yoRc config',{
 		value: value,
 		keys: keys
@@ -336,18 +455,30 @@ method.setYoRc = function (value, keys) {
 
 };
 
-method.getBasesNames = function () {
+/**
+ * Get template base names.
+ * @returns {array<string>} Array of base names base on template folder.
+ */
+Helper.prototype.getBasesNames = function () {
 	return fs.readdirSync(
 		this.ENV.path.temp.getBase()
 	);
 };
-method.getModulesNames = function () {
+
+/**
+ * Get template module names.
+ * @returns {array<string>} Array of module names base on template folder.
+ */
+Helper.prototype.getModulesNames = function () {
 	return fs.readdirSync(
 		this.ENV.path.temp.getModule()
 	);
 };
 
-method.sayWelcome = function () {
+/**
+ * Print welcome message.
+ */
+Helper.prototype.sayWelcome = function () {
 	this.gen.log(yosay([
 		"♥ Java ♥",
 		"♥ TypeScript ♥",
@@ -355,19 +486,24 @@ method.sayWelcome = function () {
 		"♥ Python ♥"
 	].join('\n')));
 };
-method.sayWelcomeBack = function () {
+
+/**
+ * Print welcome back message.
+ */
+Helper.prototype.sayWelcomeBack = function () {
 	this.gen.log(yosay([
 		this.getYoRc('app.authorName'),
 		"♥",
 		this.getYoRc('app.name')
 	].join(' ')));
 };
-method.sayGoodBye = function () {
+
+/**
+ * Print good bye message.
+ */
+Helper.prototype.sayGoodBye = function () {
 	this.gen.log([
 		'',
 		' ♥ Yeoman loves you! ♥'
 	].join('\n'));
 };
-
-module.exports = Helper;
-
