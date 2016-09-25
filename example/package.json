@@ -1,0 +1,8 @@
+{
+  "name": "generator-jarc",
+  "dependencies": {
+    "generator-generate": "file:///home/urosjarc/vcs/generator-generate",
+    "yeoman-generator": "^0.24.1"
+  },
+  "devDependencies": {}
+}
