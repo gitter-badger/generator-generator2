@@ -9,10 +9,9 @@
     "url": "https://github.com/urosjarc"
   },
   "files": [
-    "generators",
-    "generators"
+    "src"
   ],
-  "main": "generators/index.js",
+  "main": "lib/index.js",
   "keywords": [
     "yeoman-generator"
   ],
