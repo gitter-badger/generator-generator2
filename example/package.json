@@ -1,7 +1,9 @@
 {
+  "version": "1.2.3",
   "name": "generator-jarc",
   "dependencies": {
     "generator-generate": "file:///home/urosjarc/vcs/generator-generate",
+    "licenser": "file:///home/urosjarc/vcs/licenser.js",
     "yeoman-generator": "^0.24.1"
   },
   "devDependencies": {}
