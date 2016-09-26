@@ -7,9 +7,9 @@ var yosay = require('yosay');
 var process = require('process');
 var licenser = require('licenser');
 
-var utils = require('../../../lib/utils');
-var Helper = require('../../../lib/helper');
-var generator = require('../../data/helper/constructor/generator');
+var utils = require('../../lib/utils');
+var Helper = require('../../lib/helper');
+var generator = require('../data/helper/constructor/generator');
 
 describe('Helper', function () {
 
@@ -229,9 +229,9 @@ describe('Helper', function () {
 			this.fsCopy = sinon.stub(this.helper.gen.fs,'copy');
 			this.debug = sinon.stub(this.helper.logger,'debug');
 
-			this.fromDir = path.join(__dirname,'../../data/helper/generate/fromDir');
+			this.fromDir = path.join(__dirname,'../data/helper/generate/fromDir');
 
-			this.getSetupEjs.returns(path.join(__dirname,'../../data/helper/generate/setupEjs'));
+			this.getSetupEjs.returns(path.join(__dirname,'../data/helper/generate/setupEjs'));
 			this.getLicense.returns('licenseContent');
 			this.getYoRc.returns({
 				getYoRc_key0 : 'getYoRc_value0',
@@ -287,7 +287,7 @@ describe('Helper', function () {
 			this.debug = sinon.stub(this.helper.logger,'debug');
 
 			this.getSetupInjector.returns(
-				path.join(__dirname,'../../data/helper/runLineInjector/injector')
+				path.join(__dirname,'../data/helper/runLineInjector/injector')
 			);
 
 			this.injectLines.returns(
@@ -355,28 +355,33 @@ describe('Helper', function () {
 
 			this.prompt = sinon.stub(this.helper.gen,'prompt');
 			this.info = sinon.spy(this.helper.logger,'info');
+			this.getBasesNames = sinon.stub(this.helper,'getBasesNames');
+			this.getModulesNames = sinon.stub(this.helper,'getModulesNames');
 
 			this.answeres = 'answeres';
-			this.questions = 'questions';
 
-			this.prompt
-				.withArgs(this.questions)
-				.returns(new Promise(function(resolve){
-					resolve(self.answeres);
-				}));
+			this.prompt.returns({
+				then : function(cb){
+					cb(self.answeres);
+				}
+			});
 		});
 
 		afterEach(function(){
 			this.prompt.restore();
 			this.info.restore();
+			this.getModulesNames.restore();
+			this.getBasesNames.restore();
 		});
 
 		it('should call callback with answeres',function(done){
 			var self=this;
 
-			this.helper.postPrompt(self.questions,function(answeres){
+			this.helper.postPrompt(function(answeres){
 				var error = 0;
-				assert(self.prompt.withArgs(self.questions).calledOnce,'Err: ' + error++);
+				assert(self.getModulesNames.calledOnce,'Err: ' + error++);
+				assert(self.getBasesNames.calledOnce,'Err: ' + error++);
+				assert(self.prompt.calledOnce,'Err: ' + error++);
 				assert(self.info.withArgs('Post prompt answeres',self.answeres),'Err: ' + error++);
 				assert.equal(answeres,self.answeres,'Err: ' + error++);
 				done();
@@ -393,25 +398,30 @@ describe('Helper', function () {
 			this.info = sinon.spy(this.helper.logger,'info');
 
 			this.answeres = {
-				app : { language : 'language'},
-				language : 'langValue'
+				app: {subgenerator: 'subgenerator'},
+				subgenerator: 'subgeneratorValue'
 			};
+			
 			this.questions = {
-				app : 'appQuestions',
-				language : 'languageQuestions'
+				app: 'appQuestions',
+				subgenerator: 'subgeneratorQuestions'
 			};
-
+			
 			this.prompt
 				.withArgs(this.questions.app)
-				.returns(new Promise(function(resolve){
-                    resolve(self.answeres.app);
-                }));
+				.returns({
+					then: function (cb) {
+						cb(self.answeres.app);
+					}
+				});
 
 			this.prompt
-				.withArgs(this.questions.language)
-				.returns(new Promise(function(resolve){
-                    resolve(self.answeres.language);
-                }));
+				.withArgs(this.questions.subgenerator)
+				.returns({
+					then: function(cb){
+						cb(self.answeres.subgenerator);
+					}
+                });
 		});
 
 		afterEach(function(){
@@ -425,7 +435,7 @@ describe('Helper', function () {
 			this.helper.initPrompt(self.questions,function(answeres){
 				var error = 0;
 				assert(self.prompt.withArgs(self.questions.app).calledOnce,'Err: ' + error++);
-				assert(self.prompt.withArgs(self.questions.language).calledOnce,'Err: ' + error++);
+				assert(self.prompt.withArgs(self.questions.subgenerator).calledOnce,'Err: ' + error++);
 				assert(self.info.withArgs('Init prompt answeres',self.answeres),'Err: ' + error++);
 				assert.deepEqual(answeres,self.answeres,'Err: ' + error++);
 				done();
@@ -465,13 +475,13 @@ describe('Helper', function () {
 
 		it('logs execution',function(){
 			this.helper.createYoRc(this.args);
-			assert(this.info.withArgs('Create .yo-rc.json',{'generator-generate' : this.args}).calledOnce);
+			assert(this.info.withArgs('Create .yo-rc.json',{'generator-generator2' : this.args}).calledOnce);
 		});
 
 		it('writes file to destination',function(){
 			this.helper.createYoRc(this.args);
 			assert(this.fsWriteFileSync
-				.withArgs('yoRcDestination',JSON.stringify({'generator-generate' : this.args},null,4))
+				.withArgs('yoRcDestination',JSON.stringify({'generator-generator2' : this.args},null,4))
 				.calledOnce
 			);
 		});
@@ -531,7 +541,7 @@ describe('Helper', function () {
 	describe('#getBasesNames',function(){
 		beforeEach(function(){
 			this.getBase = sinon.stub(this.helper.ENV.path.temp,'getBase')
-				.returns(path.join(__dirname,'../../data/helper/getBasesNames'));
+				.returns(path.join(__dirname,'../data/helper/getBasesNames'));
 		});
 		afterEach(function(){
 			this.getBase.restore();
@@ -547,7 +557,7 @@ describe('Helper', function () {
 	describe('#getModulesNames', function () {
 		beforeEach(function () {
 			this.getModule = sinon.stub(this.helper.ENV.path.temp, 'getModule')
-				.returns(path.join(__dirname, '../../data/helper/getModulesNames'));
+				.returns(path.join(__dirname, '../data/helper/getModulesNames'));
 		});
 		afterEach(function () {
 			this.getModule.restore();

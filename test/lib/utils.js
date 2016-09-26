@@ -4,12 +4,12 @@ var assert = require('assert');
 var path = require('path');
 var fs = require('fs');
 
-var utils = require('../../../generators/app/utils');
+var utils = require('../../lib/utils');
 
 describe('utils', function () {
 
     const getUtilsPath = function(fsPath){
-        return path.join(__dirname,'../../data/utils',fsPath || '');
+        return path.join(__dirname,'../data/utils',fsPath || '');
     };
 
 	describe('#validateWord',function(){
