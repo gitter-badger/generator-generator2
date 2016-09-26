@@ -7,9 +7,8 @@ var yosay = require('yosay');
 var process = require('process');
 var licenser = require('licenser');
 
-var questions = require('../../../generators/app/questions');
-var utils = require('../../../generators/app/utils');
-var Helper = require('../../../generators/app/helper');
+var utils = require('../../../lib/utils');
+var Helper = require('../../../lib/helper');
 var generator = require('../../data/helper/constructor/generator');
 
 describe('Helper', function () {

@@ -45,7 +45,7 @@ gulp.task('test', ['pre-test'], function (cb) {
 	var mochaErr;
 
 	gulp.src([
-		'test/generators/**/*.js',
+		// 'test/lib/**/*.js'
 		'test/cli/**/*.js'
 	]).pipe(plumber())
 		.pipe(mocha({reporter: 'spec'}))

@@ -57,13 +57,7 @@ module.exports = generator.Base.extend({
                 ]
             }
         ],
-        "java": [
-            {
-                "type": "input",
-                "name": "groupId",
-                "message": "GroupId (com.github.username):"
-            }
-        ]
+        "generator": [ ]
     }
 
 }).extend(generator2.app);
