@@ -1,18 +1,18 @@
 {
-  "name": "generator-generate",
+  "name": "generator-generator2",
   "version": "0.0.0",
-  "description": "Personal generator for generating various starting project and code arhitecture for py, js, java.",
-  "homepage": "https://github.com/urosjarc/generator-generate",
+  "description": "New yeoman generator with easy workflow.",
+  "homepage": "https://github.com/urosjarc/generator-generator2",
   "author": {
     "name": "Uros Jarc",
     "email": "urosjarc@users.noreply.github.com",
     "url": "https://github.com/urosjarc"
   },
   "files": [
-    "generators",
-    "generators"
+    "lib",
+    "generator"
   ],
-  "main": "generators/index.js",
+  "main": "lib/index.js",
   "keywords": [
     "yeoman-generator"
   ],
@@ -48,7 +48,7 @@
     "yeoman-assert": "^2.0.0",
     "yeoman-test": "^1.5.1"
   },
-  "repository": "urosjarc/generator-generate",
+  "repository": "urosjarc/generator-generator2",
   "scripts": {
     "prepublish": "gulp prepublish",
     "test": "gulp"

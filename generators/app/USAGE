@@ -1,7 +1,6 @@
 Description:
-  Personal yeoman generator for generating various
-  starting project and code arhitecture for py, js, java.
+	Todo: Make this...
 
 Example:
-  yo generate
-  yo generate --debug
+  yo generator2
+  yo generator2 --debug

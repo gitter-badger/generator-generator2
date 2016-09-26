@@ -33,7 +33,10 @@ gulp.task('nsp', function (cb) {
 });
 
 gulp.task('pre-test', function () {
-	return gulp.src('generators/**/*.js')
+	return gulp.src([
+		'generators/**/*.js',
+		'lib/**/*.js'
+	])
 		.pipe(excludeGitignore())
 		.pipe(istanbul({
 			includeUntested: true
@@ -45,7 +48,7 @@ gulp.task('test', ['pre-test'], function (cb) {
 	var mochaErr;
 
 	gulp.src([
-		'test/generators/**/*.js',
+		'test/lib/**/*.js',
 		'test/cli/**/*.js'
 	]).pipe(plumber())
 		.pipe(mocha({reporter: 'spec'}))

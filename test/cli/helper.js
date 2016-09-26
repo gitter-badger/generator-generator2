@@ -4,8 +4,8 @@ var path = require('path');
 var yoTest = require('yeoman-test');
 var fs = require('fs');
 
-function Helper(language, baseName){
-	this.language = language;
+function Helper(subgenerator, baseName){
+	this.subgenerator = subgenerator;
 	this.baseName = baseName;
 
 	this._prompt = {
@@ -17,7 +17,7 @@ function Helper(language, baseName){
 		githubUser: "GITHUB_USER",
 		authorName: "AUTHOR_NAME",
 		createdAt: 'CREATED_AT',
-		language: language
+		subgenerator: subgenerator
 	};
 
 	this._config = {
@@ -69,12 +69,6 @@ method.getConfig = function (isInited) {
 
 	config.inited = isInited;
 
-	if(this.language == 'java'){
-		config.java = {
-			groupId : 'GROUP_ID'
-		}
-	}
-
 	return config;
 };
 
@@ -83,19 +77,16 @@ method.getPath= function(){
 };
 
 method.describe = function(){
-	return this.language
-		+ ' ' + this.baseName + ' generator:'
+	return this.subgenerator
+		+ ' ' + this.baseName + ':'
 };
 
 method.getTestDir = function(){
-	return path.join(__dirname, '../../build',this.language,this.baseName);
+	return path.join(__dirname, '../../build',this.subgenerator,this.baseName);
 };
 
 method.getPrompt = function () {
 	var prompt = this._prompt;
-
-	if (this.language == 'java')
-		prompt.groupId = "GROUP_ID";
 
 	return prompt;
 };

@@ -1,29 +1,14 @@
-# generator-generate
+# generator-generator2
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
-> Personal yeoman generator for generating various starting project and code arhitecture for py, js, java.
+> New yeoman generator with easy work flow build on top of yeoman-generator.
 
-## Installation
-
-First, install [Yeoman](http://yeoman.io) and generator-generate using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
-
-```bash
-npm install -g yo
-npm install -g generator-generate
-```
-
-Then generate your new project:
-
-```bash
-yo generate
-```
+# Warning!
+This project is work in progress!
 
 ## Todo
- 
- * Make logger for generator.
- * Make unittests.
- * Make extensive hand made tests for every possible error and case.
- * Verbose and neat error printing.
 
+ * Make default questions protected.
+ 
 ## Generated apps features
 
  * Todo: List this...
