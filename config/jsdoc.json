@@ -16,7 +16,8 @@
 		"excludePattern": "(^|\\/|\\\\)_"
 	},
 	"plugins": [
-		"plugins/markdown"
+		"plugins/markdown",
+		"config/jsdoc_spec"
 	],
 	"templates": {
 		"cleverLinks": true,

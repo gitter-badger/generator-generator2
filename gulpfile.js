@@ -13,6 +13,7 @@ var shell = require('gulp-shell');
 var process = require('process');
 var chalk = require('chalk');
 var fs = require('fs');
+var docco = require('gulp-docco');
 var childProcess = require('child_process');
 
 gulp.task('mkdocs', shell.task([
@@ -64,10 +65,19 @@ gulp.task('test', ['pre-test'], function (cb) {
 		});
 });
 
-gulp.task('docs', function (cb) {
+gulp.task('docco',function(){
+	var config = require('./config/docco.json');
+
+	gulp.src([
+		"./lib/**/*.js"
+	])
+		.pipe(docco(config))
+		.pipe(gulp.dest('./build/docco'))
+});
+gulp.task('jsdoc', function (cb) {
 	var config = require('./config/jsdoc.json');
 	gulp.src([
-		'./generators/**/*.js',
+		'./lib/**/*.js',
 		'./README.md'
 	], {read: false})
 		.pipe(jsdoc(config, cb));
@@ -118,6 +128,7 @@ gulp.task('e2e', function (cb) {
 gulp.task('watch', function () {
 	gulp.watch([
 		'generators/**/*.js',
+		'lib/**/*.js',
 		'test/generators/**',
 		'test/cli/**'
 	], ['test']);
