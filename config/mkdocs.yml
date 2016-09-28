@@ -1,13 +1,12 @@
 #Site
 site_name: generator-generator2
-site_url: https://github.com/urosjarc/generator-generator2
 site_description: New yeoman generator with easier and opinionated workflow.
 site_author: Uroš Jarc
+site_url: http://urosjarc.github.io/generator-generator2
 site_favicon: media/favicon.ico
 site_dir: build/mkdocs
 
 #Repo
-repo_name: Github
 repo_url: https://github.com/urosjarc/generator-generator2
 
 #Copyright
@@ -16,6 +15,8 @@ copyright: Copyright © 2016 Uroš Jarc
 #Documentation and theme
 theme: material
 docs_dir: docs
+
+#Page tree
 pages:
  - 'Home': index.md
  - 'Contribution': contribution.md
@@ -26,9 +27,14 @@ pages:
 extra:
   version: 0.1.0
   logo: media/logo.png
+  github:
+    download_release: true
   palette:
     primary: 'green'
-    accent: 'light green'
+    accent: 'green'
+  font:
+    text: 'Roboto'
+    code: 'Roboto Mono'
   author:
     github: 'urosjarc'
 
