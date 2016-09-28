@@ -10,14 +10,11 @@ var plumber = require('gulp-plumber');
 var coveralls = require('gulp-coveralls');
 var jsdoc = require('gulp-jsdoc3');
 var shell = require('gulp-shell');
+var ghPages = require('gulp-gh-pages');
 var process = require('process');
 var chalk = require('chalk');
 var fs = require('fs');
 var childProcess = require('child_process');
-
-gulp.task('mkdocs', shell.task([
-	'mkdocs build --clean --quiet --config-file ./config/mkdocs.yml'
-]));
 
 gulp.task('static', function () {
 	var config = require('./config/eslint.json');
@@ -44,44 +41,6 @@ gulp.task('pre-test', function () {
 		.pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', ['pre-test'], function (cb) {
-	var mochaErr;
-
-	gulp.src([
-		'test/lib/**/*.js',
-		'test/cli/**/*.js'
-	]).pipe(plumber())
-		.pipe(mocha({reporter: 'spec'}))
-		.on('error', function (err) {
-			mochaErr = err;
-		})
-		.pipe(istanbul.writeReports({
-			dir: "./build/coverage",
-			reportOpts: {dir: './build/coverage'}
-		}))
-		.on('end', function () {
-			cb(mochaErr);
-		});
-});
-
-gulp.task('docco',function(){
-	var config = require('./config/docco.json');
-
-	gulp.src([
-		"./lib/**/*.js"
-	])
-		.pipe(docco(config))
-		.pipe(gulp.dest('./build/docco'))
-});
-gulp.task('jsdoc', function (cb) {
-	var config = require('./config/jsdoc.json');
-	gulp.src([
-		'./lib/**/*.js',
-		'./README.md'
-	], {read: false})
-		.pipe(jsdoc(config, cb));
-});
-
 gulp.task('test-docs',function(){
 	childProcess.execSync('./node_modules/.bin/inchjs');
 	var docs = require('./docs.json');
@@ -106,6 +65,26 @@ gulp.task('test-docs',function(){
 		));
 		process.exit(1);
 	}
+});
+
+gulp.task('test', ['pre-test'], function (cb) {
+	var mochaErr;
+
+	gulp.src([
+		'test/lib/**/*.js',
+		'test/cli/**/*.js'
+	]).pipe(plumber())
+		.pipe(mocha({reporter: 'spec'}))
+		.on('error', function (err) {
+			mochaErr = err;
+		})
+		.pipe(istanbul.writeReports({
+			dir: "./build/coverage",
+			reportOpts: {dir: './build/coverage'}
+		}))
+		.on('end', function () {
+			cb(mochaErr);
+		});
 });
 
 gulp.task('e2e', function (cb) {
@@ -140,6 +119,24 @@ gulp.task('coveralls', ['test'], function () {
 
 	return gulp.src(path.join(__dirname, 'build/coverage/lcov.info'))
 		.pipe(coveralls());
+});
+
+gulp.task('mkdocs', shell.task([
+	'mkdocs build --clean --quiet --config-file ./config/mkdocs.yml'
+]));
+
+gulp.task('jsdoc', function (cb) {
+	var config = require('./config/jsdoc.json');
+	gulp.src([
+		'./lib/**/*.js',
+		'./README.md'
+	], {read: false})
+		.pipe(jsdoc(config, cb));
+});
+
+gulp.task('docs', function() {
+	return gulp.src('./build/docs/**/*')
+		.pipe(ghPages());
 });
 
 gulp.task('prepublish', ['nsp']);
