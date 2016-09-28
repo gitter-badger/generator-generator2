@@ -25,7 +25,7 @@ pages:
 
 #Theme specific
 extra:
-  version: 0.1.0
+  version: 0.0.0
   logo: media/logo.png
   github:
     download_release: true
@@ -50,3 +50,5 @@ markdown_extensions:
 google_analytics:
   - 'UA-XXXXXXXX-X'
   - 'auto'
+
+extra_css: ['template/extra.css']
