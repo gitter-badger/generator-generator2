@@ -1,6 +1,6 @@
 # generator-generator2
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
-> New yeoman generator with easy work flow build on top of yeoman-generator.
+> New yeoman generator with easier and opinionated workflow.
 
 # Warning!
 This project is work in progress!

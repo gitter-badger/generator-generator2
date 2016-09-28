@@ -13,7 +13,6 @@ var shell = require('gulp-shell');
 var process = require('process');
 var chalk = require('chalk');
 var fs = require('fs');
-var docco = require('gulp-docco');
 var childProcess = require('child_process');
 
 gulp.task('mkdocs', shell.task([
