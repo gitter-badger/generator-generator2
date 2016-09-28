@@ -37,6 +37,7 @@ extra:
     code: 'Roboto Mono'
   author:
     github: 'urosjarc'
+    twitter: 'urosjarc'
 
 # Extensions
 markdown_extensions:
