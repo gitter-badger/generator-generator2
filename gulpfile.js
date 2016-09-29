@@ -115,31 +115,8 @@ gulp.task('coveralls', ['test'], function () {
 		.pipe(coveralls());
 });
 
-gulp.task('serve:update',['docs'], function (done) {
-	browserSync.reload();
-	done();
-});
-
-gulp.task('serve',['docs'], function () {
-	browserSync.init({
-		server: {
-			baseDir: "build/docs"
-		}
-	});
-
-	gulp.watch([
-		'generators/**/*.js',
-		'lib/**/*.js',
-		'docs/**/*'
-	], ['serve:update']);
-});
-
-gulp.task('mkdocs:build', shell.task([
+gulp.task('mkdocs', shell.task([
 	'mkdocs build --strict --clean --quiet --config-file ' + mkdocsConfig
-]));
-
-gulp.task('mkdocs:deploy', shell.task([
-	'mkdocs gh-deploy --quiet --config-file ' + mkdocsConfig
 ]));
 
 gulp.task('jsdoc', function (cb) {
@@ -151,6 +128,25 @@ gulp.task('jsdoc', function (cb) {
 		.pipe(jsdoc(config, cb));
 });
 
-gulp.task('docs', ['mkdocs:build','jsdoc']);
+gulp.task('docs', ['mkdocs','jsdoc'],function(){
+	browserSync.init({
+		server: {
+			baseDir: "build/docs"
+		}
+	});
+
+	gulp.watch([
+		'generators/**/*.js',
+		'lib/**/*.js',
+		'docs/**/*'
+	],['mkdocs','jsdoc',function(){
+		browserSync.reload();
+	}]);
+});
+
+gulp.task('gh-pages',['mkdocs','jsdoc'], shell.task([
+	'mkdocs gh-deploy --quiet --config-file ' + mkdocsConfig
+]));
+
 gulp.task('prepublish', ['nsp']);
 gulp.task('default', ['static', 'test', 'coveralls','test:docs']);
