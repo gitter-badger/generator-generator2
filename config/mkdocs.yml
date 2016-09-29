@@ -4,7 +4,7 @@ site_description: New yeoman generator with easier and opinionated workflow.
 site_author: Uroš Jarc
 site_url: http://urosjarc.github.io/generator-generator2
 site_favicon: media/favicon.ico
-site_dir: build/mkdocs
+site_dir: build/docs
 
 #Repo
 repo_url: https://github.com/urosjarc/generator-generator2
@@ -48,7 +48,5 @@ markdown_extensions:
 
 # Google Analytics
 google_analytics:
-  - 'UA-XXXXXXXX-X'
+  - 'UA-53923399-3'
   - 'auto'
-
-extra_css: ['template/extra.css']

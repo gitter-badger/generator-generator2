@@ -1,6 +1,6 @@
 {
 	"opts": {
-		"destination": "./build/jsdoc",
+		"destination": "./build/docs/documentation",
 		"encoding": "utf8",
 		"recurse": true,
 		"tutorials": "./docs/tutorials"
