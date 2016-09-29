@@ -17,6 +17,7 @@ var childProcess = require('child_process');
 var browserSync = require('browser-sync').create();
 var ghPages = require('gulp-gh-pages');
 var yaml = require('js-yaml');
+var checkDeps = require('gulp-check-deps');
 
 var mkdocsConfig = './config/mkdocs.yml';
 var eslintConfig = './config/eslint.json';
@@ -45,6 +46,10 @@ gulp.task('test:pre', function () {
 			includeUntested: true
 		}))
 		.pipe(istanbul.hookRequire());
+});
+
+gulp.task('test:dep',function(){
+    return gulp.src('package.json').pipe(checkDeps());
 });
 
 gulp.task('test:docs', function () {
@@ -164,7 +169,8 @@ gulp.task('prepublish', ['nsp'],function(){
 gulp.task('docs', ['mkdocs', 'jsdoc']);
 gulp.task('default', [
 	// 'static',
+	'test:dep',
 	'test',
-	'coveralls',
+	'coveralls'
 	// 'test:docs'
 ]); //Todo: Set static + test:docs

@@ -18,9 +18,9 @@
 [travis-url]: https://travis-ci.org/urosjarc/generator-generator2
 [coverage]: https://img.shields.io/codecov/c/github/urosjarc/generator-generator2.svg
 [coverage-url]: https://codecov.io/gh/urosjarc/generator-generator2
-[dep]: https://www.versioneye.com/user/projects/VERSIONEYE_PROJECT_ID/badge.svg?style=flat-square
-[dep-url]: https://www.versioneye.com/user/projects/VERSIONEYE_PROJECT_ID
-[codestyle]: https://codebeat.co/badges/CODEBEAT_PROJECT_ID
+[dep]: https://www.versioneye.com/user/projects/57ed5868769f21004138875f/badge.svg?style=flat-square
+[dep-url]: https://www.versioneye.com/user/projects/57ed5868769f21004138875f
+[codestyle]: https://codebeat.co/badges/7875d0c3-de4e-438b-bf4a-02f5dbcec7c6
 [codestyle-url]: https://codebeat.co/projects/github-com-urosjarc-generator-generator2
 [support]: https://img.shields.io/badge/patreon-urosjarc-green.svg?style=social
 [support-url]: https://patreon.com/urosjarc/
