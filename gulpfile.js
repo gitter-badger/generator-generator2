@@ -7,20 +7,24 @@ var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var nsp = require('gulp-nsp');
 var plumber = require('gulp-plumber');
-var coveralls = require('gulp-coveralls');
+var codacy = require('gulp-codacy');
 var jsdoc = require('gulp-jsdoc3');
 var shell = require('gulp-shell');
 var process = require('process');
 var chalk = require('chalk');
 var fs = require('fs');
 var childProcess = require('child_process');
+var browserSync = require('browser-sync').create();
+var ghPages = require('gulp-gh-pages');
+var yaml = require('js-yaml');
+var checkDeps = require('gulp-check-deps');
 
-gulp.task('mkdocs', shell.task([
-	'mkdocs build --clean --quiet --config-file ./config/mkdocs.yml'
-]));
+var mkdocsConfig = './config/mkdocs.yml';
+var eslintConfig = './config/eslint.json';
+var jsdocConfig = './config/jsdoc.json';
 
 gulp.task('static', function () {
-	var config = require('./config/eslint.json');
+	var config = require(eslintConfig);
 	return gulp.src('**/*.js')
 		.pipe(excludeGitignore())
 		.pipe(eslint(config))
@@ -32,7 +36,7 @@ gulp.task('nsp', function (cb) {
 	nsp({package: path.resolve('package.json')}, cb);
 });
 
-gulp.task('pre-test', function () {
+gulp.task('test:pre', function () {
 	return gulp.src([
 		'generators/**/*.js',
 		'lib/**/*.js'
@@ -44,7 +48,37 @@ gulp.task('pre-test', function () {
 		.pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', ['pre-test'], function (cb) {
+gulp.task('test:dep', function () {
+	return gulp.src('package.json').pipe(checkDeps());
+});
+
+gulp.task('test:docs', function () {
+	childProcess.execSync('./node_modules/.bin/inchjs --all');
+	var docs = require('./docs.json');
+	var report = [];
+
+	var undocs = 0;
+	for (var i in docs.objects) {
+		var object = docs.objects[i];
+		if (object.undocumented == true) {
+			report.push(
+				' - ' + object.meta.path + ' '
+				+ object.meta.filename + ' '
+				+ object.meta.lineno
+			);
+			undocs++;
+		}
+	}
+	if (undocs != 0) {
+		console.error(chalk.red(
+			'\n > Undocumented:\n' +
+			report.join('\n')
+		));
+		process.exit(1);
+	}
+});
+
+gulp.task('test', ['test:pre'], function (cb) {
 	var mochaErr;
 
 	gulp.src([
@@ -64,41 +98,6 @@ gulp.task('test', ['pre-test'], function (cb) {
 		});
 });
 
-gulp.task('docs', function (cb) {
-	var config = require('./config/jsdoc.json');
-	gulp.src([
-		'./generators/**/*.js',
-		'./README.md'
-	], {read: false})
-		.pipe(jsdoc(config, cb));
-});
-
-gulp.task('test-docs',function(){
-	childProcess.execSync('./node_modules/.bin/inchjs');
-	var docs = require('./docs.json');
-	var report = [];
-
-	var undocs = 0;
-	for(var i in docs.objects){
-		var object = docs.objects[i];
-		if(object.undocumented == true){
-			report.push(
-				' - ' + object.meta.path + ' '
-				+ object.meta.filename + ' '
-				+ object.meta.lineno
-			);
-			undocs++;
-		}
-	}
-	if(undocs!=0){
-		console.error(chalk.red(
-			'\n > Undocumented:\n' +
-			report.join('\n')
-		));
-		process.exit(1);
-	}
-});
-
 gulp.task('e2e', function (cb) {
 	var mochaErr;
 
@@ -115,22 +114,67 @@ gulp.task('e2e', function (cb) {
 		});
 });
 
-gulp.task('watch', function () {
-	gulp.watch([
-		'generators/**/*.js',
-		'test/generators/**',
-		'test/cli/**'
-	], ['test']);
-});
-
-gulp.task('coveralls', ['test'], function () {
+gulp.task('coverage', function codacyTask() {
+	
 	if (!process.env.CI) {
 		return;
 	}
 
-	return gulp.src(path.join(__dirname, 'build/coverage/lcov.info'))
-		.pipe(coveralls());
+	return gulp
+		.src(['build/coverage/lcov.info'], {read: false})
+		.pipe(codacy({
+			token: '5723c4e3999649228cb540e0c048a3e2'
+		}));
 });
 
-gulp.task('prepublish', ['nsp']);
-gulp.task('default', ['static', 'test', 'coveralls','test-docs']);
+gulp.task('serve', ['docs'], function () {
+	browserSync.init({
+		server: {
+			baseDir: "build/docs"
+		}
+	});
+
+	gulp.watch([
+		'generators/**/*.js',
+		'lib/**/*.js',
+		'docs/**/*'
+	], ['docs', function () {
+		browserSync.reload();
+	}]);
+});
+
+gulp.task('gh-pages', ['docs'], function () {
+	return gulp.src('build/docs/**/*')
+		.pipe(ghPages({
+			cacheDir: 'build/gh-pages'
+		}));
+});
+
+gulp.task('mkdocs', shell.task([
+	'mkdocs build --strict --clean --quiet --config-file ' + mkdocsConfig
+]));
+
+gulp.task('jsdoc', function (cb) {
+	var config = require(jsdocConfig);
+	gulp.src([
+		'./lib/**/*.js',
+		'./README.md'
+	], {read: false})
+		.pipe(jsdoc(config, cb));
+});
+
+gulp.task('prepublish', ['nsp'], function () {
+	var mkdocs = yaml.safeLoad(fs.readFileSync(mkdocsConfig, 'utf8'));
+	mkdocs.extra.version = require('./package.json').version;
+	console.log('\n > Version: ' + mkdocs.extra.version + '\n');
+	fs.writeFileSync(mkdocsConfig, yaml.safeDump(mkdocs));
+});
+
+gulp.task('docs', ['mkdocs', 'jsdoc']);
+gulp.task('default', [
+	// 'static',
+	'test:dep',
+	'test',
+	'coverage'
+	// 'test:docs'
+]); //Todo: Set static + test:docs

@@ -1,17 +1,37 @@
-site_name: generator-generate
-site_url: https://github.com/urosjarc/generator-generate
-repo_url: https://github.com/urosjarc/generator-generate
-site_description: Generator for generating various projects.
-site_author: Uros Jarc
+site_name: generator-generator2
+site_description: New yeoman generator with easier and opinionated workflow.
+site_author: Uroš Jarc
+site_url: 'http://urosjarc.github.io/generator-generator2'
 site_favicon: media/favicon.ico
-copyright: Copyright © 2016 Uros Jarc
-
-theme: mkdocs #readthedocs
+site_dir: build/docs
+repo_url: 'https://github.com/urosjarc/generator-generator2'
+copyright: Copyright © 2016 Uroš Jarc
+theme: material
 docs_dir: docs
-site_dir: build/mkdocs
-
 pages:
- - 'Home': index.md
- - 'Contribution': contribution.md
- - 'Documentation': documentation.md
- - 'Changes': changes.md
+  - Home: index.md
+  - Contribution: contribution.md
+  - Documentation: documentation.md
+  - Changes: changes.md
+extra:
+  version: 0.0.1
+  logo: media/logo.png
+  github:
+    download_release: true
+  palette:
+    primary: green
+    accent: green
+  font:
+    text: Roboto
+    code: Roboto Mono
+  author:
+    github: urosjarc
+    twitter: urosjarc
+markdown_extensions:
+  - codehilite(css_class=code)
+  - admonition
+  - toc:
+      permalink: '#'
+google_analytics:
+  - UA-53923399-3
+  - auto
