@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Index</title>
+	<title>Documentation Module: generator</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -79,49 +79,484 @@
 		<div id="main">
 			
 
+	<h1 class="page-title">Module: generator</h1>
+<section>
+
+<header>
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Generator methods.
+All subgenerators will inherite its methods.</p></div>
+        
+
+        
+<dl class="details">
+    
+
 	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
 
 
+        
+    
+    </div>
 
+    
 
+    
 
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id=".configuring"><span class="type-signature">&lt;static> </span>configuring()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Save user answeres.
+Save answeres to yo-rc.json file.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
 	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".conflicts"><span class="type-signature">&lt;static> </span>conflicts()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Inject and call method.
+Methods must be defined in subgenerator.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
 
 
-    <section class="readme-section">
-        <article><h1>generator-generator2</h1><p><a href="https://npmjs.org/package/generator-generate"><img src="https://badge.fury.io/js/generator-generate.svg" alt="NPM version"></a> <a href="https://travis-ci.org/urosjarc/generator-generate"><img src="https://travis-ci.org/urosjarc/generator-generate.svg?branch=master" alt="Build Status"></a> <a href="https://david-dm.org/urosjarc/generator-generate"><img src="https://david-dm.org/urosjarc/generator-generate.svg?theme=shields.io" alt="Dependency Status"></a> <a href="https://coveralls.io/r/urosjarc/generator-generate"><img src="https://coveralls.io/repos/urosjarc/generator-generate/badge.svg" alt="Coverage percentage"></a></p>
-<blockquote>
-<p>New yeoman generator with easier and opinionated workflow.</p>
-</blockquote>
-<h1>Warning!</h1><p>This project is work in progress!</p>
-<h2>Todo</h2><ul>
-<li>Make default questions protected.</li>
-</ul>
-<h2>Generated apps features</h2><ul>
-<li>Todo: List this...</li>
-</ul>
-<h2>Getting To Know Yeoman</h2><ul>
-<li>Yeoman has a heart of gold.</li>
-<li>Yeoman is a person with feelings and opinions, but is very easy to work with.</li>
-<li>Yeoman can be too opinionated at times but is easily convinced not to be.</li>
-<li>Feel free to <a href="http://yeoman.io/">learn more about Yeoman</a>.</li>
-</ul>
-<h2>License</h2><p>MIT © <a href="https://github.com/urosjarc">Uros Jarc</a></p></article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".initializing"><span class="type-signature">&lt;static> </span>initializing()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Initialize generator.
+Setup helper and variables.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".prompting"><span class="type-signature">&lt;static> </span>prompting()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Ask user questions.
+For module or base, depending on yo-rc.json file.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".writing"><span class="type-signature">&lt;static> </span>writing()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Create file arhitecture.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
