@@ -4,12 +4,14 @@
 
 # generator-generator2
 
-[![GitHub release][release]][release-url]
+[![npm release][npm]][npm-url]
 [![Travis][travis]][travis-url]
 [![Coverage Status][coverage]][coverage-url]
 [![Dependency Status][dep]][dep-url]
 [![Codebeat badge][codestyle]][codestyle-url]
 
+[npm]: https://img.shields.io/npm/v/generator-generator2.svg?maxAge=2592000
+[npm-url]: https://www.npmjs.com/package/generator-generator2
 [release]: https://img.shields.io/github/release/urosjarc/generator-generator2.svg?maxAge=2592000
 [release-url]: https://github.com/urosjarc/generator-generator2
 [travis]: https://img.shields.io/travis/urosjarc/generator-generator2.svg?maxAge=2592000
@@ -31,6 +33,9 @@
 [![Twitter User][twitter]][twitter-url]
 
 <br>
+
+#Warning!
+Project is still in development!
 
 ## Table of Contents
 

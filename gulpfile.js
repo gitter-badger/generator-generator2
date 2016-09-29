@@ -12,9 +12,11 @@ var jsdoc = require('gulp-jsdoc3');
 var shell = require('gulp-shell');
 var process = require('process');
 var chalk = require('chalk');
+var fs = require('fs');
 var childProcess = require('child_process');
 var browserSync = require('browser-sync').create();
 var ghPages = require('gulp-gh-pages');
+var yaml = require('js-yaml');
 
 var mkdocsConfig = './config/mkdocs.yml';
 var eslintConfig = './config/eslint.json';
@@ -152,6 +154,17 @@ gulp.task('jsdoc', function (cb) {
 		.pipe(jsdoc(config, cb));
 });
 
+gulp.task('prepublish', ['nsp'],function(){
+	var mkdocs = yaml.safeLoad(fs.readFileSync(mkdocsConfig, 'utf8'));
+	mkdocs.extra.version = require('./package.json').version;
+	console.log('\n > Version: ' + mkdocs.extra.version + '\n');
+	fs.writeFileSync(mkdocsConfig, yaml.safeDump(mkdocs));
+});
+
 gulp.task('docs', ['mkdocs', 'jsdoc']);
-gulp.task('prepublish', ['nsp']);
-gulp.task('default', ['static', 'test', 'coveralls', 'test:docs']);
+gulp.task('default', [
+	// 'static',
+	'test',
+	'coveralls',
+	// 'test:docs'
+]); //Todo: Set static + test:docs
