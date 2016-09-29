@@ -14,6 +14,7 @@ var process = require('process');
 var chalk = require('chalk');
 var childProcess = require('child_process');
 var browserSync = require('browser-sync').create();
+var ghPages = require('gulp-gh-pages');
 
 var mkdocsConfig = './config/mkdocs.yml';
 var eslintConfig = './config/eslint.json';
@@ -44,15 +45,15 @@ gulp.task('test:pre', function () {
 		.pipe(istanbul.hookRequire());
 });
 
-gulp.task('test:docs',function(){
+gulp.task('test:docs', function () {
 	childProcess.execSync('./node_modules/.bin/inchjs --all');
 	var docs = require('./docs.json');
 	var report = [];
 
 	var undocs = 0;
-	for(var i in docs.objects){
+	for (var i in docs.objects) {
 		var object = docs.objects[i];
-		if(object.undocumented == true){
+		if (object.undocumented == true) {
 			report.push(
 				' - ' + object.meta.path + ' '
 				+ object.meta.filename + ' '
@@ -61,7 +62,7 @@ gulp.task('test:docs',function(){
 			undocs++;
 		}
 	}
-	if(undocs!=0){
+	if (undocs != 0) {
 		console.error(chalk.red(
 			'\n > Undocumented:\n' +
 			report.join('\n')
@@ -115,6 +116,29 @@ gulp.task('coveralls', ['test'], function () {
 		.pipe(coveralls());
 });
 
+gulp.task('serve', ['docs'], function () {
+	browserSync.init({
+		server: {
+			baseDir: "build/docs"
+		}
+	});
+
+	gulp.watch([
+		'generators/**/*.js',
+		'lib/**/*.js',
+		'docs/**/*'
+	], ['docs', function () {
+		browserSync.reload();
+	}]);
+});
+
+gulp.task('gh-pages', ['docs'], function () {
+	return gulp.src('build/docs/**/*')
+		.pipe(ghPages({
+			cacheDir : 'build/gh-pages'
+		}));
+});
+
 gulp.task('mkdocs', shell.task([
 	'mkdocs build --strict --clean --quiet --config-file ' + mkdocsConfig
 ]));
@@ -128,25 +152,6 @@ gulp.task('jsdoc', function (cb) {
 		.pipe(jsdoc(config, cb));
 });
 
-gulp.task('docs', ['mkdocs','jsdoc'],function(){
-	browserSync.init({
-		server: {
-			baseDir: "build/docs"
-		}
-	});
-
-	gulp.watch([
-		'generators/**/*.js',
-		'lib/**/*.js',
-		'docs/**/*'
-	],['mkdocs','jsdoc',function(){
-		browserSync.reload();
-	}]);
-});
-
-gulp.task('gh-pages',['mkdocs','jsdoc'], shell.task([
-	'mkdocs gh-deploy --quiet --config-file ' + mkdocsConfig
-]));
-
+gulp.task('docs', ['mkdocs', 'jsdoc']);
 gulp.task('prepublish', ['nsp']);
-gulp.task('default', ['static', 'test', 'coveralls','test:docs']);
+gulp.task('default', ['static', 'test', 'coveralls', 'test:docs']);
