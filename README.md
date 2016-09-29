@@ -1,4 +1,4 @@
-<img style="float: center;" src="docs/src/media/logo.png">
+<img style="float: center;" src="docs/media/header.png">
 
 <br>
 
@@ -33,7 +33,7 @@
 <br>
 
 #Warning!
-Project is still in development!
+Project is still in development, so documentation is not ready yet!
 
 ## Table of Contents
 
