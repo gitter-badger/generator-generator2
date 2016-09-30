@@ -12,6 +12,7 @@ pages:
   - Project: index.md
   - Tutorial: tutorial.md
   - Contribution: contribution.md
+  - Developers: developers.md
   - Documentation: documentation.md
   - Changes: changes.md
 extra:

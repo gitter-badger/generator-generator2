@@ -167,7 +167,7 @@ gulp.task('jsdoc', function (cb) {
 	var config = require(jsdocConfig);
 	gulp.src([
 		'./lib/**/*.js',
-		'./README.md'
+		'docs/documentation.md'
 	], {read: false})
 		.pipe(jsdoc(config, cb));
 });

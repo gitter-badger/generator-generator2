@@ -1,8 +1,6 @@
-<img style="float: center;" src="docs/media/header.png">
+<img style="float: center;" src="media/docs/header.png">
 
 <br>
-
-# generator-generator2
 
 [![npm release][npm]][npm-url]
 [![Travis][travis]][travis-url]
@@ -32,46 +30,43 @@
 
 <br>
 
-#Warning!
-Project is still in development, so documentation is not ready yet!
-
-<br>
-
-## Table of Contents
-
- * [Tell me more](#tell-me-more)
- * [Features](#features)
- * [Instalation](#installation)
- * [Usage](#usage)
- * [Tutorial](#tutorial)
- * [Additional info](#additional-info)
+!!! Warning
+    Project is still in development, so documentation is uncomplete!
  
 <br>
 
-## Tell me more
+##Project website
+Here is described general informations about the project.
+For every thing else like `documentation`, `contribution` visit
+[official website](https://urosjarc.github.io/generator-generator2) for this project.
 
-####What is yeoman?
+##Informations
+
+**What is yeoman?**
+
 [Yeoman](http://yeoman.io/) is a generic scaffolding system allowing the creation of any kind of app.
 It allows for rapidly getting started on new projects and streamlines the maintenance of existing projects.
 Yeoman is language agnostic. It can generate projects in any language (Web, Java, Python, C#, etc.)
 
-####generator-generator?
+**generator-generator?**
+
 Yeoman has default generator named [generator-generator](https://github.com/yeoman/generator-generator). 
 With this generator user can make their own generator by extending [generator runtime context](http://yeoman.io/authoring/running-context.html)
 methods to customize generation process of their projects. By default **GG** (generator-generator)
 is unopinionated with some basic [utility methods](http://yeoman.io/generator/Base.html) which are more or less low level.
 User must write code to make generator work.
 
-####generator-generator2?
+**generator-generator2?**
+
 **GG2** (generator-generator2) try to remove the need to write any code and make standardization how projects should
 be generated and still leave option to customize runtime context, for hard core programmers. GG2 is build upon GG!
 
 ## Features
 
- * Provide **logging** for your generator.
+ * Provide [logging](https://www.npmjs.com/package/winston) for your generator.
  * [EJS templating](http://www.embeddedjs.com/) for **files** content and **directories** names.
  * **Line injector** for file content.
- * Provide **license** provider for your generator.
+ * Provide [licenser](https://www.npmjs.com/package/licenser.js) for your generator.
  * **Prompt validation** on user input.
  * Etc... 
  
@@ -80,23 +75,23 @@ To use GG2 you must have [node.js](https://nodejs.org). If you have latest node
 you can install yo and GG2 packages.
 
 ```
+#Install yeoman cli tool.
 npm install -g yo
+
+#Install generator.
 npm install -g generator-generator2
 ```
 
 ## Usage
+
+
 ```
-#Default command.
+Run generator.
 yo generator2
 
-#Creates generator.debug file.
+#Creates generator.debug file while running generator.
 yo generator2 --debug
 ```
-
-
-## Additional info
-For more informations (documentation, contributions, ...etc),
-visit [**project website**](https://urosjarc.github.io/generator-generator2).
 
 ## License
 Copyright © 2016 Uroš Jarc

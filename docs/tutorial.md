@@ -1,4 +1,4 @@
-##Generate project
+## Generate project
 
 First follow [installation](/#instalation) section and install requirements.
 Start GG2 with yeoman CLI to generate starting structure.
@@ -109,13 +109,18 @@ File `database.yml`:
 !!! info
 	Injector will inject text lines after flag at the **same indentation**!
 
-## subgenerator methods
+## Subgenerator methods
 After base or module generation specific method in `<subgen>/index.js`
 with the same name as base or module will be executed. Here you can for example
 install dependencies for generated project or test generated structure. 
 
 ## Start your generator
-Then link this generator to start using it
+Then link this generator to start using it.
+When running generator for the first time you will be asked
+which subgenerator you want to use, and then what project you would like
+to generate. When running generator in the same directory for the second time
+you will be asked which module you want to generate.
+
 ```
 npm link
 yo <generator-name>
