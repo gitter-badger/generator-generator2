@@ -11,19 +11,19 @@
 [![Codebeat badge][codestyle]][codestyle-url]
 
 [npm]: https://img.shields.io/npm/v/generator-generator2.svg?maxAge=2592000
-[npm-url]: https://www.npmjs.com/package/generator-generator2 target="_blank"
+[npm-url]: https://www.npmjs.com/package/generator-generator2
 [travis]: https://img.shields.io/travis/urosjarc/generator-generator2.svg?maxAge=2592000
-[travis-url]: https://travis-ci.org/urosjarc/generator-generator2 target="_blank"
+[travis-url]: https://travis-ci.org/urosjarc/generator-generator2
 [coverage]: https://img.shields.io/codacy/coverage/71b26bbc68de46ed9b6ad037d821b635.svg?maxAge=2592000
-[coverage-url]: https://www.codacy.com/app/urosjarc/generator-generator2 target="_blank"
+[coverage-url]: https://www.codacy.com/app/urosjarc/generator-generator2
 [codestyle]: https://img.shields.io/codacy/grade/71b26bbc68de46ed9b6ad037d821b635.svg?maxAge=2592000
-[codestyle-url]: https://www.codacy.com/app/urosjarc/generator-generator2 target="_blank"
+[codestyle-url]: https://www.codacy.com/app/urosjarc/generator-generator2
 [dep]: https://www.versioneye.com/user/projects/57ed5868769f21004138875f/badge.svg?style=flat-square
-[dep-url]: https://www.versioneye.com/user/projects/57ed5868769f21004138875f target="_blank"
+[dep-url]: https://www.versioneye.com/user/projects/57ed5868769f21004138875f
 [support]: https://img.shields.io/badge/patreon-urosjarc-green.svg?style=social
-[support-url]: https://patreon.com/urosjarc/ target="_blank"
+[support-url]: https://patreon.com/urosjarc/
 [twitter]: https://img.shields.io/twitter/follow/urosjarc.svg?style=social&label=follow&maxAge=2592000
-[twitter-url]: https://twitter.com/intent/follow?screen_name=urosjarc target="_blank"
+[twitter-url]: https://twitter.com/intent/follow?screen_name=urosjarc
 
 > Yeoman 2nth generator with easier and opinionated workflow.
 
