@@ -4,7 +4,6 @@ var assert = require('assert');
 var yoAssert = require('yeoman-assert');
 var nexpect = require('nexpect');
 var path = require('path');
-var process = require('process');
 
 describe('generator easy build:', function () {
 

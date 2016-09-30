@@ -4,7 +4,6 @@ var fs = require('fs');
 var sinon = require('sinon');
 var yoEnv = require('yeoman-environment');
 var yosay = require('yosay');
-var process = require('process');
 var licenser = require('licenser.js');
 
 var utils = require('../../lib/utils');

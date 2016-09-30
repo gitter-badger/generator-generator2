@@ -9,7 +9,6 @@ var plumber = require('gulp-plumber');
 var codacy = require('gulp-codacy');
 var jsdoc = require('gulp-jsdoc3');
 var shell = require('gulp-shell');
-var process = require('process');
 var chalk = require('chalk');
 var fs = require('fs');
 var childProcess = require('child_process');
