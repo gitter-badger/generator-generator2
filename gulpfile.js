@@ -22,7 +22,7 @@ var eslintConfig = './config/eslint.json';
 var jsdocConfig = './config/jsdoc.json';
 
 gulp.task('static', function () {
-	if(!/(v0.12|v0.10)/.test(process.version)){
+	if (!/(v0.12|v0.10)/.test(process.version)) {
 		var eslint = require('gulp-eslint');
 		var config = require(eslintConfig);
 		return gulp.src('**/*.js')

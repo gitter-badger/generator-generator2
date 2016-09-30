@@ -17,12 +17,12 @@ describe('generator easy build:', function () {
 	};
 
 
-	beforeEach(function(){
+	beforeEach(function () {
 		process.chdir(genPath)
 	});
 
-	afterEach(function(){
-		process.chdir(path.join(__dirname,'../..'));
+	afterEach(function () {
+		process.chdir(path.join(__dirname, '../..'));
 	});
 
 	it('Should exist in build folder', function () {
