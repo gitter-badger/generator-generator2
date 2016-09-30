@@ -4,7 +4,7 @@
 
 # generator-generator2
 
-[![npm release][npm]][npm-url]{:target="_blank"}
+[![npm release][npm]](npm-url){:target="_blank"}
 [![Travis][travis]][travis-url]
 [![Coverage Status][coverage]][coverage-url]
 [![Dependency Status][dep]][dep-url]
