@@ -9,19 +9,19 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
     
       
-        <title>Contribution - generator-generator2</title>
+        <title>Tutorial - generator-generator2</title>
       
       
       
-        <link rel="canonical" href="http://urosjarc.github.io/generator-generator2/contribution/">
+        <link rel="canonical" href="http://urosjarc.github.io/generator-generator2/tutorial/">
       
       
         <meta name="author" content="Uroš Jarc">
       
     
-    <meta property="og:url" content="http://urosjarc.github.io/generator-generator2/contribution/">
+    <meta property="og:url" content="http://urosjarc.github.io/generator-generator2/tutorial/">
     <meta property="og:title" content="generator-generator2">
-    <meta property="og:image" content="http://urosjarc.github.io/generator-generator2/contribution//../media/logo.png">
+    <meta property="og:image" content="http://urosjarc.github.io/generator-generator2/tutorial//../media/logo.png">
     <meta name="apple-mobile-web-app-title" content="generator-generator2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -102,7 +102,7 @@
             
           </span>
         
-        Contribution
+        Tutorial
       </div>
     </div>
     
@@ -195,17 +195,8 @@
           
             
   <li>
-    <a class="" title="Tutorial" href="../tutorial/">
+    <a class="current" title="Tutorial" href="./">
       Tutorial
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="current" title="Contribution" href="./">
-      Contribution
     </a>
     
       
@@ -213,49 +204,64 @@
         <ul>
           
             <li class="anchor">
-              <a title="Got a Question?" href="#got-a-question">
-                Got a Question?
+              <a title="Generate project" href="#generate-project">
+                Generate project
               </a>
             </li>
           
             <li class="anchor">
-              <a title="Found an Issue?" href="#found-an-issue">
-                Found an Issue?
+              <a title="Customize promping" href="#customize-promping">
+                Customize promping
               </a>
             </li>
           
             <li class="anchor">
-              <a title="Want a Feature?" href="#want-a-feature">
-                Want a Feature?
+              <a title="Subgenerator" href="#subgenerator">
+                Subgenerator
               </a>
             </li>
           
             <li class="anchor">
-              <a title="Want a Doc Fix?" href="#want-a-doc-fix">
-                Want a Doc Fix?
+              <a title="Create bases" href="#create-bases">
+                Create bases
               </a>
             </li>
           
             <li class="anchor">
-              <a title="Submitting an Issue" href="#submitting-an-issue">
-                Submitting an Issue
+              <a title="Create modules" href="#create-modules">
+                Create modules
               </a>
             </li>
           
             <li class="anchor">
-              <a title="Submitting a Pull Request" href="#submitting-a-pull-request">
-                Submitting a Pull Request
+              <a title="Setup configuration" href="#setup-configuration">
+                Setup configuration
               </a>
             </li>
           
             <li class="anchor">
-              <a title="Coding Rules" href="#coding-rules">
-                Coding Rules
+              <a title="Subgenerator methods" href="#subgenerator-methods">
+                Subgenerator methods
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Start your generator" href="#start-your-generator">
+                Start your generator
               </a>
             </li>
           
         </ul>
       
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Contribution" href="../contribution/">
+      Contribution
+    </a>
     
   </li>
 
@@ -318,78 +324,123 @@
       <article class="article">
         <div class="wrapper">
           
-            <h1>Contribution</h1>
+            <h1>Tutorial</h1>
           
-          <p>I would love for you to contribute to our source code and to make GG2 even better than it is
-today! Here are the guidelines for you to follow...</p>
-<h2 id="got-a-question">Got a Question?<a class="headerlink" href="#got-a-question" title="Permanent link">#</a></h2>
-<p>If you have questions about how to use GG2, please create new issue
-in which you point out which section of documentation is lacking with information.</p>
-<h2 id="found-an-issue">Found an Issue?<a class="headerlink" href="#found-an-issue" title="Permanent link">#</a></h2>
-<p>If you find a bug in the source code or a mistake in the documentation, you can help by
-submitting an issue to our <a href="https://github.com/urosjarc/generator-generator2">GitHub Repository</a>. Even better you can submit a Pull Request
-with a fix.</p>
-<h2 id="want-a-feature">Want a Feature?<a class="headerlink" href="#want-a-feature" title="Permanent link">#</a></h2>
-<p>You can request a new feature by submitting an issue to our <a href="https://github.com/urosjarc/generator-generator2">GitHub Repository</a>.  If you
-would like to implement a new feature then consider what kind of change it is:</p>
-<ul>
-<li><strong>Major Changes</strong> that you wish to contribute to the project make an issue explaining details.
-  so that I can better coordinate efforts, prevent duplication of work, and help you to
-  craft the change so that it is successfully accepted into the project.</li>
-<li><strong>Small Changes</strong> can be crafted and submitted to the <a href="https://github.com/urosjarc/generator-generator2">GitHub Repository</a> as a Pull
-  Request.</li>
-</ul>
-<h2 id="want-a-doc-fix">Want a Doc Fix?<a class="headerlink" href="#want-a-doc-fix" title="Permanent link">#</a></h2>
-<p>If you want to help improve the docs, it's a good idea to let others know what you're working on to
-minimize duplication of effort. Create a new issue (or comment on a related existing one) to let
-others know what you're working on.</p>
-<h2 id="submitting-an-issue">Submitting an Issue<a class="headerlink" href="#submitting-an-issue" title="Permanent link">#</a></h2>
-<p>Before you submit your issue search the archive, maybe your question was already answered.</p>
-<p>If your issue appears to be a bug, and hasn't been reported, open a new issue. Help to maximize
-the effort on fixing issues and adding new features, by not reporting duplicate issues.
-Providing the following information will increase the chances of your issue being dealt with
-quickly:</p>
-<ul>
-<li><strong>Overview of the Issue</strong> - if an error is being thrown a non-minified stack trace helps</li>
-<li><strong>Debug log file</strong> - Use <code>yo generator2 --debug</code> to create debug log file.</li>
-<li><strong>Motivation for or Use Case</strong> - explain why this is a bug for you</li>
-<li><strong>Related Issues</strong> - has a similar issue been reported before?</li>
-<li><strong>Suggest a Fix</strong> - if you can't fix the bug yourself, perhaps you can point to what might be
-  causing the problem (line of code or commit)</li>
-</ul>
-<p><strong>If you get help, help others. Good karma rulez!</strong></p>
-<h2 id="submitting-a-pull-request">Submitting a Pull Request<a class="headerlink" href="#submitting-a-pull-request" title="Permanent link">#</a></h2>
-<p>Before you submit your pull request consider the following guidelines:</p>
-<ul>
-<li>Search <a href="https://github.com/urosjarc/generator-generator2/pulls">GitHub</a> for an open or closed Pull Request
-  that relates to your submission. You don't want to duplicate effort.</li>
-<li>
-<p>Make your changes in a new git branch:</p>
-<p><code>git checkout -b my-fix-branch master</code></p>
-</li>
-<li>
-<p>Create your patch, <strong>including appropriate test cases</strong>.</p>
-</li>
-<li>
-<p>Run test suite. and ensure that all tests pass.</p>
-<p><code>gulp</code></p>
-</li>
-<li>
-<p>Commit your changes using a descriptive commit message.</p>
-</li>
-<li>
-<p>Push your branch to GitHub:</p>
-<p><code>git push origin my-fix-branch</code></p>
-</li>
-</ul>
-<p>In GitHub, send a pull request to <code>generator-generator2:master</code>.</p>
-<p>That's it! Thank you for your contribution!</p>
-<h2 id="coding-rules">Coding Rules<a class="headerlink" href="#coding-rules" title="Permanent link">#</a></h2>
-<p>To ensure consistency throughout the source code, keep these rules in mind as you are working:</p>
-<ul>
-<li>All features or bug fixes <strong>must be tested</strong> by one or more [specs][unit-testing].</li>
-<li>All public API methods <strong>must be documented</strong> with jsdoc3 </li>
-</ul>
+          <h2 id="generate-project">Generate project<a class="headerlink" href="#generate-project" title="Permanent link">#</a></h2>
+<p>First follow <a href="../#instalation">installation</a> section and install requirements.
+Start GG2 with yeoman CLI to generate starting structure.</p>
+<div class="code"><pre><span></span>yo generator2
+</pre></div>
+
+
+<p>Command will generate your generator structure:</p>
+<div class="code"><pre><span></span>.
+├── generators/
+│   ├── app/
+│   |   ├── USAGE
+│   |   └── index.js
+|   └── subgenerator/
+|       ├── index.js
+│       └── templates/
+│           ├── base/
+│           ├── module/
+│           └── setup
+|               ├── base/
+|               ├── ejs/
+|               └── injector/
+├── .editorconfig
+├── .gitattributes
+├── .gitignore
+├── .eslintrc
+├── .travis.yml
+├── .yo-rc.json
+├── package.json
+├── gulpfile.js
+├── README.md
+├── LICENSE
+└── test/
+    └── app.js
+</pre></div>
+
+
+<h2 id="customize-promping">Customize promping<a class="headerlink" href="#customize-promping" title="Permanent link">#</a></h2>
+<p>Open <code>generators/app/index.js</code> file and modify app questions.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code>app.license</code> and <code>app.sugenerator</code> should stay the same, unless you know
+what it means to delete those objects.</p>
+</div>
+<h2 id="subgenerator">Subgenerator<a class="headerlink" href="#subgenerator" title="Permanent link">#</a></h2>
+<p>Example of good arhitecture is located at
+<a href="https://github.com/urosjarc/generator-generate">urosjarc/generator-generate</a></p>
+<p>Rename subgenerator directory in <code>generators/</code> folder.
+You should name it something like <code>java</code> or <code>python</code>.</p>
+<h2 id="create-bases">Create bases<a class="headerlink" href="#create-bases" title="Permanent link">#</a></h2>
+<p>Add folders in <code>&lt;subgen&gt;/templates/base</code> and name them something like
+<code>server</code>, <code>lib</code>, <code>website</code> or <code>cli-tool</code>. Those folders will hold
+project specific files.</p>
+<h2 id="create-modules">Create modules<a class="headerlink" href="#create-modules" title="Permanent link">#</a></h2>
+<p>Add folders in <code>&lt;subgen&gt;/templates/module</code> and name them something like
+<code>database</code>, <code>logger</code> or <code>docs</code>. Those folders will hold your project
+specific files for modules.</p>
+<h2 id="setup-configuration">Setup configuration<a class="headerlink" href="#setup-configuration" title="Permanent link">#</a></h2>
+<h3 id="tempsetupbases">temp./setup/bases<a class="headerlink" href="#tempsetupbases" title="Permanent link">#</a></h3>
+<p>Add folders and files in <code>&lt;subgen&gt;/templates/setup/base</code>.
+This folder will hold files and folders which all bases will use.
+Here you should place <code>.gitignore</code>, <code>.editorconfig</code>, <code>.travis.yml</code>.</p>
+<h3 id="tempsetupejs">temp./setup/ejs<a class="headerlink" href="#tempsetupejs" title="Permanent link">#</a></h3>
+<p>Add folders and files in <code>&lt;subgen&gt;/templates/setup/ejs</code>. Here you should
+place files which will provide <a href="http://www.embeddedjs.com/">EJS</a> template content for <code>setup/base</code>, <code>base</code>, <code>module</code>
+folders and files.</p>
+<p>For example file with path <code>&lt;subgen&gt;/templates/setup/ejs/readme/somedir/header</code> with content
+<code>Hello world!</code> will be setup as <a href="http://www.embeddedjs.com/">EJS</a> key <code>ejs.readme_somedir_header</code>. You can use EJS templating
+system within <code>base/*</code>, <code>module/*</code>, and <code>setup/base/*</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warnings</p>
+<ol>
+<li>Path slashes (<code>/</code>) will be replaced with underscore characted (<code>_</code>).</li>
+<li>There should always be <code>license</code> file in <code>ejs/</code> directory. Content
+   of <code>license</code> file will be compiled when generator will run.</li>
+<li>You can access prompt answeres joust like you setup questions for the prompt (<code>app.name</code>, <code>app.license</code>).</li>
+</ol>
+</div>
+<h3 id="tempsetupinjector">temp./setup/injector<a class="headerlink" href="#tempsetupinjector" title="Permanent link">#</a></h3>
+<p>Add yml files and name them with the same names as folders in <code>&lt;subgen&gt;/templates/module</code>.
+When generator will be generating module you will want to inject files at specific line.</p>
+<p>For example when generating module <code>database</code> you would want to inject lines in to your
+<code>setup.py</code> or <code>build.gradle</code> with dependency information.</p>
+<p>File <code>database.yml</code>:</p>
+<div class="code"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">./setup.py</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">flag</span><span class="p p-Indicator">:</span> <span class="c1">#Dependencies</span>
+  <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+    <span class="no">mysql</span>
+    <span class="no">mysql_connect</span>
+
+<span class="l l-Scalar l-Scalar-Plain">./package/__init__.py</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">flag</span><span class="p p-Indicator">:</span> <span class="c1">#Import</span>
+  <span class="l l-Scalar l-Scalar-Plain">text</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">|-</span>
+    <span class="no">import mysql</span>
+    <span class="no">import mysql_connect</span>
+</pre></div>
+
+
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Injector will inject text lines after flag at the <strong>same indentation</strong>!</p>
+</div>
+<h2 id="subgenerator-methods">Subgenerator methods<a class="headerlink" href="#subgenerator-methods" title="Permanent link">#</a></h2>
+<p>After base or module generation specific method in <code>&lt;subgen&gt;/index.js</code>
+with the same name as base or module will be executed. Here you can for example
+install dependencies for generated project or test generated structure. </p>
+<h2 id="start-your-generator">Start your generator<a class="headerlink" href="#start-your-generator" title="Permanent link">#</a></h2>
+<p>Then link this generator to start using it.
+When running generator for the first time you will be asked
+which subgenerator you want to use, and then what project you would like
+to generate. When running generator in the same directory for the second time
+you will be asked which module you want to generate.</p>
+<div class="code"><pre><span></span>npm link
+yo &lt;generator-name&gt;
+</pre></div>
           <aside class="copyright" role="note">
             
               Copyright © 2016 Uroš Jarc &ndash;
@@ -408,7 +459,7 @@ quickly:</p>
   <nav class="pagination" aria-label="Footer">
     <div class="previous">
       
-        <a href="../tutorial/" title="Tutorial">
+        <a href=".." title="Project">
           <span class="direction">
             Previous
           </span>
@@ -418,7 +469,7 @@ quickly:</p>
             </div>
             <div class="stretch">
               <div class="title">
-                Tutorial
+                Project
               </div>
             </div>
           </div>
@@ -427,14 +478,14 @@ quickly:</p>
     </div>
     <div class="next">
       
-        <a href="../developers/" title="Developers">
+        <a href="../contribution/" title="Contribution">
           <span class="direction">
             Next
           </span>
           <div class="page">
             <div class="stretch">
               <div class="title">
-                Developers
+                Contribution
               </div>
             </div>
             <div class="button button-next" role="button" aria-label="Next">

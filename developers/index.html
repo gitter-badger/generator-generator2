@@ -9,19 +9,19 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
     
       
-        <title>Contribution - generator-generator2</title>
+        <title>Developers - generator-generator2</title>
       
       
       
-        <link rel="canonical" href="http://urosjarc.github.io/generator-generator2/contribution/">
+        <link rel="canonical" href="http://urosjarc.github.io/generator-generator2/developers/">
       
       
         <meta name="author" content="Uroš Jarc">
       
     
-    <meta property="og:url" content="http://urosjarc.github.io/generator-generator2/contribution/">
+    <meta property="og:url" content="http://urosjarc.github.io/generator-generator2/developers/">
     <meta property="og:title" content="generator-generator2">
-    <meta property="og:image" content="http://urosjarc.github.io/generator-generator2/contribution//../media/logo.png">
+    <meta property="og:image" content="http://urosjarc.github.io/generator-generator2/developers//../media/logo.png">
     <meta name="apple-mobile-web-app-title" content="generator-generator2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -102,7 +102,7 @@
             
           </span>
         
-        Contribution
+        Developers
       </div>
     </div>
     
@@ -204,8 +204,17 @@
           
             
   <li>
-    <a class="current" title="Contribution" href="./">
+    <a class="" title="Contribution" href="../contribution/">
       Contribution
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="current" title="Developers" href="./">
+      Developers
     </a>
     
       
@@ -213,58 +222,31 @@
         <ul>
           
             <li class="anchor">
-              <a title="Got a Question?" href="#got-a-question">
-                Got a Question?
+              <a title="Prerequisite Software" href="#prerequisite-software">
+                Prerequisite Software
               </a>
             </li>
           
             <li class="anchor">
-              <a title="Found an Issue?" href="#found-an-issue">
-                Found an Issue?
+              <a title="Getting the Sources" href="#getting-the-sources">
+                Getting the Sources
               </a>
             </li>
           
             <li class="anchor">
-              <a title="Want a Feature?" href="#want-a-feature">
-                Want a Feature?
+              <a title="Installing NPM Modules" href="#installing-npm-modules">
+                Installing NPM Modules
               </a>
             </li>
           
             <li class="anchor">
-              <a title="Want a Doc Fix?" href="#want-a-doc-fix">
-                Want a Doc Fix?
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="Submitting an Issue" href="#submitting-an-issue">
-                Submitting an Issue
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="Submitting a Pull Request" href="#submitting-a-pull-request">
-                Submitting a Pull Request
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="Coding Rules" href="#coding-rules">
-                Coding Rules
+              <a title="Running Tests Locally" href="#running-tests-locally">
+                Running Tests Locally
               </a>
             </li>
           
         </ul>
       
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Developers" href="../developers/">
-      Developers
-    </a>
     
   </li>
 
@@ -318,78 +300,68 @@
       <article class="article">
         <div class="wrapper">
           
-            <h1>Contribution</h1>
+            <h1>Developers</h1>
           
-          <p>I would love for you to contribute to our source code and to make GG2 even better than it is
-today! Here are the guidelines for you to follow...</p>
-<h2 id="got-a-question">Got a Question?<a class="headerlink" href="#got-a-question" title="Permanent link">#</a></h2>
-<p>If you have questions about how to use GG2, please create new issue
-in which you point out which section of documentation is lacking with information.</p>
-<h2 id="found-an-issue">Found an Issue?<a class="headerlink" href="#found-an-issue" title="Permanent link">#</a></h2>
-<p>If you find a bug in the source code or a mistake in the documentation, you can help by
-submitting an issue to our <a href="https://github.com/urosjarc/generator-generator2">GitHub Repository</a>. Even better you can submit a Pull Request
-with a fix.</p>
-<h2 id="want-a-feature">Want a Feature?<a class="headerlink" href="#want-a-feature" title="Permanent link">#</a></h2>
-<p>You can request a new feature by submitting an issue to our <a href="https://github.com/urosjarc/generator-generator2">GitHub Repository</a>.  If you
-would like to implement a new feature then consider what kind of change it is:</p>
+          <p>This document describes how to set up your development environment to build and test project. 
+It also explains the basic mechanics of using <code>git</code>, <code>node</code>, <code>npm</code>, <code>gulp</code>.</p>
+<p>See the <a href="../contribution">contribution guidelines</a>
+if you'd like to contribute.</p>
+<h2 id="prerequisite-software">Prerequisite Software<a class="headerlink" href="#prerequisite-software" title="Permanent link">#</a></h2>
+<p>Before you can build and test project, you must install and configure the
+following products on your development machine:</p>
 <ul>
-<li><strong>Major Changes</strong> that you wish to contribute to the project make an issue explaining details.
-  so that I can better coordinate efforts, prevent duplication of work, and help you to
-  craft the change so that it is successfully accepted into the project.</li>
-<li><strong>Small Changes</strong> can be crafted and submitted to the <a href="https://github.com/urosjarc/generator-generator2">GitHub Repository</a> as a Pull
-  Request.</li>
-</ul>
-<h2 id="want-a-doc-fix">Want a Doc Fix?<a class="headerlink" href="#want-a-doc-fix" title="Permanent link">#</a></h2>
-<p>If you want to help improve the docs, it's a good idea to let others know what you're working on to
-minimize duplication of effort. Create a new issue (or comment on a related existing one) to let
-others know what you're working on.</p>
-<h2 id="submitting-an-issue">Submitting an Issue<a class="headerlink" href="#submitting-an-issue" title="Permanent link">#</a></h2>
-<p>Before you submit your issue search the archive, maybe your question was already answered.</p>
-<p>If your issue appears to be a bug, and hasn't been reported, open a new issue. Help to maximize
-the effort on fixing issues and adding new features, by not reporting duplicate issues.
-Providing the following information will increase the chances of your issue being dealt with
-quickly:</p>
-<ul>
-<li><strong>Overview of the Issue</strong> - if an error is being thrown a non-minified stack trace helps</li>
-<li><strong>Debug log file</strong> - Use <code>yo generator2 --debug</code> to create debug log file.</li>
-<li><strong>Motivation for or Use Case</strong> - explain why this is a bug for you</li>
-<li><strong>Related Issues</strong> - has a similar issue been reported before?</li>
-<li><strong>Suggest a Fix</strong> - if you can't fix the bug yourself, perhaps you can point to what might be
-  causing the problem (line of code or commit)</li>
-</ul>
-<p><strong>If you get help, help others. Good karma rulez!</strong></p>
-<h2 id="submitting-a-pull-request">Submitting a Pull Request<a class="headerlink" href="#submitting-a-pull-request" title="Permanent link">#</a></h2>
-<p>Before you submit your pull request consider the following guidelines:</p>
-<ul>
-<li>Search <a href="https://github.com/urosjarc/generator-generator2/pulls">GitHub</a> for an open or closed Pull Request
-  that relates to your submission. You don't want to duplicate effort.</li>
 <li>
-<p>Make your changes in a new git branch:</p>
-<p><code>git checkout -b my-fix-branch master</code></p>
+<p><a href="http://git-scm.com">Git</a> and/or the <strong>GitHub app</strong> (for <a href="http://mac.github.com">Mac</a> or
+  <a href="http://windows.github.com">Windows</a>); <a href="https://help.github.com/articles/set-up-git">GitHub's Guide to Installing
+  Git</a> is a good source of information.</p>
 </li>
 <li>
-<p>Create your patch, <strong>including appropriate test cases</strong>.</p>
-</li>
-<li>
-<p>Run test suite. and ensure that all tests pass.</p>
-<p><code>gulp</code></p>
-</li>
-<li>
-<p>Commit your changes using a descriptive commit message.</p>
-</li>
-<li>
-<p>Push your branch to GitHub:</p>
-<p><code>git push origin my-fix-branch</code></p>
+<p><a href="http://nodejs.org">Node.js</a>, (version <code>&gt;=0.10 &lt;6</code>) which is used to run,
+  run tests, source files. We also use Node's Package Manager, <code>npm</code>
+  which comes with Node. Depending on your system, you can install Node either from
+  source or as a pre-packaged bundle.</p>
 </li>
 </ul>
-<p>In GitHub, send a pull request to <code>generator-generator2:master</code>.</p>
-<p>That's it! Thank you for your contribution!</p>
-<h2 id="coding-rules">Coding Rules<a class="headerlink" href="#coding-rules" title="Permanent link">#</a></h2>
-<p>To ensure consistency throughout the source code, keep these rules in mind as you are working:</p>
+<h2 id="getting-the-sources">Getting the Sources<a class="headerlink" href="#getting-the-sources" title="Permanent link">#</a></h2>
+<p>Fork and clone the project repository:</p>
+<ol>
+<li>Login to your GitHub account or create one by following the instructions given
+   <a href="https://github.com/signup/free">here</a>.</li>
+<li><a href="http://help.github.com/forking">Fork</a> the <a href="https://github.com/urosjarc/generator/generator2">main project 
+   repository</a>.</li>
+<li>Clone your fork of the Angular repository and define an <code>upstream</code> remote pointing back to
+   the Angular repository that you forked in the first place.</li>
+</ol>
+<div class="code"><pre><span></span><span class="c1"># Clone your GitHub repository:</span>
+git clone git@github.com:&lt;github username&gt;/generator-generator2.git
+
+<span class="c1"># Go to the project directory:</span>
+<span class="nb">cd</span> generator-generator2
+
+<span class="c1"># Add the main project repository as an upstream remote to your repository:</span>
+git remote add upstream https://github.com/urosjarc/generator-generator2.git
+</pre></div>
+
+
+<h2 id="installing-npm-modules">Installing NPM Modules<a class="headerlink" href="#installing-npm-modules" title="Permanent link">#</a></h2>
+<p>Next, install the JavaScript modules needed to build and test project:</p>
+<div class="code"><pre><span></span><span class="c1"># Install project dependencies (package.json)</span>
+npm install
+</pre></div>
+
+
+<p><strong>Optional</strong>: In this document, we make use of project local <code>npm</code> package scripts and binaries
+(stored under <code>./node_modules/.bin</code>) by prefixing these command invocations with <code>$(npm bin)</code>; in
+particular <code>gulp</code> commands. If you prefer, you can drop this path prefix by either:</p>
+<p><em>Option 1</em>: globally installing these two packages as follows:</p>
 <ul>
-<li>All features or bug fixes <strong>must be tested</strong> by one or more [specs][unit-testing].</li>
-<li>All public API methods <strong>must be documented</strong> with jsdoc3 </li>
+<li><code>npm install -g gulp</code> (you might need to prefix this command with <code>sudo</code>)</li>
 </ul>
+<p>Since global installs can become stale, and required versions can vary by project, we avoid their
+use in these instructions.</p>
+<h2 id="running-tests-locally">Running Tests Locally<a class="headerlink" href="#running-tests-locally" title="Permanent link">#</a></h2>
+<div class="code"><pre><span></span>gulp
+</pre></div>
           <aside class="copyright" role="note">
             
               Copyright © 2016 Uroš Jarc &ndash;
@@ -408,7 +380,7 @@ quickly:</p>
   <nav class="pagination" aria-label="Footer">
     <div class="previous">
       
-        <a href="../tutorial/" title="Tutorial">
+        <a href="../contribution/" title="Contribution">
           <span class="direction">
             Previous
           </span>
@@ -418,7 +390,7 @@ quickly:</p>
             </div>
             <div class="stretch">
               <div class="title">
-                Tutorial
+                Contribution
               </div>
             </div>
           </div>
@@ -427,14 +399,14 @@ quickly:</p>
     </div>
     <div class="next">
       
-        <a href="../developers/" title="Developers">
+        <a href="../documentation/" title="Documentation">
           <span class="direction">
             Next
           </span>
           <div class="page">
             <div class="stretch">
               <div class="title">
-                Developers
+                Documentation
               </div>
             </div>
             <div class="button button-next" role="button" aria-label="Next">
