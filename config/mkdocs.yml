@@ -9,7 +9,8 @@ copyright: Copyright © 2016 Uroš Jarc
 theme: material
 docs_dir: docs
 pages:
-  - Home: index.md
+  - Project: index.md
+  - Tutorial: tutorial.md
   - Contribution: contribution.md
   - Documentation: documentation.md
   - Changes: changes.md

@@ -43,6 +43,7 @@ Project is still in development, so documentation is not ready yet!
  * [Features](#features)
  * [Instalation](#installation)
  * [Usage](#usage)
+ * [Tutorial](#tutorial)
  * [Additional info](#additional-info)
  
 <br>
@@ -68,7 +69,7 @@ be generated and still leave option to customize runtime context, for hard core 
 ## Features
 
  * Provide **logging** for your generator.
- * EJS templating for **files** content and **directories** names.
+ * [EJS templating](http://www.embeddedjs.com/) for **files** content and **directories** names.
  * **Line injector** for file content.
  * Provide **license** provider for your generator.
  * **Prompt validation** on user input.
@@ -84,65 +85,14 @@ npm install -g generator-generator2
 ```
 
 ## Usage
-
-First follow [installation](#installation) section and install requirements.
-
-####1. Generate your generator
-Start GG2 with yeoman CLI to generate starting structure.
-
 ```
+#Default command.
 yo generator2
+
+#Creates generator.debug file.
+yo generator2 --debug
 ```
 
-Command will generate your generator structure:
-```
-.
-├── generators/
-│   ├── app/
-│   |   ├── USAGE
-│   |   └── index.js
-|   └── subgenerator/
-|       ├── index.js
-│       └── templates/
-│           ├── base/
-│           ├── module/
-│           └── setup
-|               ├── base/
-|               ├── ejs/
-|               └── injector/
-├── .editorconfig
-├── .gitattributes
-├── .gitignore
-├── .eslintrc
-├── .travis.yml
-├── .yo-rc.json
-├── package.json
-├── gulpfile.js
-├── README.md
-├── LICENSE
-└── test/
-    └── app.js
-```
-
-####2. Customize promping
-Open `generators/app/index.js` file and modify app questions.
-
-**Warning:** `app.license` and `app.sugenerator` should stay the same, unless you know
-what it means to delete those objects.
-
-####3. Customize subgenerator
-
- 1. Rename subgenerator directory in `generators/` folder. You should name it something like `java` or `python`.
- 2. Add folders in ` ... /templates/base` and name something like `server`, `lib`, `website` or `cli-tool`.
- 
- //Todo: You stayed here!
-
-####3. Start your generator
-Then link this generator to start using it
-```
-npm link
-yo <generator-name>
-```
 
 ## Additional info
 For more informations (documentation, contributions, ...etc),
