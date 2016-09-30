@@ -35,34 +35,114 @@
 #Warning!
 Project is still in development, so documentation is not ready yet!
 
+<br>
+
 ## Table of Contents
 
  * [Tell me more](#tell-me-more)
- * [How it works](#how-it-works)
  * [Features](#features)
  * [Instalation](#installation)
  * [Usage](#usage)
- * [Contributions](#additional-info)
- * [Documentation](#additional-info)
- * [Change log](#additional-info)
- * [License](#license)
+ * [Additional info](#additional-info)
  
 <br>
 
 ## Tell me more
-Todo: Add example.gif and extended description.
 
-## How it works
-Todo: Add in readme, how app works internaly.
+####What is yeoman?
+[Yeoman](http://yeoman.io/) is a generic scaffolding system allowing the creation of any kind of app.
+It allows for rapidly getting started on new projects and streamlines the maintenance of existing projects.
+Yeoman is language agnostic. It can generate projects in any language (Web, Java, Python, C#, etc.)
+
+####generator-generator?
+Yeoman has default generator named [generator-generator](https://github.com/yeoman/generator-generator). 
+With this generator user can make their own generator by extending [generator runtime context](http://yeoman.io/authoring/running-context.html)
+methods to customize generation process of their projects. By default **GG** (generator-generator)
+is unopinionated with some basic [utility methods](http://yeoman.io/generator/Base.html) which are more or less low level.
+User must write code to make generator work.
+
+####generator-generator2?
+**GG2** (generator-generator2) try to remove the need to write any code and make standardization how projects should
+be generated and still leave option to customize runtime context, for hard core programmers. GG2 is build upon GG!
 
 ## Features
-Todo: Add features list in readme.
 
+ * Provide **logging** for your generator.
+ * EJS templating for **files** content and **directories** names.
+ * **Line injector** for file content.
+ * Provide **license** provider for your generator.
+ * **Prompt validation** on user input.
+ * Etc... 
+ 
 ## Instalation
-Todo: Add installation steps in readme.
+To use GG2 you must have [node.js](https://nodejs.org). If you have latest node
+you can install yo and GG2 packages.
+
+```
+npm install -g yo
+npm install -g generator-generator2
+```
 
 ## Usage
-Todo: Add usage information in readme.
+
+First follow [installation](#installation) section and install requirements.
+
+####1. Generate your generator
+Start GG2 with yeoman CLI to generate starting structure.
+
+```
+yo generator2
+```
+
+Command will generate your generator structure:
+```
+.
+├── generators/
+│   ├── app/
+│   |   ├── USAGE
+│   |   └── index.js
+|   └── subgenerator/
+|       ├── index.js
+│       └── templates/
+│           ├── base/
+│           ├── module/
+│           └── setup
+|               ├── base/
+|               ├── ejs/
+|               └── injector/
+├── .editorconfig
+├── .gitattributes
+├── .gitignore
+├── .eslintrc
+├── .travis.yml
+├── .yo-rc.json
+├── package.json
+├── gulpfile.js
+├── README.md
+├── LICENSE
+└── test/
+    └── app.js
+```
+
+####2. Customize promping
+Open `generators/app/index.js` file and modify app questions.
+
+**Warning:** `app.license` and `app.sugenerator` should stay the same, unless you know
+what it means to delete those objects.
+
+####3. Customize subgenerator
+
+ 1. Rename subgenerator directory in `generators/` folder. You should name it something like `java` or `python`.
+ 2. Add folders in ` ... /templates/base` and name something like `server`, `lib`, `website` or `cli-tool`.
+ 
+ //Todo: You stayed here!
+
+####3. Start your generator
+Then link this generator to start using it
+```
+npm link
+yo <generator-name>
+```
 
 ## Additional info
 For more informations (documentation, contributions, ...etc),
