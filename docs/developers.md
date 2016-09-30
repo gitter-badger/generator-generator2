@@ -62,14 +62,10 @@ use in these instructions.
 
 ## Running Tests Locally
 
-Runing test suite:
-
 ```shell
+#Runing test suite:
 gulp test
-```
 
-Simulate CI testing:
-
-```shell
+#Simulate CI testing:
 gulp
 ```
