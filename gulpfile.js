@@ -115,7 +115,7 @@ gulp.task('e2e', function (cb) {
 });
 
 gulp.task('coverage', function codacyTask() {
-	
+
 	if (!process.env.CI) {
 		return;
 	}
@@ -137,7 +137,8 @@ gulp.task('serve', ['docs'], function () {
 	gulp.watch([
 		'generators/**/*.js',
 		'lib/**/*.js',
-		'docs/**/*'
+		'docs/**/*',
+		'config/mkdocs.yml'
 	], ['docs', function () {
 		browserSync.reload();
 	}]);
