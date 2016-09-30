@@ -1,5 +1,5 @@
 site_name: generator-generator2
-site_description: New yeoman generator with easier and opinionated workflow.
+site_description: Yeoman 2nth generator with easier and opinionated workflow.
 site_author: Uroš Jarc
 site_url: 'http://urosjarc.github.io/generator-generator2'
 site_favicon: media/favicon.ico

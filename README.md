@@ -4,7 +4,7 @@
 
 # generator-generator2
 
-[![npm release][npm]][npm-url]
+[![npm release][npm]][npm-url]{:target="_blank"}
 [![Travis][travis]][travis-url]
 [![Coverage Status][coverage]][coverage-url]
 [![Dependency Status][dep]][dep-url]
@@ -25,7 +25,7 @@
 [twitter]: https://img.shields.io/twitter/follow/urosjarc.svg?style=social&label=follow&maxAge=2592000
 [twitter-url]: https://twitter.com/intent/follow?screen_name=urosjarc
 
-> New yeoman generator with easier and opinionated workflow.
+> Yeoman 2nth generator with easier and opinionated workflow.
 
 [![Patreon User][support]][support-url]
 [![Twitter User][twitter]][twitter-url]

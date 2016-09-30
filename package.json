@@ -1,7 +1,7 @@
 {
   "name": "generator-generator2",
   "version": "0.0.1",
-  "description": "New yeoman generator with easier and opinionated workflow.",
+  "description": "Yeoman 2nth generator with easier and opinionated workflow.",
   "homepage": "https://github.com/urosjarc/generator-generator2",
   "author": {
     "name": "Uroš Jarc",
