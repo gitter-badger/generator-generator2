@@ -401,12 +401,12 @@ describe('Helper', function () {
 				app: {subgenerator: 'subgenerator'},
 				subgenerator: 'subgeneratorValue'
 			};
-			
+
 			this.questions = {
 				app: 'appQuestions',
 				subgenerator: 'subgeneratorQuestions'
 			};
-			
+
 			this.prompt
 				.withArgs(this.questions.app)
 				.returns({

@@ -8,7 +8,7 @@ var utils = require('../../lib/utils');
 
 describe('utils', function () {
 
-    const getUtilsPath = function(fsPath){
+    var getUtilsPath = function(fsPath){
         return path.join(__dirname,'../data/utils',fsPath || '');
     };
 
