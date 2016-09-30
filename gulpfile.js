@@ -20,12 +20,16 @@ var checkDeps = require('gulp-check-deps');
 var mkdocsConfig = './config/mkdocs.yml';
 var eslintConfig = './config/eslint.json';
 var jsdocConfig = './config/jsdoc.json';
+var checkDepConfig = './config/checkDep.json';
+var codacyConfig = './config/codacy.json';
 
 gulp.task('static', function () {
-	if (!/(v0.12|v0.10)/.test(process.version)) {
+	if (!/(v0.12|v0.10)/.test(process.version)){
 		var eslint = require('gulp-eslint');
 		var config = require(eslintConfig);
-		return gulp.src('**/*.js')
+		return gulp.src([
+			'**/*.js'
+		])
 			.pipe(excludeGitignore())
 			.pipe(eslint(config))
 			.pipe(eslint.format())
@@ -50,7 +54,10 @@ gulp.task('test:pre', function () {
 });
 
 gulp.task('test:dep', function () {
-	return gulp.src('package.json').pipe(checkDeps());
+	var config = require(checkDepConfig);
+	return gulp
+		.src('package.json')
+		.pipe(checkDeps(config));
 });
 
 gulp.task('test:docs', function () {
@@ -121,11 +128,11 @@ gulp.task('coverage', function codacyTask() {
 		return;
 	}
 
+	var config = require(codacyConfig);
+
 	return gulp
 		.src(['build/coverage/lcov.info'], {read: false})
-		.pipe(codacy({
-			token: '5723c4e3999649228cb540e0c048a3e2'
-		}));
+		.pipe(codacy(config));
 });
 
 gulp.task('serve', ['docs'], function () {
@@ -174,9 +181,9 @@ gulp.task('prepublish', ['nsp'], function () {
 
 gulp.task('docs', ['mkdocs', 'jsdoc']);
 gulp.task('default', [
-	// 'static',
 	'test:dep',
 	'test',
-	'coverage'
-	// 'test:docs'
-]); //Todo: Set static + test:docs
+	'coverage',
+	'static',
+	'test:docs'
+]);

@@ -3,8 +3,10 @@
 	"env": {
 		"mocha": true
 	},
-	"indent": [
-		"error",
-		"tab"
-	]
+	"rules":{
+		"indent": [
+			"error",
+			"tab"
+		]
+	}
 }

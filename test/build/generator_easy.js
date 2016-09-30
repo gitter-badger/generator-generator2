@@ -7,15 +7,14 @@ var path = require('path');
 
 describe('generator easy build:', function () {
 
-	const genPath = path.join(__dirname, '../../build/generator/easy');
-	const npmTask = function (task) {
+	var genPath = path.join(__dirname, '../../build/generator/easy');
+	var npmTask = function (task) {
 		if (!task)
 			task = ' ls';
 		else
 			task = ' ' + task;
 		return 'npm' + task;
 	};
-
 
 	beforeEach(function () {
 		process.chdir(genPath)
