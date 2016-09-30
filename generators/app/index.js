@@ -1,7 +1,7 @@
 var generator2 = require('../../lib');
 var generator = require('yeoman-generator');
 var path = require('path');
-var licenser = require('licenser');
+var licenser = require('licenser.js');
 
 var utils = generator2.utils;
 
