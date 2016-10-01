@@ -4,12 +4,11 @@ var assert = require('assert');
 var yoAssert = require('yeoman-assert');
 var nexpect = require('nexpect');
 var path = require('path');
-var process = require('process');
 
 describe('generator easy build:', function () {
 
-	const genPath = path.join(__dirname, '../../build/generator/easy');
-	const npmTask = function (task) {
+	var genPath = path.join(__dirname, '../../build/generator/easy');
+	var npmTask = function (task) {
 		if (!task)
 			task = ' ls';
 		else
@@ -17,13 +16,12 @@ describe('generator easy build:', function () {
 		return 'npm' + task;
 	};
 
-
-	beforeEach(function(){
+	beforeEach(function () {
 		process.chdir(genPath)
 	});
 
-	afterEach(function(){
-		process.chdir(path.join(__dirname,'../..'));
+	afterEach(function () {
+		process.chdir(path.join(__dirname, '../..'));
 	});
 
 	it('Should exist in build folder', function () {

@@ -4,7 +4,7 @@ var assert = require('assert');
 var yoAssert = require('yeoman-assert');
 var Helper = require('./helper');
 
-var helper = new Helper('generator','easy');
+var helper = new Helper('generator', 'easy');
 
 describe(helper.describe(), function () {
 
@@ -24,20 +24,20 @@ describe(helper.describe(), function () {
 		]);
 	});
 
-	describe('module subgenerator:',function(){
+	describe('module subgenerator:', function () {
 
 		before(function () {
 			return helper.runSubgenerator('subgenerator');
 		});
 
-		it('Creates default files',function(){
+		it('Creates default files', function () {
 			yoAssert.file([
 				'SUBGENERATOR'
 			]);
 		});
 
-		it('Injects SUBGENERATOR',function(){
-			helper.assertContent('SUBGENERATOR',[
+		it('Injects SUBGENERATOR', function () {
+			helper.assertContent('SUBGENERATOR', [
 				/yeoman_line/,
 				/yeoman_line1/
 			]);

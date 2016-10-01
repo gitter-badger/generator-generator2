@@ -1,16 +1,16 @@
 {
-  "name": "generator-generator2",
-  "version": "0.0.0",
-  "description": "New yeoman generator with easy workflow.",
-  "homepage": "https://github.com/urosjarc/generator-generator2",
-  "author": {
-    "name": "Uros Jarc",
-    "email": "urosjarc@users.noreply.github.com",
-    "url": "https://github.com/urosjarc"
-  },
-  "dependencies": {
-  },
-  "devDependencies": {
-  },
-  "license": "MIT"
+	"name": "generator-generator2",
+	"version": "0.0.0",
+	"description": "New yeoman generator with easy workflow.",
+	"homepage": "https://github.com/urosjarc/generator-generator2",
+	"author": {
+		"name": "Uros Jarc",
+		"email": "urosjarc@users.noreply.github.com",
+		"url": "https://github.com/urosjarc"
+	},
+	"dependencies": {
+	},
+	"devDependencies": {
+	},
+	"license": "MIT"
 }

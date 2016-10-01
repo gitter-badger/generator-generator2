@@ -4,7 +4,7 @@ var path = require('path');
 var yoTest = require('yeoman-test');
 var fs = require('fs');
 
-function Helper(subgenerator, baseName){
+function Helper(subgenerator, baseName) {
 	this.subgenerator = subgenerator;
 	this.baseName = baseName;
 
@@ -25,7 +25,7 @@ function Helper(subgenerator, baseName){
 		subgenerator: {
 			base: baseName
 		},
-		inited : undefined
+		inited: undefined
 	};
 
 	this._prompt.base = baseName;
@@ -33,7 +33,7 @@ function Helper(subgenerator, baseName){
 
 var method = Helper.prototype;
 
-method.runGenerator = function(){
+method.runGenerator = function () {
 	return yoTest
 		.run(this.getPath())
 		.inDir(this.getTestDir())
@@ -41,20 +41,20 @@ method.runGenerator = function(){
 		.toPromise();
 };
 
-method.assertContent = function(filePath,testArr){
-	var content = fs.readFileSync(path.join(this.getTestDir(),filePath),'utf8');
-	for(var i in testArr){
-		if(testArr[i] instanceof RegExp){
-			if(!testArr[i].test(content)){
-				throw Error('Regex: "' + testArr[i] + '" failed on '+filePath);
+method.assertContent = function (filePath, testArr) {
+	var content = fs.readFileSync(path.join(this.getTestDir(), filePath), 'utf8');
+	for (var i in testArr) {
+		if (testArr[i] instanceof RegExp) {
+			if (!testArr[i].test(content)) {
+				throw Error('Regex: "' + testArr[i] + '" failed on ' + filePath);
 			}
-		} else if(content.indexOf(testArr[i]) == -1){
-			throw Error('Line: "' + testArr[i] + '" is missing in '+filePath);
+		} else if (content.indexOf(testArr[i]) == -1) {
+			throw Error('Line: "' + testArr[i] + '" is missing in ' + filePath);
 		}
 	}
 };
 
-method.runSubgenerator = function(moduleName){
+method.runSubgenerator = function (moduleName) {
 	return yoTest
 		.run(this.getPath())
 		.cd(this.getTestDir())
@@ -72,17 +72,17 @@ method.getConfig = function (isInited) {
 	return config;
 };
 
-method.getPath= function(){
+method.getPath = function () {
 	return path.join(__dirname, '../../generators/app');
 };
 
-method.describe = function(){
+method.describe = function () {
 	return this.subgenerator
 		+ ' ' + this.baseName + ':'
 };
 
-method.getTestDir = function(){
-	return path.join(__dirname, '../../build',this.subgenerator,this.baseName);
+method.getTestDir = function () {
+	return path.join(__dirname, '../../build', this.subgenerator, this.baseName);
 };
 
 method.getPrompt = function () {

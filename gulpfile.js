@@ -1,7 +1,6 @@
 'use strict';
 var path = require('path');
 var gulp = require('gulp');
-var eslint = require('gulp-eslint');
 var excludeGitignore = require('gulp-exclude-gitignore');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
@@ -10,7 +9,6 @@ var plumber = require('gulp-plumber');
 var codacy = require('gulp-codacy');
 var jsdoc = require('gulp-jsdoc3');
 var shell = require('gulp-shell');
-var process = require('process');
 var chalk = require('chalk');
 var fs = require('fs');
 var childProcess = require('child_process');
@@ -22,14 +20,21 @@ var checkDeps = require('gulp-check-deps');
 var mkdocsConfig = './config/mkdocs.yml';
 var eslintConfig = './config/eslint.json';
 var jsdocConfig = './config/jsdoc.json';
+var checkDepConfig = './config/checkDep.json';
+var codacyConfig = './config/codacy.json';
 
 gulp.task('static', function () {
-	var config = require(eslintConfig);
-	return gulp.src('**/*.js')
-		.pipe(excludeGitignore())
-		.pipe(eslint(config))
-		.pipe(eslint.format())
-		.pipe(eslint.failAfterError());
+	if (!/(v0.12|v0.10)/.test(process.version)){
+		var eslint = require('gulp-eslint');
+		var config = require(eslintConfig);
+		return gulp.src([
+			'**/*.js'
+		])
+			.pipe(excludeGitignore())
+			.pipe(eslint(config))
+			.pipe(eslint.format())
+			.pipe(eslint.failAfterError());
+	}
 });
 
 gulp.task('nsp', function (cb) {
@@ -49,7 +54,10 @@ gulp.task('test:pre', function () {
 });
 
 gulp.task('test:dep', function () {
-	return gulp.src('package.json').pipe(checkDeps());
+	var config = require(checkDepConfig);
+	return gulp
+		.src('package.json')
+		.pipe(checkDeps(config));
 });
 
 gulp.task('test:docs', function () {
@@ -115,16 +123,16 @@ gulp.task('e2e', function (cb) {
 });
 
 gulp.task('coverage', function codacyTask() {
-	
+
 	if (!process.env.CI) {
 		return;
 	}
 
+	var config = require(codacyConfig);
+
 	return gulp
 		.src(['build/coverage/lcov.info'], {read: false})
-		.pipe(codacy({
-			token: '5723c4e3999649228cb540e0c048a3e2'
-		}));
+		.pipe(codacy(config));
 });
 
 gulp.task('serve', ['docs'], function () {
@@ -137,7 +145,8 @@ gulp.task('serve', ['docs'], function () {
 	gulp.watch([
 		'generators/**/*.js',
 		'lib/**/*.js',
-		'docs/**/*'
+		'docs/**/*',
+		'config/mkdocs.yml'
 	], ['docs', function () {
 		browserSync.reload();
 	}]);
@@ -158,7 +167,7 @@ gulp.task('jsdoc', function (cb) {
 	var config = require(jsdocConfig);
 	gulp.src([
 		'./lib/**/*.js',
-		'./README.md'
+		'docs/documentation.md'
 	], {read: false})
 		.pipe(jsdoc(config, cb));
 });
@@ -172,9 +181,9 @@ gulp.task('prepublish', ['nsp'], function () {
 
 gulp.task('docs', ['mkdocs', 'jsdoc']);
 gulp.task('default', [
-	// 'static',
 	'test:dep',
 	'test',
-	'coverage'
-	// 'test:docs'
-]); //Todo: Set static + test:docs
+	'coverage',
+	'static',
+	'test:docs'
+]);

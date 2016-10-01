@@ -1,5 +1,5 @@
 site_name: generator-generator2
-site_description: New yeoman generator with easier and opinionated workflow.
+site_description: Yeoman 2nth generator with easier and opinionated workflow.
 site_author: Uroš Jarc
 site_url: 'http://urosjarc.github.io/generator-generator2'
 site_favicon: media/favicon.ico
@@ -9,8 +9,10 @@ copyright: Copyright © 2016 Uroš Jarc
 theme: material
 docs_dir: docs
 pages:
-  - Home: index.md
+  - Project: index.md
+  - Tutorial: tutorial.md
   - Contribution: contribution.md
+  - Developers: developers.md
   - Documentation: documentation.md
   - Changes: changes.md
 extra:
@@ -35,3 +37,6 @@ markdown_extensions:
 google_analytics:
   - UA-53923399-3
   - auto
+extra_css:
+  - /template/theme.css
+  - /template/fadein.css
