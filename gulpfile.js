@@ -1,6 +1,13 @@
 'use strict';
+
 var path = require('path');
-var gulp = require('gulp');
+var fs = require('fs');
+
+var chalk = require('chalk');
+var browserSync = require('browser-sync').create();
+var yaml = require('js-yaml');
+
+var gulp = require('gulp-help')(require('gulp'));
 var excludeGitignore = require('gulp-exclude-gitignore');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
@@ -9,12 +16,7 @@ var plumber = require('gulp-plumber');
 var codacy = require('gulp-codacy');
 var jsdoc = require('gulp-jsdoc3');
 var shell = require('gulp-shell');
-var chalk = require('chalk');
-var fs = require('fs');
-var childProcess = require('child_process');
-var browserSync = require('browser-sync').create();
 var ghPages = require('gulp-gh-pages');
-var yaml = require('js-yaml');
 var checkDeps = require('gulp-check-deps');
 
 var mkdocsConfig = './config/mkdocs.yml';
@@ -23,7 +25,6 @@ var jsdocConfig = './config/jsdoc.json';
 var checkDepConfig = './config/checkDep.json';
 var codacyConfig = './config/codacy.json';
 
-var gulp = require('gulp-help')(gulp);
 
 gulp.task('static', 'Lint *.js project files.', function () {
 	if (!/(v0.12|v0.10)/.test(process.version)) {
@@ -62,29 +63,12 @@ gulp.task('test:dep', 'Test project dependencies for deprecation.', function () 
 		.pipe(checkDeps(config));
 });
 
-gulp.task('test:docs', 'Test project documentations.', function () {
-	childProcess.execSync('./node_modules/.bin/inchjs --all');
+gulp.task('test:docs', 'Test project documentations.', ['inchjs'], function () {
 	var docs = require('./docs.json');
-	var report = [];
-
-	var undocs = 0;
 	for (var i in docs.objects) {
-		var object = docs.objects[i];
-		if (object.undocumented == true) {
-			report.push(
-				' - ' + object.meta.path + ' '
-				+ object.meta.filename + ' '
-				+ object.meta.lineno
-			);
-			undocs++;
+		if (docs.objects[i].undocumented == true) {
+			process.exit(1);
 		}
-	}
-	if (undocs != 0) {
-		console.error(chalk.red(
-			'\n > Undocumented:\n' +
-			report.join('\n')
-		));
-		process.exit(1);
 	}
 });
 
@@ -161,6 +145,10 @@ gulp.task('gh-pages', 'Upload documentation to github pages.', ['docs'], functio
 		}));
 });
 
+gulp.task('inchjs', false, shell.task([
+	'./node_modules/.bin/inchjs --all'
+]));
+
 gulp.task('mkdocs', false, shell.task([
 	'mkdocs build --strict --clean --quiet --config-file ' + mkdocsConfig
 ]));
@@ -182,6 +170,7 @@ gulp.task('prepublish', false, ['nsp'], function () {
 });
 
 gulp.task('docs', 'Build project documentation.', ['mkdocs', 'jsdoc']);
+
 gulp.task('test:CI', 'Run continuous integration test suite.', [
 	'test',
 	'coverage',
