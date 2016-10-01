@@ -31,8 +31,10 @@
 <br>
 
 !!! Warning
-    Project is still in development, so documentation is uncomplete!
- 
+    Project is still in development!
+    Please see project [milestones](https://github.com/urosjarc/generator-generator2/milestones)
+    to see when the first production ready version will come out. 
+    
 <br>
 
 ##Informations
