@@ -62,7 +62,7 @@ Before you submit your pull request consider the following guidelines:
 * Run test suite. and ensure that all tests pass.
 
     ```
-    gulp
+    gulp test:CI
     ```
 
 * Commit your changes using a descriptive commit message.
