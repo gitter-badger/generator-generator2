@@ -3,13 +3,16 @@
   "version": "0.0.1",
   "description": "Yeoman 2nth generator with easier and opinionated workflow.",
   "license": "MIT",
-  "repository": "urosjarc/generator-generator2",
   "homepage": "https://github.com/urosjarc/generator-generator2",
   "main": "lib/index.js",
   "author": {
     "name": "Uroš Jarc",
     "email": "urosjarc@users.noreply.github.com",
     "url": "https://github.com/urosjarc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/urosjarc/generator-generator2"
   },
   "keywords": [
     "yeoman-generator"
@@ -22,8 +25,9 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "prepublish": "gulp prepublish",
-    "test": "gulp test:CI"
+    "gulp": "gulp",
+    "prepublish": "npm run gulp prepublish",
+    "test": "npm run gulp test:CI"
   },
   "dependencies": {
     "chalk": "^1.0.0",

@@ -24,7 +24,7 @@ var eslintConfig = './config/eslint.json';
 var jsdocConfig = './config/jsdoc.json';
 var checkDepConfig = './config/checkDep.json';
 var codacyConfig = './config/codacy.json';
-
+var changelogConfig = './config/changelog.json';
 
 gulp.task('static', 'Lint *.js project files.', function () {
 	if (!/(v0.12|v0.10)/.test(process.version)) {
@@ -160,6 +160,15 @@ gulp.task('jsdoc', false, function (cb) {
 		'docs/documentation.md'
 	], {read: false})
 		.pipe(jsdoc(config, cb));
+});
+
+gulp.task('changelog', 'Update docs changelog file.',function(cb){
+	var command = 'github_changelog_generator';
+	var config = require(changelogConfig);
+	for(var i in config){
+		command += ' --' + i + ' ' + config[i];
+	}
+	shell.task([ command ])(cb);
 });
 
 gulp.task('prepublish', false, ['nsp'], function () {

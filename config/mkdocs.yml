@@ -14,7 +14,7 @@ pages:
   - Contribution: contribution.md
   - Developers: developers.md
   - Documentation: documentation.md
-  - Changes: changes.md
+  - Changelog: changelog.md
 extra:
   version: 0.0.1
   logo: media/logo.png
