@@ -67,5 +67,5 @@ use in these instructions.
 gulp test
 
 #Simulate CI testing:
-gulp
+gulp test:CI
 ```

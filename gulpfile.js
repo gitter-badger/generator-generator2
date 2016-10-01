@@ -23,8 +23,10 @@ var jsdocConfig = './config/jsdoc.json';
 var checkDepConfig = './config/checkDep.json';
 var codacyConfig = './config/codacy.json';
 
-gulp.task('static', function () {
-	if (!/(v0.12|v0.10)/.test(process.version)){
+var gulp = require('gulp-help')(gulp);
+
+gulp.task('static', 'Lint *.js project files.', function () {
+	if (!/(v0.12|v0.10)/.test(process.version)) {
 		var eslint = require('gulp-eslint');
 		var config = require(eslintConfig);
 		return gulp.src([
@@ -37,11 +39,11 @@ gulp.task('static', function () {
 	}
 });
 
-gulp.task('nsp', function (cb) {
+gulp.task('nsp', 'Run node security checks.', function (cb) {
 	nsp({package: path.resolve('package.json')}, cb);
 });
 
-gulp.task('test:pre', function () {
+gulp.task('test:pre', false, function () {
 	return gulp.src([
 		'generators/**/*.js',
 		'lib/**/*.js'
@@ -53,14 +55,14 @@ gulp.task('test:pre', function () {
 		.pipe(istanbul.hookRequire());
 });
 
-gulp.task('test:dep', function () {
+gulp.task('test:dep', 'Test project dependencies for deprecation.', function () {
 	var config = require(checkDepConfig);
 	return gulp
 		.src('package.json')
 		.pipe(checkDeps(config));
 });
 
-gulp.task('test:docs', function () {
+gulp.task('test:docs', 'Test project documentations.', function () {
 	childProcess.execSync('./node_modules/.bin/inchjs --all');
 	var docs = require('./docs.json');
 	var report = [];
@@ -86,7 +88,7 @@ gulp.task('test:docs', function () {
 	}
 });
 
-gulp.task('test', ['test:pre'], function (cb) {
+gulp.task('test', 'Run integration/unit tests.', ['test:pre'], function (cb) {
 	var mochaErr;
 
 	gulp.src([
@@ -106,7 +108,7 @@ gulp.task('test', ['test:pre'], function (cb) {
 		});
 });
 
-gulp.task('e2e', function (cb) {
+gulp.task('e2e', 'Run end to end tests.', function (cb) {
 	var mochaErr;
 
 	gulp.src([
@@ -122,7 +124,7 @@ gulp.task('e2e', function (cb) {
 		});
 });
 
-gulp.task('coverage', function codacyTask() {
+gulp.task('coverage', false, function codacyTask() {
 
 	if (!process.env.CI) {
 		return;
@@ -135,7 +137,7 @@ gulp.task('coverage', function codacyTask() {
 		.pipe(codacy(config));
 });
 
-gulp.task('serve', ['docs'], function () {
+gulp.task('serve', 'Build, serve documentation and reload on docs change.', ['docs'], function () {
 	browserSync.init({
 		server: {
 			baseDir: "build/docs"
@@ -152,18 +154,18 @@ gulp.task('serve', ['docs'], function () {
 	}]);
 });
 
-gulp.task('gh-pages', ['docs'], function () {
+gulp.task('gh-pages', 'Upload documentation to github pages.', ['docs'], function () {
 	return gulp.src('build/docs/**/*')
 		.pipe(ghPages({
 			cacheDir: 'build/gh-pages'
 		}));
 });
 
-gulp.task('mkdocs', shell.task([
+gulp.task('mkdocs', false, shell.task([
 	'mkdocs build --strict --clean --quiet --config-file ' + mkdocsConfig
 ]));
 
-gulp.task('jsdoc', function (cb) {
+gulp.task('jsdoc', false, function (cb) {
 	var config = require(jsdocConfig);
 	gulp.src([
 		'./lib/**/*.js',
@@ -172,18 +174,18 @@ gulp.task('jsdoc', function (cb) {
 		.pipe(jsdoc(config, cb));
 });
 
-gulp.task('prepublish', ['nsp'], function () {
+gulp.task('prepublish', false, ['nsp'], function () {
 	var mkdocs = yaml.safeLoad(fs.readFileSync(mkdocsConfig, 'utf8'));
 	mkdocs.extra.version = require('./package.json').version;
 	console.log('\n > Version: ' + mkdocs.extra.version + '\n');
 	fs.writeFileSync(mkdocsConfig, yaml.safeDump(mkdocs));
 });
 
-gulp.task('docs', ['mkdocs', 'jsdoc']);
-gulp.task('default', [
-	'test:dep',
+gulp.task('docs', 'Build project documentation.', ['mkdocs', 'jsdoc']);
+gulp.task('test:CI', 'Run continuous integration test suite.', [
 	'test',
 	'coverage',
 	'static',
-	'test:docs'
+	'test:docs',
+	'test:dep'
 ]);
