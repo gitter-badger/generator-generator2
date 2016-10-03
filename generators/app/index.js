@@ -8,11 +8,18 @@ var utils = generator2.utils;
 module.exports = generator.Base.extend({
 
 	questions: function () {
+		var self = this;
+		
+		var gitName = self.user.git.name();
+		var gitEmail = self.user.git.email();
+		var appName = path.basename(this.destinationRoot());
+
 		return [
 			{
 				"type": "input",
 				"name": "name",
 				"message": "Project name:",
+				"default": appName,
 				"validate": utils.validateWord
 			},
 			{
@@ -22,26 +29,73 @@ module.exports = generator.Base.extend({
 			},
 			{
 				"type": "input",
-				"name": "repoUrl",
-				"message": "Repository url (https://github.com/USER/PROJECT):",
+				"name": "homepage",
+				"message": "Home page url:",
+				"default": "https://" + gitName + ".github.io/" + appName,
 				"validate": utils.validateUrl
 			},
 			{
 				"type": "input",
-				"name": "siteUrl",
-				"message": "Site url (https://USER.github.io/PROJECT):",
+				"name": "authorName",
+				"message": "Authors real name:",
+				"default": "Firstname Lastname"
+			},
+			{
+				"type": "input",
+				"name": "authorEmail",
+				"message": "Authors email:",
+				"default": gitEmail,
+				"validate": utils.validateEmail
+			},
+			{
+				"type": "input",
+				"name": "authorUrl",
+				"message": "Authors url:",
+				"default": "https://github.com/" + gitName,
+				"validate": utils.validateUrl
+			},
+			{
+				"type": "list",
+				"name": "repoType",
+				"message": "Repository type:",
+				"default": "git",
+				"choices": ['git','svn'],
+				"validate": utils.validateUrl
+			},
+			{
+				"type": "input",
+				"name": "repoUrl",
+				"message": "Repository url:",
+				"default": "https://github.com/" + gitName + '/' + appName,
 				"validate": utils.validateUrl
 			},
 			{
 				"type": "input",
 				"name": "githubUser",
-				"message": "Github user:"
+				"message": "Github user:",
+				"default": gitName,
+				"validate": utils.validateWord
 			},
 			{
 				"type": "input",
-				"name": "authorName",
-				"message": "Authors name:"
-			}
+				"name": "twitterUser",
+				"message": "Twitter user:",
+				"filter" : function(input){
+					if(!/^[a-zA-Z]/.test(input))
+						return null;
+					else return input;
+				}
+			},
+			{
+				"type": "input",
+				"name": "patreonUser",
+				"message": "Patreon user:",
+				"filter" : function(input){
+					if(!/^[a-zA-Z]/.test(input))
+						return null;
+					else return input;
+				}
+			},
 		];
 	}
 }).extend(generator2.app);

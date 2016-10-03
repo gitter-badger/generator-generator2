@@ -1,11 +1,11 @@
-site_name: generator-generator2
-site_description: Yeoman 2nth generator with easier and opinionated workflow.
-site_author: Uroš Jarc
-site_url: 'http://urosjarc.github.io/generator-generator2'
+site_name: <%-app.name%>
+site_description: <%-app.description%>
+site_author: <%-app.authorName%>
+site_url: '<%-app.homepage%>'
 site_favicon: media/favicon.ico
 site_dir: build/docs
-repo_url: 'https://github.com/urosjarc/generator-generator2'
-copyright: Copyright © 2016 Uroš Jarc
+repo_url: '<%-app.repoUrl%>'
+copyright: Copyright © <%-new Date().getFullYear()%> <%-app.authorName%>
 theme: material
 docs_dir: docs
 pages:
@@ -16,7 +16,7 @@ pages:
   - Documentation: documentation.md
   - Changelog: changelog.md
 extra:
-  version: 0.0.1
+  version: 0.0.0
   logo: media/logo.png
   github:
     download_release: true
@@ -27,15 +27,17 @@ extra:
     text: Roboto
     code: Roboto Mono
   author:
-    github: urosjarc
-    twitter: urosjarc
+    github: <%-app.githubUser%>
+<%if (app.twitterUser) { -%>
+    twitter: <%-app.twitterUser%>
+<% } -%>
 markdown_extensions:
   - codehilite(css_class=code)
   - admonition
   - toc:
       permalink: '#'
 google_analytics:
-  - UA-53923399-3
+  - UA-53923399-3 #Todo: Add google analytics!
   - auto
 extra_css:
   - /template/theme.css

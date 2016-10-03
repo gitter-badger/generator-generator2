@@ -86,7 +86,6 @@ npm install -g generator-generator2
 
 ## Usage
 
-
 ```
 Run generator.
 yo generator2
@@ -94,6 +93,12 @@ yo generator2
 #Creates generator.debug file while running generator.
 yo generator2 --debug
 ```
+
+##Contributors
+
+Many thanks for your time to contribute to this project:
+
+ - @srsgores
 
 ## License
 Copyright © 2016 Uroš Jarc

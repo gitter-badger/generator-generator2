@@ -1,18 +1,18 @@
 {
-  "name": "generator-generator2",
-  "version": "0.0.1",
-  "description": "Yeoman 2nth generator with easier and opinionated workflow.",
-  "license": "MIT",
-  "homepage": "https://github.com/urosjarc/generator-generator2",
-  "main": "lib/index.js",
+  "name": "<%-app.name%>",
+  "version": "0.0.0",
+  "description": "<%-app.description%>",
+  "license": "<%-app.license%>",
+  "homepage": "<%-app.homepage%>",
+  "main": "generators/app/index.js",
   "author": {
-    "name": "Uroš Jarc",
-    "email": "urosjarc@users.noreply.github.com",
-    "url": "https://github.com/urosjarc"
+    "name": "<%-app.authorName%>",
+    "email": "<%-app.authorEmail%>",
+    "url": "<%-app.authorUrl%>"
   },
   "repository": {
-    "type": "git",
-    "url": "https://github.com/urosjarc/generator-generator2"
+    "type": "<%-app.repoType%>",
+    "url": "<%-app.repoUrl%>"
   },
   "keywords": [
     "yeoman-generator"
@@ -33,7 +33,6 @@
     "chalk": "^1.0.0",
     "ejs": "^2.5.1",
     "js-yaml": "^3.6.1",
-    "licenser.js": "0.0.0",
     "mmmagic": "^0.4.5",
     "walk": "^2.3.9",
     "winston": "^2.2.0",
