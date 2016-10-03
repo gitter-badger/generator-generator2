@@ -361,7 +361,7 @@ describe('Helper', function () {
 			this.isSubgeneratorInited = sinon.stub(this.helper, 'isSubgeneratorInited');
 
 			this.tmpNameAnsweres = {
-				name: 'tmpName'
+				_name: 'tmpName'
 			};
 
 			this.answeres = {
@@ -428,7 +428,7 @@ describe('Helper', function () {
 			this.info = sinon.spy(this.helper.logger, 'info');
 
 			this.appAnsweres = {key2: 'value2'};
-			this.generatorAnsweres = {'key0': 'value0', 'key1': 'value1'};
+			this.generatorAnsweres = {'_key0': 'value0', '_key1': 'value1'};
 			this.questions = 'appQuestions';
 
 			this.cbAnsweres = {
