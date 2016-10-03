@@ -1,0 +1,19 @@
+{
+	"opts": {
+		"destination": "./build/docs/documentation",
+		"encoding": "utf8",
+		"recurse": true,
+		"tutorials": "./docs/tutorials"
+	},
+	"tags": {
+		"allowUnknownTags": false
+	},
+	"plugins": [
+		"plugins/markdown",
+		"config/jsdoc_plugin"
+	],
+	"templates": {
+		"cleverLinks": true,
+		"monospaceLinks": true
+	}
+}

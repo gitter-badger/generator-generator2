@@ -7,8 +7,8 @@ var utils = generator2.utils;
 
 module.exports = generator.Base.extend({
 
-	questions: {
-		"app": [
+	questions: function () {
+		return [
 			{
 				"type": "input",
 				"name": "name",
@@ -33,12 +33,6 @@ module.exports = generator.Base.extend({
 				"validate": utils.validateUrl
 			},
 			{
-				"type": "list",
-				"name": "license",
-				"message": "License:",
-				"choices": licenser.getNames()
-			},
-			{
 				"type": "input",
 				"name": "githubUser",
 				"message": "Github user:"
@@ -47,17 +41,7 @@ module.exports = generator.Base.extend({
 				"type": "input",
 				"name": "authorName",
 				"message": "Authors name:"
-			},
-			{
-				"type": "list",
-				"name": "subgenerator",
-				"message": "Select subgenerator:",
-				"choices": [
-					"generator"
-				]
 			}
-		],
-		"generator": []
+		];
 	}
-
 }).extend(generator2.app);
