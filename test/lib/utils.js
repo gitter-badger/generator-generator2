@@ -170,7 +170,7 @@ describe('utils', function () {
 
 	describe('#getNowDate', function () {
 		it('should be the right format', function () {
-			assert(/\d{1,2}\/\d{1,2}\/\d{4}/.test(
+			assert(/\d{1,2}.\d{1,2}.\d{4}/.test(
 				utils.getNowDate()
 			));
 		});

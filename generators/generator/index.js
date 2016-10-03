@@ -7,27 +7,12 @@ module.exports = generator.Base.extend({
 		return {
 			base: {
 				default: [
-					{
-                        "type": "input",
-                        "name": "testing",
-                        "message": "Testing default question..."
-                    }
 				],
 				customizable : [
-					{
-                        "type": "input",
-                        "name": "testing",
-                        "message": "Testing customizable question..."
-                    }
 				]
 			},
 			module: {
 				subgenerator: [
-					{
-                        "type": "input",
-                        "name": "testing",
-                        "message": "Testing subgenerator question..."
-                    }
 				]
 			}
 		}

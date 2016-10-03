@@ -4,8 +4,8 @@ var fs = require('fs');
 var sinon = require('sinon');
 var yoEnv = require('yeoman-environment');
 var yosay = require('yosay');
-var licenser = require('licenser.js');
 
+var license = require('../../lib/license');
 var utils = require('../../lib/utils');
 var Helper = require('../../lib/helper');
 var generator = require('../data/helper/constructor/generator');
@@ -154,19 +154,19 @@ describe('Helper', function () {
 		it('calls licenser with good arguments', function () {
 			sinon.stub(this.helper, 'getYoRc')
 				.returns('licenseName');
-			sinon.stub(licenser, 'getLicense')
+			sinon.stub(license, 'getContent')
 				.returns('licenseContent');
 
 			this.helper.getLicense();
 
-			assert(licenser.getLicense.withArgs(
+			assert(license.getContent.withArgs(
 				'licenseName',
 				sinon.match.number,
 				sinon.match.string
 			));
 
 			this.helper.getYoRc.restore();
-			licenser.getLicense.restore();
+			license.getContent.restore();
 		});
 	});
 
@@ -358,14 +358,43 @@ describe('Helper', function () {
 			this.info = sinon.spy(this.helper.logger, 'info');
 			this.getBasesNames = sinon.stub(this.helper, 'getBasesNames');
 			this.getModulesNames = sinon.stub(this.helper, 'getModulesNames');
+			this.isSubgeneratorInited = sinon.stub(this.helper, 'isSubgeneratorInited');
 
-			this.answeres = 'answeres';
+			this.tmpNameAnsweres = {
+				name: 'tmpName'
+			};
 
-			this.prompt.returns({
+			this.answeres = {
+				key0: 'value0'
+			};
+
+			this.cbAnsweres = {
+				base: {
+					name: 'tmpName',
+					key0: 'value0'
+				}
+			};
+
+			this.questions = {
+				'base': {
+					'tmpName': 'value0'
+				}
+			};
+
+			this.prompt.withArgs(this.questions.base.tmpName).returns({
 				then: function (cb) {
 					cb(self.answeres);
 				}
 			});
+
+			this.prompt.withArgs(sinon.match.array).returns({
+				then: function (cb) {
+					cb(self.tmpNameAnsweres);
+				}
+			});
+
+			this.isSubgeneratorInited.returns(false);
+
 		});
 
 		afterEach(function () {
@@ -373,18 +402,18 @@ describe('Helper', function () {
 			this.info.restore();
 			this.getModulesNames.restore();
 			this.getBasesNames.restore();
+			this.isSubgeneratorInited.restore();
 		});
 
 		it('should call callback with answeres', function (done) {
 			var self = this;
 
-			this.helper.postPrompt(function (answeres) {
+			this.helper.postPrompt(this.questions, function (answeres) {
 				var error = 0;
 				assert(self.getModulesNames.calledOnce, 'Err: ' + error++);
 				assert(self.getBasesNames.calledOnce, 'Err: ' + error++);
-				assert(self.prompt.calledOnce, 'Err: ' + error++);
-				assert(self.info.withArgs('Post prompt answeres', self.answeres), 'Err: ' + error++);
-				assert.equal(answeres, self.answeres, 'Err: ' + error++);
+				assert(self.info.withArgs('Post prompt answeres', self.cbAnsweres), 'Err: ' + error++);
+				assert.deepEqual(answeres, self.cbAnsweres, 'Err: ' + error++);
 				done();
 			});
 
@@ -398,29 +427,31 @@ describe('Helper', function () {
 			this.prompt = sinon.stub(this.helper.gen, 'prompt');
 			this.info = sinon.spy(this.helper.logger, 'info');
 
-			this.answeres = {
-				app: {subgenerator: 'subgenerator'},
-				subgenerator: 'subgeneratorValue'
-			};
+			this.appAnsweres = {key2: 'value2'};
+			this.generatorAnsweres = {'key0': 'value0', 'key1': 'value1'};
+			this.questions = 'appQuestions';
 
-			this.questions = {
-				app: 'appQuestions',
-				subgenerator: 'subgeneratorQuestions'
+			this.cbAnsweres = {
+				app: {
+					key0: 'value0',
+					key1: 'value1',
+					key2: 'value2'
+				}
 			};
 
 			this.prompt
-				.withArgs(this.questions.app)
+				.withArgs(this.questions)
 				.returns({
 					then: function (cb) {
-						cb(self.answeres.app);
+						cb(self.appAnsweres);
 					}
 				});
 
 			this.prompt
-				.withArgs(this.questions.subgenerator)
+				.withArgs(sinon.match.array)
 				.returns({
 					then: function (cb) {
-						cb(self.answeres.subgenerator);
+						cb(self.generatorAnsweres);
 					}
 				});
 		});
@@ -435,10 +466,8 @@ describe('Helper', function () {
 
 			this.helper.initPrompt(self.questions, function (answeres) {
 				var error = 0;
-				assert(self.prompt.withArgs(self.questions.app).calledOnce, 'Err: ' + error++);
-				assert(self.prompt.withArgs(self.questions.subgenerator).calledOnce, 'Err: ' + error++);
-				assert(self.info.withArgs('Init prompt answeres', self.answeres), 'Err: ' + error++);
-				assert.deepEqual(answeres, self.answeres, 'Err: ' + error++);
+				assert(self.info.withArgs('Init prompt answeres', self.cbAnsweres), 'Err: ' + error++);
+				assert.deepEqual(answeres, self.cbAnsweres, 'Err: ' + error++);
 				done();
 			});
 

@@ -47,6 +47,7 @@ gulp.task('nsp', 'Run node security checks.', function (cb) {
 gulp.task('test:pre', false, function () {
 	return gulp.src([
 		'generators/**/*.js',
+		'!**/templates/**/*.js',
 		'lib/**/*.js'
 	])
 		.pipe(excludeGitignore())

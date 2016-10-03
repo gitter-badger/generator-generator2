@@ -13,22 +13,22 @@ function Helper(subgenerator, baseName) {
 		description: "DESCRIPTION",
 		repoUrl: "https://REPO_URL.com/",
 		siteUrl: "https://SITE_URL.com/",
-		license: "MIT License",
 		githubUser: "GITHUB_USER",
 		authorName: "AUTHOR_NAME",
+		license: "MIT License",
 		createdAt: 'CREATED_AT',
 		subgenerator: subgenerator
 	};
 
 	this._config = {
 		app: this._prompt,
-		subgenerator: {
-			base: baseName
+		base: {
+			name: baseName
 		},
 		inited: undefined
 	};
 
-	this._prompt.base = baseName;
+	this._prompt.name = baseName;
 }
 
 var method = Helper.prototype;
@@ -60,7 +60,7 @@ method.runSubgenerator = function (moduleName) {
 		.cd(this.getTestDir())
 		.withLocalConfig(this.getConfig(true))
 		.withPrompts({
-			"module": moduleName
+			"name": moduleName
 		}).toPromise();
 };
 
