@@ -31,6 +31,8 @@
 <br>
 
 # !!! WARNING !!!
+
+[![Join the chat at https://gitter.im/urosjarc1/Lobby](https://badges.gitter.im/urosjarc1/Lobby.svg)](https://gitter.im/urosjarc1/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 **Project is still in development!**
 **Please see project [v1.0.0 milestone](https://github.com/urosjarc/generator-generator2/milestones)**
 **to see when the first production ready version will come out.**
