@@ -7,21 +7,7 @@
 [![Coverage Status][coverage]][coverage-url]
 [![Dependency Status][dep]][dep-url]
 [![Codebeat badge][codestyle]][codestyle-url]
-
-[npm]: https://img.shields.io/npm/v/generator-generator2.svg
-[npm-url]: https://www.npmjs.com/package/generator-generator2
-[travis]: https://img.shields.io/travis/urosjarc/generator-generator2.svg
-[travis-url]: https://travis-ci.org/urosjarc/generator-generator2
-[coverage]: https://img.shields.io/codacy/coverage/71b26bbc68de46ed9b6ad037d821b635.svg
-[coverage-url]: https://www.codacy.com/app/urosjarc/generator-generator2
-[codestyle]: https://img.shields.io/codacy/grade/71b26bbc68de46ed9b6ad037d821b635.svg
-[codestyle-url]: https://www.codacy.com/app/urosjarc/generator-generator2
-[dep]: https://www.versioneye.com/user/projects/57ed5868769f21004138875f/badge.svg?style=flat-square
-[dep-url]: https://www.versioneye.com/user/projects/57ed5868769f21004138875f
-[support]: https://img.shields.io/badge/patreon-urosjarc-green.svg?style=social
-[support-url]: https://patreon.com/urosjarc/
-[twitter]: https://img.shields.io/twitter/follow/urosjarc.svg?style=social&label=follow
-[twitter-url]: https://twitter.com/intent/follow?screen_name=urosjarc
+[![Docs Status][docs]][docs-url]
 
 > Yeoman 2nth generator with easier and opinionated workflow.
 
@@ -68,7 +54,7 @@ be generated and still leave option to customize runtime context, for hard core 
  * Provide [logging](https://www.npmjs.com/package/winston) for your generator.
  * [EJS templating](http://www.embeddedjs.com/) for **files** content and **directories** names.
  * **Line injector** for file content.
- * Provide [licenser](https://www.npmjs.com/package/licenser.js) for your generator.
+ * Provide license for your generator.
  * **Prompt validation** on user input.
  * Etc... 
  
@@ -104,3 +90,20 @@ Many thanks for your time to contribute to this project:
 Copyright © 2016 Uroš Jarc
 
 MIT License
+
+[npm]: https://img.shields.io/npm/v/generator-generator2.svg
+[npm-url]: https://www.npmjs.com/package/generator-generator2
+[travis]: https://img.shields.io/travis/urosjarc/generator-generator2.svg
+[travis-url]: https://travis-ci.org/urosjarc/generator-generator2
+[coverage]: https://img.shields.io/codacy/coverage/71b26bbc68de46ed9b6ad037d821b635.svg
+[coverage-url]: https://www.codacy.com/app/urosjarc/generator-generator2
+[codestyle]: https://img.shields.io/codacy/grade/71b26bbc68de46ed9b6ad037d821b635.svg
+[codestyle-url]: https://www.codacy.com/app/urosjarc/generator-generator2
+[dep]: https://www.versioneye.com/user/projects/57ed5868769f21004138875f/badge.svg?style=flat-square
+[dep-url]: https://www.versioneye.com/user/projects/57ed5868769f21004138875f
+[docs]: http://inch-ci.org/github/urosjarc/generator-generator2.svg?style=shields
+[docs-url]: http://inch-ci.org/github/urosjarc/generator-generator2
+[support]: https://img.shields.io/badge/patreon-urosjarc-green.svg?style=social
+[support-url]: https://patreon.com/urosjarc/
+[twitter]: https://img.shields.io/twitter/follow/urosjarc.svg?style=social&label=follow
+[twitter-url]: https://twitter.com/intent/follow?screen_name=urosjarc

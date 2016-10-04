@@ -55,17 +55,9 @@ module.exports = generator.Base.extend({
 				"validate": utils.validateUrl
 			},
 			{
-				"type": "list",
-				"name": "repoType",
-				"message": "Repository type:",
-				"default": "git",
-				"choices": ['git','svn'],
-				"validate": utils.validateUrl
-			},
-			{
 				"type": "input",
 				"name": "repoUrl",
-				"message": "Repository url:",
+				"message": "Github repository url:",
 				"default": "https://github.com/" + gitName + '/' + appName,
 				"validate": utils.validateUrl
 			},

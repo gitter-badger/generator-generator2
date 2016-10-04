@@ -37,7 +37,7 @@ markdown_extensions:
   - toc:
       permalink: '#'
 google_analytics:
-  - UA-53923399-3 #Todo: Add google analytics!
+  - '' #Todo: Add google analytics!
   - auto
 extra_css:
   - /template/theme.css
